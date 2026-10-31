@@ -1,0 +1,41 @@
+<section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
+<h2 class="section-heading" id="download-heading">Download</h2>
+<article class="content-article" data-admin="content:content.css" id="download-get">
+<h3 class="article-heading">Get drAGhts {{draghts_version}}</h3>
+<p>drAGhts ships as one small archive with the whole game in it. No installer, no runtime, no setup — unzip it and open <code>index.html</code> in any browser. It works offline, and it never sends anything anywhere.</p>
+<p><a href="/downloads/draghts-{{draghts_version}}/{{draghts_file}}" download>Download the drAGhts archive ({{draghts_size}})</a> — drAGhts {{draghts_version}}, the browser game.</p>
+<div class="table-scroll"><table class="download-table">
+<thead>
+<tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="/downloads/draghts-{{draghts_version}}/{{draghts_file}}">drAGhts archive</a></th><td>Any browser</td><td>{{draghts_size}}</td><td><code>SHA256:{{draghts_sha256}}</code></td></tr>
+</tbody>
+</table></div>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-install" aria-labelledby="download-install-heading">
+<h2 class="section-heading" id="download-install-heading">How to run it</h2>
+<article class="content-article" data-admin="content:content.css" id="download-install-steps">
+<h3 class="article-heading">Two steps</h3>
+<p>1. Unzip the archive — in PowerShell: <code>Expand-Archive -Path draghts-{{draghts_version}}.zip</code>. On a Mac or Linux, unzip it with the file manager or with <code>unzip</code>.</p>
+<p>2. Open <code>index.html</code> in your browser. That is the whole installation.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-install-notes">
+<h3 class="article-heading">If the double click does nothing</h3>
+<p>Some browsers will not open a local page straight from the disk. If that happens, serve the folder with any small web server instead — for example <code>python -m http.server 8000</code> from inside the unpacked folder — and then visit <code>http://localhost:8000/</code> in your browser.</p>
+<p>The game is the same either way: the same rules, the same presets, the same records kept in your own browser.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-install-privacy">
+<h3 class="article-heading">What it does not do</h3>
+<p>No accounts, no telemetry, no analytics, no advertising and no network calls of any kind. Your game records are stored in your own browser on your own machine, and they stay there. Sounds start only after your first tap or keypress.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-elsewhere" aria-labelledby="download-elsewhere-heading">
+<h2 class="section-heading" id="download-elsewhere-heading">Or play it in the browser</h2>
+<article class="content-article" data-admin="content:content.css" id="download-elsewhere-online">
+<h3 class="article-heading">The same game, on the site</h3>
+<p>The archive and the site copy are the same game, built from the same source. If you would rather not download anything, play it in the playground.</p>
+<p><a href="/playground/one/">Play drAGhts online</a></p>
+</article>
+</section>

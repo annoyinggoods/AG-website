@@ -1,0 +1,82 @@
+/* Single responsibility: element defaults, focus, images, links. */
+* {
+  box-sizing: border-box;
+}
+/* The icon sprite holds the symbols the pages draw with use. It is taken out
+   of the flow here, because an inline style attribute is not allowed by the
+   content security policy. */
+.icon-sprite {
+  position: absolute;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: var(--stage-tint);
+  color: var(--ink);
+  line-height: 1.6;
+}
+body.menu-open {
+  overflow: hidden;
+}
+body.menu-open .logo-ball {
+  visibility: hidden;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+a {
+  color: var(--accent);
+}
+a,
+button,
+summary {
+  transition: transform var(--dur-hover) ease;
+}
+button {
+  color: inherit;
+}
+a:hover,
+button:hover,
+summary:hover,
+.chip:hover {
+  transform: translateY(-2px);
+}
+a:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+button:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+input:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+.skip-link {
+  position: absolute;
+  left: 1rem;
+  top: -4rem;
+  z-index: 100;
+  background: var(--accent);
+  color: var(--bg);
+  padding: 0.6rem 1rem;
+  border-radius: var(--radius-field);
+}
+.skip-link:focus-visible {
+  top: 1rem;
+}

@@ -1,0 +1,27 @@
+<section class="content-section" data-admin="content:content.css" id="draghts" aria-labelledby="draghts-heading">
+<h2 class="section-heading" id="draghts-heading">drAGhts</h2>
+<p>Chaotic checkers with eight toggleable house rules. Play a friend hot-seat or face the computer, right here on this page.</p>
+<div id="draghts-app" class="draghts-app" data-draghts>
+<div class="draghts-main">
+<div id="start-screen-container"></div>
+<div id="hud-container"></div>
+<div id="game-area">
+<div id="turn-banner" aria-live="assertive" aria-atomic="true" class="turn-banner"></div>
+<div id="picker-banner" aria-live="polite" class="picker-banner hidden"></div>
+<div id="coin-flip-result" aria-live="polite" class="coin-flip-result"></div>
+<div id="end-turn-wrapper" class="end-turn-wrapper hidden">
+<button id="end-turn-btn" type="button">End Turn</button>
+</div>
+<div id="board" aria-label="Checkers board"></div>
+</div>
+<div id="end-screen-container"></div>
+<div id="dashboard-container"></div>
+</div>
+</div>
+<div class="chip-row">
+<a class="chip" href="/playground/">Playground</a>
+<a class="chip" href="/products/drAGhts/">Product page</a>
+<a class="chip" href="/products/drAGhts/download/">Download</a>
+</div>
+</section>
+<script type="module" src="/scripts/draghts/draghts.bundle.js"></script>

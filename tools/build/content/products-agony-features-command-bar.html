@@ -1,0 +1,31 @@
+<section class="content-section" data-admin="content:content.css" id="command-bar" aria-labelledby="command-bar-heading">
+<h2 class="section-heading" id="command-bar-heading">The command bar</h2>
+<p>Press <code>Ctrl-K</code> — or click the taskbar's status area — and a bar drops in along the taskbar edge with the focused pane's working directory at the left. Type, and suggestions appear before you finish the word. Press Enter to accept one; press Enter again to run it in a new window.</p>
+<figure class="feature-media">
+<img src="assets/agony/commandbar.svg" alt="Recording: the AGony command bar suggesting checkout for the words git che" width="1090" height="676" loading="lazy">
+<figcaption>A real capture: <code>git che</code> being completed to <code>checkout</code> by the carapace completion engine.</figcaption>
+</figure>
+</section>
+<section class="content-section" data-admin="content:content.css" id="command-bar-sources" aria-labelledby="command-bar-sources-heading">
+<h2 class="section-heading" id="command-bar-sources-heading">Where the suggestions come from</h2>
+<article class="content-article" data-admin="content:content.css" id="command-bar-sources-list">
+<h3 class="article-heading">Four sources, one ranked list</h3>
+<p>The bar merges everything it knows: the app catalog (installed apps and launchable entries), your run history (previous lines, ranked above the rest, with a <code>✗</code> marker on commands that failed), the file panel's current tree, and shell completions from the carapace completion binary — which knows roughly a thousand commands and their arguments. Type <code>git che</code>, get <code>checkout</code>; type the first letters of an app, get the app.</p>
+<p>When exactly one candidate remains, <code>Ctrl-F</code> autofills it. The wheel scrolls the list; a click selects; a double-click accepts. Only Enter ever runs anything — a suggestion is text until you commit to it.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="command-bar-drop">
+<h3 class="article-heading">The drop: files without typing paths</h3>
+<p>Grab a file in the panel with <code>g</code>, then press <code>Ctrl-G</code> over the bar: a paste menu opens offering the file as a name, as an absolute path, or as a path relative to the bar's working directory. Each row shows the exact text it will insert, so what you see is precisely what lands — quoted, at the cursor. The <a href="/products/agony/features/file-panel/">file panel page</a> shows that menu in motion.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="command-bar-audience" aria-labelledby="command-bar-audience-heading">
+<h2 class="section-heading" id="command-bar-audience-heading">Who it is for</h2>
+<article class="content-article" data-admin="content:content.css" id="command-bar-newcomers">
+<h3 class="article-heading">If commands do not stick in your head</h3>
+<p>The bar means you never have to remember a flag, a subcommand or a path spelling. Start typing what you think the command is; the ranking forgives typos and fragments. Wrong guesses cost nothing because nothing executes until Enter — the terminal stops being a place where a mistake runs something.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="command-bar-pros">
+<h3 class="article-heading">If you already know your commands</h3>
+<p>The bar is a launcher, not a replacement shell: Enter runs the line in a new window, the history is persisted where you can read it (<code>agony history</code> prints it, <code>--clear</code> empties it, the file lives in your AGony config directory as valid JSON even after a hard kill), and completions arrive through carapace as a subprocess with a timeout — the desktop never blocks on it, and the bar works without carapace installed, just quieter.</p>
+</article>
+</section>

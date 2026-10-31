@@ -1,0 +1,16 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "rootDir": ".",
+    "declaration": false,
+    "sourceMap": false
+  },
+  "include": [
+    "types/node-builtins.d.ts",
+    "src/**/*.ts",
+    "tools/admin/src/**/*.ts",
+    "REVIEW/tests/**/*.ts",
+    "playwright.config.ts"
+  ]
+}

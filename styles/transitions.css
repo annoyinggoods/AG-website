@@ -1,0 +1,48 @@
+/* Single responsibility: outgoing shake-drop plus incoming box beats. */
+@keyframes box-shake {
+  0% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(calc(-1 * var(--hover-nudge)));
+  }
+  50% {
+    transform: translateX(var(--hover-nudge));
+  }
+  75% {
+    transform: translateX(calc(-1 * var(--hover-nudge)));
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+@keyframes box-drop {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(60vh);
+    opacity: 0;
+  }
+}
+@keyframes box-enter-right {
+  from {
+    transform: translateX(40vw);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+.stage-header.is-leaving,
+.title-box.is-leaving,
+.main-box.is-leaving {
+  animation: box-shake var(--dur-shake) ease-in, box-drop var(--dur-drop) ease-in var(--dur-shake) forwards;
+}
+.stage-header.is-entering,
+.title-box.is-entering,
+.main-box.is-entering {
+  animation: box-enter-right var(--dur-enter) ease-out forwards;
+}

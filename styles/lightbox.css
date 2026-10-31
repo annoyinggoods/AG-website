@@ -1,0 +1,78 @@
+/* Single responsibility: full size image toast with a dimmed backdrop. */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-lightbox);
+  display: grid;
+  place-items: center;
+  padding: var(--gap-box);
+}
+.lightbox[hidden] {
+  display: none;
+}
+.lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--lightbox-veil);
+}
+.lightbox-frame {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+  max-width: min(92vw, 90rem);
+  max-height: 92vh;
+}
+.lightbox-image {
+  max-width: 100%;
+  max-height: 78vh;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: var(--radius-box);
+  box-shadow: var(--shadow-float);
+  cursor: zoom-out;
+}
+.lightbox-close {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 2.75rem;
+  padding: 0.5rem 1.1rem;
+  border: var(--hairline-w) solid var(--hairline);
+  border-radius: var(--radius-chip);
+  background: var(--chip);
+  color: var(--chip-ink);
+  font-family: var(--font-tiny);
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: transform var(--dur-hover) ease, background var(--dur-hover) ease, border-color var(--dur-hover) ease;
+}
+.lightbox-close:hover {
+  background: var(--chip-active);
+  border-color: var(--accent);
+  transform: translateY(-2px);
+}
+.lightbox-close:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.lightbox-close-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+}
+.lightbox-close-icon use {
+  stroke: currentColor;
+}
+body.lightbox-open {
+  overflow: hidden;
+}
+img[role="button"][aria-haspopup="dialog"] {
+  cursor: zoom-in;
+}
+img[role="button"][aria-haspopup="dialog"]:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}

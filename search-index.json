@@ -1,0 +1,806 @@
+[
+  {
+    "title": "Home",
+    "path": "/",
+    "parent": null,
+    "keywords": [
+      "home",
+      "studio"
+    ],
+    "excerpt": "A Spider-Themed Writing Studio Stories caught in a web Annoying Goods is a small writing studio with a horror-comedy heart. We build strange tools for writers, researchers, and role-players. Everythin…"
+  },
+  {
+    "title": "About",
+    "path": "/about/",
+    "parent": null,
+    "keywords": [
+      "studio",
+      "about"
+    ],
+    "excerpt": "About the Studio About Annoying Goods A spider-themed writing studio with a horror-comedy heart. Read our philosophy, principles, and what-and-why behind local-first writing tools. See what we build"
+  },
+  {
+    "title": "Philosophy",
+    "path": "/about/philosophy/",
+    "parent": "/about/",
+    "keywords": [
+      "studio",
+      "mission"
+    ],
+    "excerpt": "Philosophy Horror-comedy with a work ethic We believe writing tools should feel alive, a little creepy, and completely yours. No accounts forced on you. No data harvesting dressed up as convenience. L…"
+  },
+  {
+    "title": "Principles",
+    "path": "/about/principles/",
+    "parent": "/about/",
+    "keywords": [
+      "rules",
+      "principles"
+    ],
+    "excerpt": "Principles Simple, verbose, human-readable Plain HTML, CSS, and TypeScript with no frameworks. Small focused files with one clear job each. Accessibility is not optional: semantic markup, keyboard pat…"
+  },
+  {
+    "title": "What and Why",
+    "path": "/about/what-and-why/",
+    "parent": "/about/",
+    "keywords": [
+      "studio",
+      "why"
+    ],
+    "excerpt": "What and Why Why a spider studio Stories are webs: threads of plot, character, and research pulled tight. Our tools help you spin the web, spot the broken threads, and catch the good ideas. See what w…"
+  },
+  {
+    "title": "Products",
+    "path": "/products/",
+    "parent": null,
+    "keywords": [
+      "products"
+    ],
+    "excerpt": "Products Tools that keep your work close Everything the studio builds runs on your own machine and asks for nothing from anybody else. Most of it keeps your work in plain files too. The list below is…"
+  },
+  {
+    "title": "AGIT",
+    "path": "/products/agit/",
+    "parent": "/products/",
+    "keywords": [
+      "agit",
+      "writing"
+    ],
+    "excerpt": "The writing desk that remembers your story AGIT is our flagship writing environment for long projects: novels, series, scripts, essays, research. The draft, the notes, the story bible and the AI help…"
+  },
+  {
+    "title": "Features",
+    "path": "/products/agit/features/",
+    "parent": "/products/agit/",
+    "keywords": [
+      "features"
+    ],
+    "excerpt": "Features AGIT's features span fiction, non-fiction, research, role-play, and more. Pick an area to explore. Fiction Non-Fiction Research Role-Play External Tools Screens The same workspace, four ways…"
+  },
+  {
+    "title": "Fiction",
+    "path": "/products/agit/features/fiction/",
+    "parent": "/products/agit/features/",
+    "keywords": [
+      "fiction",
+      "novel"
+    ],
+    "excerpt": "Fiction AGIT helps novelists and short story writers track plots, characters, and drafts in one web. Every scene keeps its own thread, so nothing gets lost in the nest."
+  },
+  {
+    "title": "Non-Fiction",
+    "path": "/products/agit/features/non-fiction/",
+    "parent": "/products/agit/features/",
+    "keywords": [
+      "non-fiction",
+      "essay"
+    ],
+    "excerpt": "Non-Fiction Essays, guides, and documentation stay structured with outlines, boards, and an editor. AGIT editor view with a structured document"
+  },
+  {
+    "title": "Research",
+    "path": "/products/agit/features/research/",
+    "parent": "/products/agit/features/",
+    "keywords": [
+      "research"
+    ],
+    "excerpt": "Research Collect sources, index them locally, and chart what matters."
+  },
+  {
+    "title": "Import and Index",
+    "path": "/products/agit/features/research/import-and-index/",
+    "parent": "/products/agit/features/research/",
+    "keywords": [
+      "import",
+      "index"
+    ],
+    "excerpt": "Import and Index Bring in documents and notes, then search them instantly with a local index. AGIT outline view showing imported and indexed documents"
+  },
+  {
+    "title": "Compute and Chart",
+    "path": "/products/agit/features/research/compute-and-chart/",
+    "parent": "/products/agit/features/research/",
+    "keywords": [
+      "compute",
+      "chart",
+      "demo"
+    ],
+    "excerpt": "Compute and Chart Run local computations over research data and turn the results into charts. Sample output without JavaScript: 120 words, 8 sentences, top terms spider, web, silk. Sample text statist…"
+  },
+  {
+    "title": "MCP and External Tools",
+    "path": "/products/agit/features/research/mcp-and-external-tools/",
+    "parent": "/products/agit/features/research/",
+    "keywords": [
+      "mcp",
+      "tools"
+    ],
+    "excerpt": "MCP and External Tools Connect model context protocol tools and external helpers without sending private work away. AGIT boards view with connected research tools"
+  },
+  {
+    "title": "Automation",
+    "path": "/products/agit/features/research/automation/",
+    "parent": "/products/agit/features/research/",
+    "keywords": [
+      "automation",
+      "recipes"
+    ],
+    "excerpt": "Automation Automate repetitive chores like renaming, tagging, and exporting drafts."
+  },
+  {
+    "title": "Role-Play",
+    "path": "/products/agit/features/role-play/",
+    "parent": "/products/agit/features/",
+    "keywords": [
+      "role-play"
+    ],
+    "excerpt": "Role-Play Interview your own characters before they misbehave in chapter nine."
+  },
+  {
+    "title": "Roleplay for Writing",
+    "path": "/products/agit/features/role-play/roleplay-for-writing/",
+    "parent": "/products/agit/features/role-play/",
+    "keywords": [
+      "roleplay",
+      "writing"
+    ],
+    "excerpt": "Roleplay for Writing Use role-play sessions to test dialogue, motives, and world rules. AGIT chat view with a role-play writing session"
+  },
+  {
+    "title": "Roleplay for Fun",
+    "path": "/products/agit/features/role-play/roleplay-for-fun/",
+    "parent": "/products/agit/features/role-play/",
+    "keywords": [
+      "roleplay",
+      "fun"
+    ],
+    "excerpt": "Roleplay for Fun Let the spider play dungeon master when the manuscript needs a break."
+  },
+  {
+    "title": "External Tools",
+    "path": "/products/agit/features/external-tools/",
+    "parent": "/products/agit/features/",
+    "keywords": [
+      "external",
+      "tools"
+    ],
+    "excerpt": "External Tools AGIT plugs into the tools you already trust, keeping your files in plain formats."
+  },
+  {
+    "title": "Comparison",
+    "path": "/products/agit/comparison/",
+    "parent": "/products/agit/",
+    "keywords": [
+      "comparison",
+      "editions"
+    ],
+    "excerpt": "Comparison Why AGIT instead of the usual suspects Local first, so your drafts never become someone else's training data. Plain files, so you can leave any time and take the whole web with you. No subs…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/agit/download/",
+    "parent": "/products/agit/",
+    "keywords": [
+      "download",
+      "installer"
+    ],
+    "excerpt": "Download Get AGIT Desktop builds for writers who like their spiders close. One download page covers every build until a split is requested. Download the installer (535 MB) — AGIT 1.0.1 for Windows 10/…"
+  },
+  {
+    "title": "Privacy Policy",
+    "path": "/products/agit/privacy/",
+    "parent": "/products/agit/",
+    "keywords": [
+      "privacy"
+    ],
+    "excerpt": "Privacy Policy Which version prevails: the English text prevails in case of conflict. English AGIT runs locally and collects only functionality and necessary data. No advertising trackers, no social p…"
+  },
+  {
+    "title": "English",
+    "path": "/products/agit/privacy/en/",
+    "parent": "/products/agit/privacy/",
+    "keywords": [
+      "privacy",
+      "english"
+    ],
+    "excerpt": "English AGIT runs locally and collects only functionality and necessary data. No advertising trackers, no social pixels, no third-party data sharing."
+  },
+  {
+    "title": "Polish",
+    "path": "/products/agit/privacy/pl/",
+    "parent": "/products/agit/privacy/",
+    "keywords": [
+      "prywatnosc",
+      "polski"
+    ],
+    "excerpt": "Polska wersja AGIT działa lokalnie i zbiera wyłącznie dane funkcjonalne i niezbędne. Brak trackerów reklamowych, brak pikseli społecznościowych, brak udostępniania danych stronom trzecim. Wersja angie…"
+  },
+  {
+    "title": "AGrrr!",
+    "path": "/products/agrrr/",
+    "parent": "/products/",
+    "keywords": [
+      "agrrr",
+      "drafts"
+    ],
+    "excerpt": "Raw drafts with teeth AGrrr! is the studio's tool for the first messy pass of a web page. You throw raw material at a live canvas, and it growls back real HTML, CSS and JavaScript. No account, no uplo…"
+  },
+  {
+    "title": "AGnosis",
+    "path": "/products/agnosis/",
+    "parent": "/products/",
+    "keywords": [
+      "agnosis",
+      "memory"
+    ],
+    "excerpt": "A hotkey, a parade, and nobody's business The studio's joke that ships: press one hotkey and every open browser minimizes while a fullscreen parade of ASCII ducks claims the screen. All products The l…"
+  },
+  {
+    "title": "AGDevelop",
+    "path": "/products/agdevelop/",
+    "parent": "/products/",
+    "keywords": [
+      "agdevelop",
+      "workbench"
+    ],
+    "excerpt": "AGDevelop The studio workbench AGDevelop is planned as the internal toolkit the studio uses to build the other tools: the build that assembles these pages, the menu tree that feeds the navigation, and…"
+  },
+  {
+    "title": "yAGna",
+    "path": "/products/yagna/",
+    "parent": "/products/",
+    "keywords": [
+      "yagna",
+      "github",
+      "stars",
+      "library",
+      "offline"
+    ],
+    "excerpt": "Your stars, offline yAGna is a local-first library for a GitHub stars catalog that outgrew the GitHub UI. Every repo you ever starred comes down to your disk and stays there: READMEs with their images…"
+  },
+  {
+    "title": "AGony",
+    "path": "/products/agony/",
+    "parent": "/products/",
+    "keywords": [
+      "agony",
+      "terminal",
+      "tui",
+      "desktop"
+    ],
+    "excerpt": "A desktop that lives in a terminal AGony is a desktop environment for people who hate terminals but want to learn to like them, and for people whose memory for commands is short. It gives the terminal…"
+  },
+  {
+    "title": "Features",
+    "path": "/products/agony/features/",
+    "parent": "/products/agony/",
+    "keywords": [
+      "agony",
+      "features",
+      "tour"
+    ],
+    "excerpt": "Features Five things carry the AGony desktop, and each has its own page with a recording of the real thing in motion. The recordings were captured through a real terminal on a real machine — what you…"
+  },
+  {
+    "title": "Command Bar",
+    "path": "/products/agony/features/command-bar/",
+    "parent": "/products/agony/features/",
+    "keywords": [
+      "agony",
+      "command bar",
+      "completion",
+      "carapace"
+    ],
+    "excerpt": "The command bar Press Ctrl-K — or click the taskbar's status area — and a bar drops in along the taskbar edge with the focused pane's working directory at the left. Type, and suggestions appear before…"
+  },
+  {
+    "title": "Windows",
+    "path": "/products/agony/features/windows/",
+    "parent": "/products/agony/features/",
+    "keywords": [
+      "agony",
+      "windows",
+      "taskbar",
+      "wm"
+    ],
+    "excerpt": "Windows and the taskbar AGony windows are windows: a titlebar with the program's name, minimize, maximize and close buttons, a border you can grab. Drag a titlebar and the window moves; drag the botto…"
+  },
+  {
+    "title": "Start Menu",
+    "path": "/products/agony/features/start-menu/",
+    "parent": "/products/agony/features/",
+    "keywords": [
+      "agony",
+      "start menu",
+      "apps",
+      "catalog"
+    ],
+    "excerpt": "The start menu Ctrl-Space opens a menu with four roots: SEARCH opens the command bar, FILE MANAGER lists the common folders and drives, PROGRAMS holds the app catalog, and SETTINGS opens the settings…"
+  },
+  {
+    "title": "File Panel",
+    "path": "/products/agony/features/file-panel/",
+    "parent": "/products/agony/features/",
+    "keywords": [
+      "agony",
+      "files",
+      "panel",
+      "paste"
+    ],
+    "excerpt": "The file panel The panel is a tree of your working directory docked beside the shells. It is ignore-aware with git's exact semantics — inside a repository, target/ and friends simply do not appear, be…"
+  },
+  {
+    "title": "Settings",
+    "path": "/products/agony/features/settings/",
+    "parent": "/products/agony/features/",
+    "keywords": [
+      "agony",
+      "settings",
+      "themes",
+      "keys"
+    ],
+    "excerpt": "Settings and themes The settings window opens from the menu's SETTINGS root, focused on the section you came from. Appearance previews immediately: pick a theme and the desktop behind the window chang…"
+  },
+  {
+    "title": "Comparison",
+    "path": "/products/agony/comparison/",
+    "parent": "/products/agony/",
+    "keywords": [
+      "agony",
+      "comparison",
+      "tmux",
+      "zellij"
+    ],
+    "excerpt": "Comparison AGony is a desktop environment that lives in a terminal, so its real neighbors are the terminal multiplexers people reach for when one shell window stops being enough, and the terminal emul…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/agony/download/",
+    "parent": "/products/agony/",
+    "keywords": [
+      "agony",
+      "download",
+      "archive",
+      "checksum"
+    ],
+    "excerpt": "Download Get AGony 0.9.0 AGony ships as a small portable archive: the binary, a short install note and the Apache-2.0 license text. No installer wizard, no registry entries, no background service — un…"
+  },
+  {
+    "title": "License",
+    "path": "/products/agony/license/",
+    "parent": "/products/agony/",
+    "keywords": [
+      "agony",
+      "license",
+      "apache",
+      "credits"
+    ],
+    "excerpt": "License AGony is Apache-2.0 AGony, the desktop environment that lives in a terminal, is free and open-source software under the Apache License 2.0. In plain terms: You may use it at home, use it at wo…"
+  },
+  {
+    "title": "AG-web",
+    "path": "/products/ag-web/",
+    "parent": "/products/",
+    "keywords": [
+      "ag-web",
+      "website",
+      "stack",
+      "html",
+      "css"
+    ],
+    "excerpt": "The site you are reading AG-web is the Annoying Goods website itself — the pages, the menu, the spider and the search are all this one product. It is listed here because its stack is a statement: the…"
+  },
+  {
+    "title": "nAG",
+    "path": "/products/nAG/",
+    "parent": "/products/",
+    "keywords": [
+      "nag",
+      "game",
+      "memory"
+    ],
+    "excerpt": "The memory game that nags you nAG is a reverse-order memory game. You scout a shuffled board of cards, and then you replay the whole order in one perfect run. Turn over the wrong card and you lose a p…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/nAG/download/",
+    "parent": "/products/nAG/",
+    "keywords": [
+      "download",
+      "archive"
+    ],
+    "excerpt": "Download Get nAG {{nag_version}} nAG ships as one small archive with the whole game in it. No installer, no runtime, no setup — unzip it and open index.html in any browser. It works offline, and it ne…"
+  },
+  {
+    "title": "drAGhts",
+    "path": "/products/drAGhts/",
+    "parent": "/products/",
+    "keywords": [
+      "draghts",
+      "game",
+      "checkers",
+      "browser"
+    ],
+    "excerpt": "Chaotic checkers with house rules drAGhts is checkers with eight toggleable house rules. You set the chaos before the game, then you play hot-seat with a friend or against the computer. Miss a kill an…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/drAGhts/download/",
+    "parent": "/products/drAGhts/",
+    "keywords": [
+      "download",
+      "archive"
+    ],
+    "excerpt": "Download Get drAGhts {{draghts_version}} drAGhts ships as one small archive with the whole game in it. No installer, no runtime, no setup — unzip it and open index.html in any browser. It works offlin…"
+  },
+  {
+    "title": "Playground",
+    "path": "/playground/",
+    "parent": null,
+    "keywords": [
+      "playground",
+      "games",
+      "wasm",
+      "experiments"
+    ],
+    "excerpt": "Small games, tiny WASM The playground is where the studio's small things live: little games and tiny WebAssembly projects that are too small for a product page of their own and too playful for the lab…"
+  },
+  {
+    "title": "drAGhts",
+    "path": "/playground/one/",
+    "parent": "/playground/",
+    "keywords": [
+      "playground",
+      "game",
+      "checkers",
+      "draghts"
+    ],
+    "excerpt": "drAGhts Chaotic checkers with eight toggleable house rules. Play a friend hot-seat or face the computer, right here on this page. End Turn Playground Product page Download"
+  },
+  {
+    "title": "Game Two",
+    "path": "/playground/two/",
+    "parent": "/playground/",
+    "keywords": [
+      "playground",
+      "game",
+      "wasm",
+      "slot-two"
+    ],
+    "excerpt": "Slot Two This slot is reserved for the second small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with no…"
+  },
+  {
+    "title": "Game Three",
+    "path": "/playground/three/",
+    "parent": "/playground/",
+    "keywords": [
+      "playground",
+      "game",
+      "wasm",
+      "slot-three"
+    ],
+    "excerpt": "Slot Three This slot is reserved for the third small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with n…"
+  },
+  {
+    "title": "Game Four",
+    "path": "/playground/four/",
+    "parent": "/playground/",
+    "keywords": [
+      "playground",
+      "game",
+      "wasm",
+      "slot-four"
+    ],
+    "excerpt": "Slot Four This slot is reserved for the fourth small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with n…"
+  },
+  {
+    "title": "nAG",
+    "path": "/playground/nAG/",
+    "parent": "/playground/",
+    "keywords": [
+      "playground",
+      "game",
+      "memory",
+      "nag"
+    ],
+    "excerpt": "nAG A reverse-order memory game. Scout the shuffled board, then replay the whole order in one perfect run. Six levels, from four-by-four pairs up to a memorised twenty-five card order, and every mista…"
+  },
+  {
+    "title": "Labs",
+    "path": "/labs/",
+    "parent": null,
+    "keywords": [
+      "labs"
+    ],
+    "excerpt": "Prototypes Fresh silk New experiments fresh from the workbench, still sticky and untested. Try them early and tell the spider what broke. Prototype boards view with early experiment cards Workbench ro…"
+  },
+  {
+    "title": "Prototypes",
+    "path": "/labs/prototypes/",
+    "parent": "/labs/",
+    "keywords": [
+      "prototypes"
+    ],
+    "excerpt": "Prototypes Rough, disposable, one question A prototype exists to answer a single question. When the question is answered, the prototype is usually thrown away, even when it worked. Nothing here is fin…"
+  },
+  {
+    "title": "Alpha",
+    "path": "/labs/alpha/",
+    "parent": "/labs/",
+    "keywords": [
+      "alpha"
+    ],
+    "excerpt": "Alpha Usable, unstable, sharp edges An alpha build works well enough to be worth using. It is not finished, and it is not guarded. Features may change, move, or disappear without warning. Work you do…"
+  },
+  {
+    "title": "Failed",
+    "path": "/labs/failed/",
+    "parent": "/labs/",
+    "keywords": [
+      "failed",
+      "post-mortem"
+    ],
+    "excerpt": "Failed The shelf, kept on purpose Experiments that did not survive are archived here with a one line reason. A failed build is a result, not a shame, and it is usually cheaper to read the reason than…"
+  },
+  {
+    "title": "Workflow",
+    "path": "/labs/workflow/",
+    "parent": "/labs/",
+    "keywords": [
+      "workflow",
+      "pipeline"
+    ],
+    "excerpt": "Workflow How experiments graduate Every idea in the labs starts the same way, with a question and a short life. Most of them stop early. The ones that keep going pass through a fixed sequence. The sta…"
+  },
+  {
+    "title": "Blog",
+    "path": "/blog/",
+    "parent": null,
+    "keywords": [
+      "blog"
+    ],
+    "excerpt": "Blog Notes from the nest Studio news, strange ideas, and horror-comedy observations. Five shelves, no feed, no algorithm: every post is filed under a shelf and read in the order it was written. Dev Up…"
+  },
+  {
+    "title": "Dev Updates",
+    "path": "/blog/dev-updates/",
+    "parent": "/blog/",
+    "keywords": [
+      "dev",
+      "updates"
+    ],
+    "excerpt": "Dev Updates Notes from the workbench What moved this week, what broke, and what is still a mess. Short notes, written while the ink is wet. Older posts live on the blog index . The menu tree learned t…"
+  },
+  {
+    "title": "Release Notes",
+    "path": "/blog/release-notes/",
+    "parent": "/blog/",
+    "keywords": [
+      "release",
+      "notes"
+    ],
+    "excerpt": "Release Notes What shipped, and what broke A plain changelog of the studio site and its tooling. Newest first. Older notes live on the blog index . October release notes The navigation rebuilt around…"
+  },
+  {
+    "title": "Technical Dives",
+    "path": "/blog/technical-dives/",
+    "parent": "/blog/",
+    "keywords": [
+      "technical"
+    ],
+    "excerpt": "Technical Dives Long reads on the small decisions How the parts work and why they were built that way. Written for readers who like to know. Older posts live on the blog index . Counting words without…"
+  },
+  {
+    "title": "Design Decisions",
+    "path": "/blog/design-decisions/",
+    "parent": "/blog/",
+    "keywords": [
+      "design"
+    ],
+    "excerpt": "Design Decisions Why it is built this way Decisions the studio is willing to defend, written down so they can be argued with. Older posts live on the blog index . Why every page is a folder Every page…"
+  },
+  {
+    "title": "Other",
+    "path": "/blog/other/",
+    "parent": "/blog/",
+    "keywords": [
+      "other"
+    ],
+    "excerpt": "Other Everything that fits nowhere else Notes, oddments, and the occasional complaint about our own tools. Older posts live on the blog index . The spider on the 404 page The 404 page has a spider in…"
+  },
+  {
+    "title": "Words",
+    "path": "/words/",
+    "parent": null,
+    "keywords": [
+      "words"
+    ],
+    "excerpt": "Short Stories Small webs, sharp teeth Standfirst: a one-line hook before the body begins. Original short fiction from the studio with a horror-comedy bite. Each story is easily expandable: new tales s…"
+  },
+  {
+    "title": "Short Stories",
+    "path": "/words/short-stories/",
+    "parent": "/words/",
+    "keywords": [
+      "short",
+      "stories"
+    ],
+    "excerpt": "Short Stories Original fiction from the studio Short stories with a horror comedy bite. Open a title to read the whole piece right here on this page. The Tenant of the Attic Window A girl signs for a…"
+  },
+  {
+    "title": "AI Stories",
+    "path": "/words/ai-stories/",
+    "parent": "/words/",
+    "keywords": [
+      "ai",
+      "stories"
+    ],
+    "excerpt": "AI Stories Machines in the loop Fiction written with a machine in the room. Each story carries a plain note on how it was made and what the author kept. Draft the Silence A machine writes the pauses.…"
+  },
+  {
+    "title": "Research",
+    "path": "/words/research/",
+    "parent": "/words/",
+    "keywords": [
+      "research",
+      "notes"
+    ],
+    "excerpt": "Research Notes from the library web Research notes behind the fiction and the tools. The method is stated first, then the findings. Why Local First Tools Keep Their Notes A short look at why plain loc…"
+  },
+  {
+    "title": "Support",
+    "path": "/support/",
+    "parent": null,
+    "keywords": [
+      "support"
+    ],
+    "excerpt": "FAQ Is AGIT free The core writing desk is built to stay affordable with no data harvesting. Where is my data stored Locally, in plain files you can copy, back up, and keep forever. Which browsers work…"
+  },
+  {
+    "title": "FAQ",
+    "path": "/support/faq/",
+    "parent": "/support/",
+    "keywords": [
+      "faq"
+    ],
+    "excerpt": "FAQ The short answers Plain questions with plain answers. If yours is not here, ask through the contact page . What is AGIT AGIT is the studio's writing and research companion. It keeps drafts, outlin…"
+  },
+  {
+    "title": "GitHub",
+    "path": "/support/github/",
+    "parent": "/support/",
+    "keywords": [
+      "github",
+      "repos"
+    ],
+    "excerpt": "GitHub The source is public The studio keeps the source of this site in a public repository. Read it, copy it, check what it does with your data, or run it on your own machine. Issues can be reported…"
+  },
+  {
+    "title": "Privacy Policy",
+    "path": "/support/privacy-policy/",
+    "parent": "/support/",
+    "keywords": [
+      "privacy",
+      "policy"
+    ],
+    "excerpt": "Privacy Policy Plain language. Short summary first, details after. Last reviewed 19 October 2026 . In short This site does not track you. It collects nothing unless you type a message and send it your…"
+  },
+  {
+    "title": "Terms of Use",
+    "path": "/support/terms-of-use/",
+    "parent": "/support/",
+    "keywords": [
+      "terms"
+    ],
+    "excerpt": "Terms of Use Rules of use, user responsibilities, and liability limits in plain language. Last reviewed 19 October 2026 . In short Use the site lawfully, use the forms honestly, and do not republish t…"
+  },
+  {
+    "title": "Contact",
+    "path": "/contact/",
+    "parent": null,
+    "keywords": [
+      "contact"
+    ],
+    "excerpt": "Contact Two ways to reach us Every message is read by a person at the studio. Pick the door that fits your problem and the spider will pick it up. Report a bug Something broke, threw an error, or beha…"
+  },
+  {
+    "title": "Report Bug",
+    "path": "/contact/report-bug/",
+    "parent": "/contact/",
+    "keywords": [
+      "bug",
+      "report"
+    ],
+    "excerpt": "Report Bug Form Tell the spider what snapped Something broke and you would like it fixed. Say so here, in plain words. Both forms work without JavaScript as a progressive enhancement. Describe the bug…"
+  },
+  {
+    "title": "Request a Feature",
+    "path": "/contact/request-feature/",
+    "parent": "/contact/",
+    "keywords": [
+      "feature",
+      "request"
+    ],
+    "excerpt": "Request a Feature Form Spin a new thread You want a tool to do something it cannot do yet. Describe it here, once, clearly. Tell us which product the idea is for and why it matters to writers. One cle…"
+  },
+  {
+    "title": "How the suite tests without a framework",
+    "path": "/blog/how-the-suite-tests-without-a-framework/",
+    "parent": "/blog/",
+    "keywords": [
+      "testing",
+      "engineering",
+      "studio",
+      "blog"
+    ],
+    "excerpt": "The test suite is a folder of spec files that open a real browser and drive the real page. There is no test framework, no mock library, and no virtual DOM, and the reason is the same reason the site h…"
+  },
+  {
+    "title": "What the performance budget actually buys",
+    "path": "/blog/what-the-performance-budget-actually-buys/",
+    "parent": "/blog/",
+    "keywords": [
+      "performance",
+      "testing",
+      "engineering",
+      "blog"
+    ],
+    "excerpt": "The home page carries a transfer budget of seven hundred and fifty kilobytes, and the number is written into the test suite. It is not there to make the file smaller. It is there to make the argument…"
+  },
+  {
+    "title": "Why the site is still static",
+    "path": "/blog/why-the-site-is-still-static/",
+    "parent": "/blog/",
+    "keywords": [
+      "design",
+      "performance",
+      "studio",
+      "blog"
+    ],
+    "excerpt": "Every page on this site is a folder with an index file inside it, and every one of them was written by hand. That is not nostalgia and it is not stubbornness, it is the cheapest way to publish a page…"
+  },
+  {
+    "title": "Notes from the library web",
+    "path": "/words/notes-from-the-library-web/",
+    "parent": "/words/",
+    "keywords": [
+      "research",
+      "notes",
+      "reading",
+      "words"
+    ],
+    "excerpt": "These are the notes behind the research essays, and they live in plain files on one disk because that is where research belongs until it is ready to be a page. What a source owes the writer A source o…"
+  },
+  {
+    "title": "Small webs, sharp teeth",
+    "path": "/words/small-webs-sharp-teeth/",
+    "parent": "/words/",
+    "keywords": [
+      "fiction",
+      "short story",
+      "spiders",
+      "words"
+    ],
+    "excerpt": "The house had a web in the corner that nobody had built, and Marla decided it was a message rather than a mistake. She had been in the house for six weeks, long enough to know that the kitchen tap dri…"
+  }
+]

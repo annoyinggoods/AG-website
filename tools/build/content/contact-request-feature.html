@@ -1,0 +1,41 @@
+<section class="content-section" data-admin="content:content.css" id="request-feature-form" aria-labelledby="feature-heading">
+<h2 class="section-heading" id="feature-heading">Request a Feature Form</h2>
+<article class="content-article" data-admin="content:content.css" id="request-feature-intro">
+<h3 class="article-heading">Spin a new thread</h3>
+<p>You want a tool to do something it cannot do yet. Describe it here, once, clearly.</p>
+<p>Tell us which product the idea is for and why it matters to writers.</p>
+<form class="contact-form" action="mailto:features@annoyinggoods.com?subject=Feature%20request" method="post" enctype="text/plain" data-endpoint="/api/contact/" aria-describedby="feature-help">
+<p class="form-help" id="feature-help">One clear idea per message helps the spider weave faster. Fields marked required must be filled.</p>
+<div class="form-field">
+<label for="feature-area">Product area</label>
+<select id="feature-area" name="area" required>
+<option value="">Choose a product area</option>
+<option value="agit">AGIT</option>
+<option value="agrrr">AGrrr!</option>
+<option value="agnosis">AGnosis</option>
+<option value="agdevelop">AGDevelop</option>
+<option value="website">Website</option>
+</select>
+</div>
+<div class="form-field">
+<label for="feature-title">Title</label>
+<input type="text" id="feature-title" name="title" required autocomplete="off" placeholder="One line that names the idea…">
+</div>
+<div class="form-field">
+<label for="feature-description">Description</label>
+<textarea id="feature-description" name="description" rows="6" required autocomplete="off" placeholder="Describe the idea and why it matters…"></textarea>
+</div>
+<div class="form-field">
+<label for="feature-usecase">Use case (optional)</label>
+<textarea id="feature-usecase" name="usecase" rows="3" autocomplete="off" placeholder="How you would use it…"></textarea>
+</div>
+<div class="form-field">
+<label for="feature-email">Contact email (optional)</label>
+<input type="email" id="feature-email" name="email" autocomplete="email" placeholder="you@example.com…">
+</div>
+<div class="form-trap" aria-hidden="true"><label for="feature-trap">Leave this field empty</label><input type="text" id="feature-trap" name="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit">Send feature request</button>
+<p class="form-status" data-form-status role="status" aria-live="polite"></p>
+</form>
+</article>
+</section>

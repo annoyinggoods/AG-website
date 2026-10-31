@@ -1,0 +1,257 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["v*"]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type PUBLISH to confirm a manual production release."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+env:
+  STAGING_FOLDER: /home/www/annoyinggoods-staging
+  PRODUCTION_FOLDER: /home/www/annoyinggoods
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Lint the sources and the pixel units
+        run: npm run lint
+      - name: Type check every TypeScript file
+        run: npm run typecheck
+
+  build:
+    name: Build
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Build the site, the scripts and the panel
+        run: npm run build
+      - name: Pack the release
+        run: node tools/build/package.mjs
+      - name: The release carries no admin code
+        run: |
+          if [ -e "dist/tools" ] || [ -e "dist/admin" ]; then
+            echo "::error::The release carries the admin code, so it must not go out."
+            exit 1
+          fi
+          echo "The release carries no admin code."
+      - name: Upload the release
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
+
+  unit:
+    name: Rust unit tests
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Run the Rust unit tests
+        run: cargo test --manifest-path wasm/Cargo.toml
+
+  test:
+    name: Playwright desktop
+    needs: [build, unit]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: Build the site
+        run: npm run build
+      - name: Run the test suite
+        run: npx playwright test
+      - name: Write the test summary
+        if: always()
+        run: node tools/build/test-summary.mjs
+
+  test-phone:
+    name: Playwright phone
+    needs: [build, unit]
+    runs-on: ubuntu-latest
+    env:
+      AG_TEST_PROFILE: mobile
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: Build the site
+        run: npm run build
+      - name: Run the phone tests
+        run: npx playwright test --project=mobile REVIEW/tests/smoke.spec.ts REVIEW/tests/layout.spec.ts REVIEW/tests/menu.spec.ts REVIEW/tests/hero.spec.ts REVIEW/tests/entries.spec.ts REVIEW/tests/a11y.spec.ts REVIEW/tests/a11y-keyboard.spec.ts REVIEW/tests/menu-gestures.spec.ts REVIEW/tests/performance.spec.ts REVIEW/tests/cookies.spec.ts REVIEW/tests/carousel.spec.ts REVIEW/tests/transitions.spec.ts REVIEW/tests/chart-demo.spec.ts REVIEW/tests/forms.spec.ts REVIEW/tests/events.spec.ts
+      - name: Write the test summary
+        if: always()
+        run: node tools/build/test-summary.mjs
+
+  test-reduced:
+    name: Playwright reduced motion
+    needs: [build, unit]
+    runs-on: ubuntu-latest
+    env:
+      AG_TEST_PROFILE: reduced
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: Build the site
+        run: npm run build
+      - name: Run the reduced motion tests
+        run: npx playwright test --project=reduced REVIEW/tests/smoke.spec.ts REVIEW/tests/entries.spec.ts REVIEW/tests/events.spec.ts REVIEW/tests/menu.spec.ts REVIEW/tests/search.spec.ts REVIEW/tests/a11y.spec.ts REVIEW/tests/a11y-keyboard.spec.ts REVIEW/tests/cookies.spec.ts REVIEW/tests/forms.spec.ts REVIEW/tests/chart-demo.spec.ts REVIEW/tests/layout.spec.ts
+      - name: Write the test summary
+        if: always()
+        run: node tools/build/test-summary.mjs
+
+  staging:
+    name: Staging
+    needs: [test, test-phone, test-reduced]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: Write the staging key
+        env:
+          AG_STAGING_SSH_KEY: ${{ secrets.AG_STAGING_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$AG_STAGING_SSH_KEY" > ~/.ssh/ag_staging_key
+          chmod 600 ~/.ssh/ag_staging_key
+      - name: Publish to the staging folder
+        env:
+          AG_DEPLOY_SERVER: ${{ secrets.AG_DEPLOY_SERVER }}
+          AG_DEPLOY_USER: ${{ secrets.AG_DEPLOY_USER }}
+        run: |
+          pwsh -File tools/deploy/publish.ps1 -Mode publish -Staging -Folder "$STAGING_FOLDER" -Server "$AG_DEPLOY_SERVER" -User "$AG_DEPLOY_USER" -KeyFile ~/.ssh/ag_staging_key
+      - name: Repair the permissions
+        env:
+          AG_DEPLOY_SERVER: ${{ secrets.AG_DEPLOY_SERVER }}
+          AG_DEPLOY_USER: ${{ secrets.AG_DEPLOY_USER }}
+        run: |
+          pwsh -File tools/deploy/publish.ps1 -Mode fix -Staging -Folder "$STAGING_FOLDER" -Server "$AG_DEPLOY_SERVER" -User "$AG_DEPLOY_USER" -KeyFile ~/.ssh/ag_staging_key
+
+  production:
+    name: Production
+    needs: [staging]
+    if: github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+      - name: Install the dependencies
+        run: npm ci
+      - name: Install the browser
+        run: npx playwright install --with-deps chromium
+      - name: The pre-deploy checklist
+        env:
+          AG_CONFIRM: ${{ inputs.confirm }}
+        run: |
+          echo "## Pre-deploy checklist" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Every URL in sitemap.xml answers with HTTP 200." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The 404 page answers with a real 404 status." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The cookie banner appears on a first visit, and the answer survives a reload." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The forms post to the first-party endpoint and the status message confirms the send." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The network log shows no request that leaves the domain." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The theme pill, the menu search, the mobile bubble, the forms and the demo work in both themes." >> "$GITHUB_STEP_SUMMARY"
+          echo "- The transfer budget for the home page stays under 750 KB, and the heavy hero plates wait for the animation." >> "$GITHUB_STEP_SUMMARY"
+          echo "- npm run lint, npm run build and npm test are green." >> "$GITHUB_STEP_SUMMARY"
+          echo ""
+          cat "$GITHUB_STEP_SUMMARY"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ "$AG_CONFIRM" != "PUBLISH" ]; then
+            echo "::error::A manual production release needs the confirmation PUBLISH in the workflow input."
+            exit 1
+          fi
+          echo "The environment protection rules of the production environment are the second confirmation."
+      - name: Write the production key
+        env:
+          AG_PRODUCTION_SSH_KEY: ${{ secrets.AG_PRODUCTION_SSH_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$AG_PRODUCTION_SSH_KEY" > ~/.ssh/ag_production_key
+          chmod 600 ~/.ssh/ag_production_key
+      - name: Publish to the production folder
+        env:
+          AG_DEPLOY_SERVER: ${{ secrets.AG_DEPLOY_SERVER }}
+          AG_DEPLOY_USER: ${{ secrets.AG_DEPLOY_USER }}
+        run: |
+          pwsh -File tools/deploy/publish.ps1 -Mode publish -Folder "$PRODUCTION_FOLDER" -Server "$AG_DEPLOY_SERVER" -User "$AG_DEPLOY_USER" -KeyFile ~/.ssh/ag_production_key
+      - name: Repair the permissions
+        env:
+          AG_DEPLOY_SERVER: ${{ secrets.AG_DEPLOY_SERVER }}
+          AG_DEPLOY_USER: ${{ secrets.AG_DEPLOY_USER }}
+        run: |
+          pwsh -File tools/deploy/publish.ps1 -Mode fix -Folder "$PRODUCTION_FOLDER" -Server "$AG_DEPLOY_SERVER" -User "$AG_DEPLOY_USER" -KeyFile ~/.ssh/ag_production_key

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-panel="admin">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Annoying Goods control panel</title>
+<link rel="stylesheet" href="admin.css">
+</head>
+<body class="panel-body">
+<a class="skip-link" href="#panel-main">Skip to the panel</a>
+<header class="panel-header">
+<div class="panel-brand">
+<span class="panel-mark" aria-hidden="true"></span>
+<h1 class="panel-title">Annoying Goods control panel</h1>
+</div>
+<nav class="panel-tabs" aria-label="Panel views">
+<button type="button" class="panel-tab" data-panel-tab="inspector" aria-pressed="true" aria-controls="panel-view-inspector">Visual inspector</button>
+<button type="button" class="panel-tab" data-panel-tab="editor" aria-pressed="false" aria-controls="panel-view-editor">Content editor</button>
+<button type="button" class="panel-tab" data-panel-tab="deploy" aria-pressed="false" aria-controls="panel-view-deploy">Deploy panel</button>
+</nav>
+<p class="panel-stale" data-panel-stale role="alert" hidden></p>
+<p class="panel-status" data-panel-status role="status"></p>
+</header>
+
+<main class="panel-main" id="panel-main">
+
+<section class="panel-view" id="panel-view-inspector" data-panel-view="inspector" aria-labelledby="panel-view-inspector-heading">
+<h2 class="panel-heading" id="panel-view-inspector-heading">Visual inspector</h2>
+<div class="inspector-layout">
+<div class="inspector-frame">
+<div class="inspector-toolbar">
+<label class="panel-field">
+<span>Page</span>
+<select data-inspector-page>
+<option value="/">Home</option>
+</select>
+</label>
+<button type="button" class="panel-button" data-inspector-reload>Reload preview</button>
+<span class="inspector-hint">Click any element in the preview.</span>
+</div>
+<iframe class="inspector-preview" data-inspector-preview title="Preview of the built site" src="/"></iframe>
+</div>
+<div class="inspector-popup" data-inspector-popup hidden>
+<h3 class="panel-subheading">Selected element</h3>
+<p class="inspector-target" data-inspector-target></p>
+<dl class="inspector-meta">
+<dt>Category</dt>
+<dd data-inspector-category></dd>
+<dt>Source file</dt>
+<dd data-inspector-file></dd>
+</dl>
+<div class="inspector-fields" data-inspector-fields></div>
+<div class="inspector-actions">
+<button type="button" class="panel-button panel-button-primary" data-inspector-save>Save to file</button>
+<button type="button" class="panel-button" data-inspector-reset>Reset</button>
+<button type="button" class="panel-button" data-inspector-export>Export the change</button>
+</div>
+<p class="inspector-note" data-inspector-note></p>
+<div class="inspector-export">
+<h3 class="panel-subheading">Change to copy by hand</h3>
+<p class="inspector-hint">This is the same change without the helper, so the file can be edited by hand.</p>
+<pre class="inspector-snippet" data-inspector-export-text tabindex="0"></pre>
+</div>
+</div>
+</div>
+<div class="inspector-registry">
+<h3 class="panel-subheading">Element registry</h3>
+<p class="inspector-hint">The categories the built pages use. A category the panel does not know is named here.</p>
+<ul class="registry-list" data-inspector-registry></ul>
+</div>
+</section>
+
+<section class="panel-view" id="panel-view-editor" data-panel-view="editor" aria-labelledby="panel-view-editor-heading" hidden>
+<h2 class="panel-heading" id="panel-view-editor-heading">Content editor</h2>
+<div class="editor-layout">
+<div class="editor-list">
+<label class="panel-field">
+<span>Page</span>
+<select data-editor-page></select>
+</label>
+<p class="editor-hint" data-editor-hint></p>
+<ul class="editor-entries" data-editor-entries></ul>
+<div class="editor-actions">
+<button type="button" class="panel-button panel-button-primary" data-editor-create>Add new entry</button>
+</div>
+<div class="editor-trash">
+<h3 class="panel-subheading">Trash</h3>
+<p class="editor-hint">A deleted entry waits here. Restore puts it back into its section.</p>
+<ul class="editor-entries" data-editor-trash></ul>
+</div>
+</div>
+<div class="editor-form" data-editor-form hidden>
+<label class="panel-field">
+<span>Title</span>
+<input type="text" data-editor-title>
+</label>
+<label class="panel-field">
+<span>Date</span>
+<input type="date" data-editor-date>
+</label>
+<label class="panel-field">
+<span>Tags</span>
+<input type="text" data-editor-tags>
+</label>
+<label class="panel-field">
+<span>Excerpt (optional)</span>
+<input type="text" data-editor-excerpt>
+</label>
+<label class="panel-field">
+<span>Standfirst (optional)</span>
+<input type="text" data-editor-standfirst>
+</label>
+<label class="panel-field">
+<span>Author note (optional)</span>
+<input type="text" data-editor-author>
+</label>
+<label class="panel-field">
+<span>Markdown</span>
+<textarea rows="18" data-editor-body></textarea>
+</label>
+<aside class="editor-guide">
+<h3 class="panel-subheading">Guide</h3>
+<p>Headings run from H2 to H6. The page already owns the H1, so the body starts at level two.</p>
+<p>Use <strong>bold</strong> and <em>italic</em> for emphasis.</p>
+<p>Every image needs a description, because the description becomes the alt text: <code>![A short description](assets/pictures/name.webp "800x450")</code></p>
+<p>The size after the path is optional and keeps the page from jumping while the picture arrives.</p>
+<p>An excerpt replaces the first forty five words on the index card. A standfirst and an author note appear on the detail page.</p>
+</aside>
+<div class="editor-preview">
+<h3 class="panel-subheading">Index card preview</h3>
+<div class="editor-card" data-editor-card></div>
+</div>
+<div class="editor-actions">
+<button type="button" class="panel-button panel-button-primary" data-editor-publish>Create and publish</button>
+<button type="button" class="panel-button" data-editor-draft>Save for later</button>
+<button type="button" class="panel-button panel-button-danger" data-editor-delete>Move to trash</button>
+<button type="button" class="panel-button" data-editor-export>Export the markdown</button>
+<button type="button" class="panel-button" data-editor-cancel>Close</button>
+</div>
+<p class="editor-note" data-editor-note></p>
+<div class="editor-export">
+<h3 class="panel-subheading">Markdown to copy by hand</h3>
+<p class="editor-hint">This is the file the panel would write, so it can be saved by hand without the helper.</p>
+<pre class="inspector-snippet" data-editor-export-text tabindex="0"></pre>
+</div>
+</div>
+</div>
+</section>
+
+<section class="panel-view" id="panel-view-deploy" data-panel-view="deploy" aria-labelledby="panel-view-deploy-heading" hidden>
+<h2 class="panel-heading" id="panel-view-deploy-heading">Deploy panel</h2>
+<form class="deploy-form" data-deploy-form>
+<label class="panel-field">
+<span>SSH host address</span>
+<input type="text" data-deploy-server autocomplete="off" spellcheck="false">
+</label>
+<label class="panel-field">
+<span>User name</span>
+<input type="text" data-deploy-user autocomplete="off" spellcheck="false">
+</label>
+<label class="panel-field">
+<span>Password</span>
+<input type="password" data-deploy-password autocomplete="off">
+</label>
+<label class="panel-field">
+<span>Folder</span>
+<input type="text" data-deploy-folder value="/home/www/annoyinggoods" spellcheck="false">
+</label>
+<label class="panel-field">
+<span>Port</span>
+<input type="number" data-deploy-port value="22" min="1" max="65535">
+</label>
+<div class="deploy-actions">
+<button type="button" class="panel-button" data-deploy-check>Check connection</button>
+<button type="button" class="panel-button panel-button-primary" data-deploy-publish>Publish to IONOS</button>
+<button type="button" class="panel-button" data-deploy-fix>Fix server permissions</button>
+</div>
+</form>
+<div class="deploy-reply">
+<h3 class="panel-subheading">Server reply</h3>
+<pre class="deploy-output" data-deploy-output role="log" aria-live="polite" tabindex="0"></pre>
+<p class="editor-hint" data-deploy-snapshot></p>
+</div>
+<div class="deploy-manual">
+<h3 class="panel-subheading">Without the helper</h3>
+<p>The panel exports the exact command, so a release can go out from a plain PowerShell window. The password travels in the AG_DEPLOY_PASSWORD environment variable and never in the command line.</p>
+<pre class="deploy-command" data-deploy-command></pre>
+<button type="button" class="panel-button" data-deploy-export>Export the publish command</button>
+<p class="editor-hint">A publish keeps a snapshot of the build output in dist/snapshots/, named after the release time, so a bad publish can be undone by publishing the snapshot again.</p>
+</div>
+</section>
+
+</main>
+<script type="module" src="scripts/main.js"></script>
+</body>
+</html>

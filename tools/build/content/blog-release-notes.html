@@ -1,0 +1,44 @@
+<section class="content-section" data-admin="content:content.css" id="release-notes" aria-labelledby="release-notes-heading">
+<h2 class="section-heading" id="release-notes-heading">Release Notes</h2>
+<article class="content-article" data-admin="content:content.css" id="release-notes-intro">
+<h3 class="article-heading">What shipped, and what broke</h3>
+<p>A plain changelog of the studio site and its tooling. Newest first.</p>
+<p>Older notes live on the <a href="/blog/">blog index</a>.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="release-october">
+<h3 class="article-heading"><a class="entry-open" href="#release-october">October release notes</a></h3>
+<p class="entry-excerpt">The navigation rebuilt around a single menu tree, so the links, the search index, and the sitemap can no longer drift apart. The chart demo now loads its heavy parts only when you scroll it into view. The site is quieter and faster to read...</p>
+<div class="entry-body" data-entry-body="release-october" hidden>
+<p>The navigation rebuilt around a single menu tree, so the links, the search index, and the sitemap can no longer drift apart. The chart demo now loads its heavy parts only when you scroll it into view. The site is quieter and faster to read... That is the whole list. Small numbers, small sentences, and a page that does less work than it used to.</p>
+<p>The menu tree moved into one file that the navigation, the search index and the sitemap all read. Before this, each of those had its own copy of the site, and the copies aged at different rates. A page added in one place was missing from the others for weeks, and nobody noticed until a reader typed an address from the search box and got the spider.</p>
+<p>The chart demo was the heavy part. It now waits until the chart is close to the screen before it starts, so a reader who never scrolls that far never pays for it. The page does the same amount of work on a slow connection as on a fast one, which is the standard we hold everything to.</p>
+<p>Also in this release, the search box matches on page titles as well as body text, the link back to the top works from the middle of a long page, and the site no longer flashes its old theme before the new one loads. The last one was a small embarrassment that many people never saw and some people saw every day.</p>
+<p>Known rough edges: the search does not look inside documents yet, and the mobile menu still takes a moment longer than it should on a cold connection. Both are written down and both are small enough to argue about next month.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-10-12">12 October 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="release-september">
+<h3 class="article-heading"><a class="entry-open" href="#release-september">September release notes</a></h3>
+<p class="entry-excerpt">The hero animation waits for a click before it starts. Nobody asked for that, but the page used to move while you were reading it, which is its own kind of noise. The first click now opens the curtain. Everything else stayed as it was...</p>
+<div class="entry-body" data-entry-body="release-september" hidden>
+<p>The hero animation waits for a click before it starts. Nobody asked for that, but the page used to move while you were reading it, which is its own kind of noise. The first click now opens the curtain. Everything else stayed as it was... That last sentence is mostly true. The rest of the month went into the details below.</p>
+<p>The home page had a spider weaving above the fold while the copy underneath tried to hold still. On a fast machine that was atmospheric. On a slow one it was a page that moved while you read it, which is its own kind of noise, and no amount of good animation fixes a page that will not hold still.</p>
+<p>The hero now shows a resting spider until you click it. The click starts the weaving, the button says what it does, and the page below stops moving. There is also a text alternative for people who never click and for readers of screen readers, since an image that only exists after an interaction needs a description that exists before it.</p>
+<p>The menu tree gained its first pass at remembering open branches, the 404 spider learned to fall apart more gently, and the footer stopped carrying three extra links that nobody used.</p>
+<p>No data was collected in this release and no new permissions were asked for. The site still works with scripts turned off, which is the sort of thing we like to be able to say in a release note.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-09-28">28 September 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="release-august">
+<h3 class="article-heading"><a class="entry-open" href="#release-august">August release notes</a></h3>
+<p class="entry-excerpt">The mobile menu bubble now remembers where you parked it, and the menu remembers which branches you left open. The theme choice survives a reload. Small things, but the site stopped arguing with you every time you came back to it again, on any page...</p>
+<div class="entry-body" data-entry-body="release-august" hidden>
+<p>The mobile menu bubble now remembers where you parked it, and the menu remembers which branches you left open. The theme choice survives a reload. Small things, but the site stopped arguing with you every time you came back to it again, on any page... Nothing in that sentence involves an account.</p>
+<p>The theme was the easy one. A choice between two themes is a preference, and preferences belong to the person holding the browser, so we wrote it down in local storage and read it back before the first paint. There was a flash of the wrong theme on slow loads for a while, which we tracked to the order of two small scripts.</p>
+<p>The bubble took longer. It remembers its position on the screen so it does not cover the same paragraph twice, and it remembers whether it was open or closed. Both are small pieces of state that used to live for a single page view and then vanish, which is not what a preference is.</p>
+<p>Also in this release, the font files are smaller, the dark theme was checked against every panel rather than only the main one, and the search box no longer jumps to the top of the page when it opens.</p>
+<p>Still open from July: the print stylesheet, and a proper fallback for browsers that do not support the newer layout properties. Neither is urgent. Both are written down.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-08-31">31 August 2026</time></p>
+</article>
+</section>

@@ -1,0 +1,30 @@
+<section class="content-section" data-admin="content:content.css" id="agweb-stack" aria-labelledby="agweb-stack-heading">
+<h2 class="section-heading" id="agweb-stack-heading">The site you are reading</h2>
+<p>AG-web is the Annoying Goods website itself — the pages, the menu, the spider and the search are all this one product. It is listed here because its stack is a statement: the whole public site is dependency-free HTML and CSS, with no framework anywhere in what a visitor downloads.</p>
+<article class="content-article" data-admin="content:content.css" id="agweb-stack-basics">
+<h3 class="article-heading">The basic stack</h3>
+<p>HTML and CSS carry the layout, the theming and the glass. TypeScript is allowed for logic and compiles down to plain JavaScript modules that the build bundles by hand — no bundler framework, no runtime dependencies. Rust and WebAssembly enter only where the project genuinely needs WASM, and nowhere else.</p>
+<p>Node.js is a development-only guest: it runs the build scripts and the local admin panel helper, and it must never ship to production or run on the public site. The deployable output is plain files.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agweb-stack-rules">
+<h3 class="article-heading">The house rules</h3>
+<p>No frameworks unless one is argued for and agreed. Files stay small and single-purpose. Every page must be easy to extend and must meet accessibility requirements: semantic HTML, ARIA where it is needed, keyboard navigation and colour contrast. Desktop leads the design, and the mobile layout is built at the same time, not after.</p>
+<p>The build assembles every page from a navigation tree, per-page metadata and content fragments, then validates titles, links, images and the content security policy before anything is allowed to ship.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agweb-hosting" aria-labelledby="agweb-hosting-heading">
+<h2 class="section-heading" id="agweb-hosting-heading">Hosting and source</h2>
+<article class="content-article" data-admin="content:content.css" id="agweb-hosting-ionos">
+<h3 class="article-heading">Served from IONOS</h3>
+<p>The site is served on IONOS from a folder bound to the domain, under the path <code>/annoyinggoods</code>. The build produces the deployable bundle with content digests, a sitemap, a search index and a 404 page that shares the site chrome.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agweb-hosting-repo">
+<h3 class="article-heading">The repository</h3>
+<p>The repository link is pending — it will be published here once the source goes public. Until then, the <a href="/support/github/">GitHub page</a> lists where the other studio projects live.</p>
+</article>
+<div class="chip-row">
+<a class="chip" href="/support/github/">GitHub</a>
+<a class="chip" href="/blog/design-decisions/">Design Decisions</a>
+<a class="chip" href="/playground/">Playground</a>
+</div>
+</section>

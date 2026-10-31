@@ -1,0 +1,43 @@
+/* Single responsibility: reduced-motion guards and static end states. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  * {
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
+  }
+  .lens {
+    display: none;
+  }
+  .glow {
+    display: none;
+  }
+  .err-spider {
+    animation: none;
+  }
+  .hero.is-idle-rolling .hero-ball {
+    animation: none;
+  }
+  .title-box.is-leaving {
+    opacity: 0;
+  }
+  .main-box.is-leaving {
+    opacity: 0;
+  }
+  body,
+  .site-background,
+  .site-background::after,
+  .glass-surface,
+  .title-box,
+  .menu-box,
+  .main-box,
+  .site-hero-image,
+  .hero .hero-web-layer,
+  .hero .hero-web-layer-forward,
+  .hero .hero-web-layer-return,
+  .theme-icon svg {
+    transition: none;
+  }
+}

@@ -1,0 +1,49 @@
+<section class="content-section" data-admin="content:content.css" id="report-bug-form" aria-labelledby="bug-heading">
+<h2 class="section-heading" id="bug-heading">Report Bug Form</h2>
+<article class="content-article" data-admin="content:content.css" id="report-bug-intro">
+<h3 class="article-heading">Tell the spider what snapped</h3>
+<p>Something broke and you would like it fixed. Say so here, in plain words.</p>
+<p>Both forms work without JavaScript as a progressive enhancement.</p>
+<form class="contact-form" action="mailto:bugs@annoyinggoods.com?subject=Bug%20report" method="post" enctype="text/plain" data-endpoint="/api/contact/" aria-describedby="bug-help">
+<p class="form-help" id="bug-help">Describe the bug, your browser, and what you expected to happen. Fields marked required must be filled.</p>
+<div class="form-field">
+<label for="bug-product">Product</label>
+<select id="bug-product" name="product" required>
+<option value="">Choose a product</option>
+<option value="agit">AGIT</option>
+<option value="agrrr">AGrrr!</option>
+<option value="agnosis">AGnosis</option>
+<option value="agdevelop">AGDevelop</option>
+<option value="website">Website</option>
+</select>
+</div>
+<div class="form-field">
+<label for="bug-version">Version (optional)</label>
+<input type="text" id="bug-version" name="version" autocomplete="off" placeholder="e.g. 1.4.2…">
+</div>
+<div class="form-field">
+<label for="bug-summary">Summary</label>
+<input type="text" id="bug-summary" name="summary" required autocomplete="off" placeholder="One line that says what broke…">
+</div>
+<div class="form-field">
+<label for="bug-steps">Steps to reproduce</label>
+<textarea id="bug-steps" name="steps" rows="6" required autocomplete="off" placeholder="What you did, step by step…"></textarea>
+</div>
+<div class="form-field">
+<label for="bug-expected">Expected result (optional)</label>
+<textarea id="bug-expected" name="expected" rows="3" autocomplete="off" placeholder="What you expected to happen…"></textarea>
+</div>
+<div class="form-field">
+<label for="bug-actual">Actual result (optional)</label>
+<textarea id="bug-actual" name="actual" rows="3" autocomplete="off" placeholder="What happened instead…"></textarea>
+</div>
+<div class="form-field">
+<label for="bug-email">Contact email (optional)</label>
+<input type="email" id="bug-email" name="email" autocomplete="email" placeholder="you@example.com…">
+</div>
+<div class="form-trap" aria-hidden="true"><label for="bug-trap">Leave this field empty</label><input type="text" id="bug-trap" name="website" tabindex="-1" autocomplete="off"></div>
+<button type="submit">Send bug report</button>
+<p class="form-status" data-form-status role="status" aria-live="polite"></p>
+</form>
+</article>
+</section>

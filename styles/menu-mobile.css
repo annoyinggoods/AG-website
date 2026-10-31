@@ -1,0 +1,117 @@
+/* Single responsibility: mobile bubble, overlay panel, caret states. */
+.menu-bubble {
+  position: fixed;
+  right: 0;
+  top: 33vh;
+  z-index: var(--z-bubble);
+  touch-action: manipulation;
+  width: 3.25rem;
+  height: 3.25rem;
+  border-radius: 50%;
+  border: var(--hairline-w) solid var(--accent);
+  background: var(--panel);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.menu-bubble.is-left {
+  right: auto;
+  left: 0;
+}
+.menu-bubble-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  fill: currentColor;
+}
+.menu-bubble-caret {
+  display: none;
+  width: 0.6rem;
+  height: 1rem;
+  border-inline-start: var(--focus-ring) solid var(--accent);
+}
+.menu-bubble.is-left .menu-bubble-caret {
+  border-inline-start: 0;
+  border-inline-end: var(--focus-ring) solid var(--accent);
+}
+.menu-bubble.is-hidden {
+  width: 1.5rem;
+  border-radius: 0.6rem;
+}
+.menu-bubble.is-hidden .menu-bubble-icon {
+  display: none;
+}
+.menu-bubble.is-hidden .menu-bubble-caret {
+  display: block;
+}
+.menu-panel {
+  position: fixed;
+  inset-block: 0;
+  right: 0;
+  width: min(22rem, 86vw);
+  z-index: var(--z-menu);
+  background: var(--overlay);
+  transform: translateX(105%);
+  transition: transform var(--dur-fade) ease;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-top: env(safe-area-inset-top, 0rem);
+  padding-bottom: env(safe-area-inset-bottom, 0rem);
+}
+.menu-panel.is-open {
+  transform: translateX(0);
+}
+@media (max-width: 56rem) {
+  .menu-bubble {
+    display: inline-flex;
+  }
+  .menu-box.is-detached {
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    height: 100%;
+  }
+  .menu-box {
+    position: fixed;
+    inset-block: 0;
+    right: 0;
+    left: auto;
+    top: 0;
+    width: min(22rem, 86vw);
+    max-height: none;
+    z-index: var(--z-menu);
+    transform: translateX(105%);
+    transition: transform var(--dur-fade) ease;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-top: env(safe-area-inset-top, 0rem);
+    padding-bottom: env(safe-area-inset-bottom, 0rem);
+  }
+  .menu-box.is-open {
+    transform: translateX(0);
+  }
+  .menu-box.is-left {
+    right: auto;
+    left: 0;
+    transform: translateX(-105%);
+  }
+  .menu-box.is-left.is-open {
+    transform: translateX(0);
+  }
+  /* Without scripting the bubble cannot open anything, so the menu stays in
+     the page flow where every link is reachable and the branches still open
+     through the native details element. */
+  html:not(.js) .menu-bubble {
+    display: none;
+  }
+  html:not(.js) .menu-box {
+    position: static;
+    inset: auto;
+    transform: none;
+    width: auto;
+    max-height: none;
+    overflow: visible;
+  }
+  html:not(.js) .stage {
+    grid-template-areas: "hero" "menu" "main" "footer";
+  }
+}

@@ -1,0 +1,923 @@
+/* Single responsibility: the nAG game. The styles live on the game container
+   and on the nag- prefixed classes, so they never reach the site chrome.
+
+   The colours are the game's own dark palette. The site has a light and a
+   dark theme, and the game keeps its dark look in both, because the
+   playground stage it sits on is black either way. Every custom property is
+   namespaced with nag- so the site's token names can never collide with the
+   game's. */
+
+/* The tokens live on the mount point, so the whole game picks them up from
+   one place and nothing outside the game sees them. */
+#nag-app {
+  --nag-card-back: #000000;
+  --nag-card-front: #4c1d95;
+  --nag-card-glyph: #f97316;
+  --nag-board-canvas: #161023;
+  --nag-panel-bg: #1b1230;
+  --nag-panel-border: #6f5bae;
+  --nag-panel-inset: #241a3d;
+  --nag-accent: #f97316;
+  --nag-good: #4ade80;
+  --nag-warning: #fbbf24;
+  --nag-danger: #f87171;
+  --nag-info: #7dd3fc;
+  --nag-ink: #efeaf8;
+  --nag-ink-soft: #ded5f2;
+  --nag-ink-muted: #c9bce6;
+  --nag-ink-faint: #9c8fc0;
+  --nag-page-bg: #0e0817;
+  --nag-card-radius: 1rem;
+  --nag-card-gap: 0.5rem;
+  --nag-focus-ring: 0.1875rem;
+}
+
+/* The container is the game's own dark surface, so it reads the same in the
+   light theme and in the dark theme. */
+#nag-app {
+  display: block;
+  padding: 1rem;
+  background: var(--nag-page-bg);
+  color: var(--nag-ink);
+  font-family: system-ui, sans-serif;
+  text-align: center;
+}
+
+/*
+ * The site scrolls smoothly, and a smooth scroll is a moving target for
+ * anything that waits for the page to settle, such as a keyboard player
+ * tabbing to a card or an automated test clicking one. The game scrolls
+ * instantly instead, so a control is where it says it is.
+ */
+body:has(#nag-app) {
+  scroll-behavior: auto;
+}
+
+#nag-app .nag-shell {
+  max-width: 56rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#nag-app .nag-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+#nag-app .nag-tagline {
+  margin: 0;
+  color: var(--nag-ink-muted);
+  font-size: 0.95rem;
+}
+
+#nag-app .nag-instructions-region {
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+#nag-app .nag-instructions {
+  margin: 0;
+}
+
+#nag-app .nag-instructions-title {
+  display: list-item;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 700;
+  list-style: none;
+}
+
+#nag-app .nag-instructions-title::-webkit-details-marker {
+  display: none;
+}
+
+#nag-app .nag-instructions-title::after {
+  content: " â–¾";
+  color: var(--nag-accent);
+}
+
+#nag-app .nag-instructions:not([open]) .nag-instructions-title::after {
+  content: " â–¸";
+}
+
+#nag-app .nag-instructions-body {
+  padding-top: 0.5rem;
+}
+
+#nag-app .nag-instruction {
+  margin-bottom: 0.75rem;
+}
+
+#nag-app .nag-instruction:last-child {
+  margin-bottom: 0;
+}
+
+#nag-app .nag-instruction-heading {
+  margin: 0 0 0.25rem;
+  font-size: 0.95rem;
+  color: var(--nag-accent);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+#nag-app .nag-instruction-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  line-height: 1.5;
+  color: var(--nag-ink-soft);
+  font-size: 0.92rem;
+}
+
+#nag-app .nag-hud-region {
+  display: block;
+}
+
+#nag-app .nag-hud {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 0.75rem;
+}
+
+#nag-app .nag-hud-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 5.5rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.6rem;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+#nag-app .nag-hud-caption {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--nag-ink-faint);
+}
+
+#nag-app .nag-hud-value {
+  font-size: 1.15rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+#nag-app .nag-hud-score.is-negative {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-hud-time.is-urgent {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-hud-deduction {
+  min-height: 1.1rem;
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: var(--nag-warning);
+  opacity: 0;
+}
+
+#nag-app .nag-hud-deduction.is-flashing {
+  opacity: 1;
+  animation: nag-deduction-flash 1.6s ease-out;
+}
+
+#nag-app .nag-hud-group[hidden] {
+  display: none;
+}
+
+#nag-app .nag-hud-viewcost.is-negative {
+  color: var(--nag-warning);
+}
+
+@keyframes nag-deduction-flash {
+  0% {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+  70% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+#nag-app .nag-hud-level-select {
+  background: var(--nag-panel-inset);
+  color: var(--nag-ink);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 0.5rem;
+  padding: 0.25rem 0.4rem;
+  font-size: 0.85rem;
+  max-width: 11rem;
+}
+
+#nag-app .nag-phase-scout {
+  color: var(--nag-info);
+}
+
+#nag-app .nag-phase-run {
+  color: var(--nag-good);
+}
+
+#nag-app .nag-phase-linger {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-phase-win {
+  color: var(--nag-good);
+}
+
+#nag-app .nag-phase-failed {
+  color: var(--nag-danger);
+}
+
+#nag-app .nag-stats-region {
+  display: block;
+}
+
+#nag-app .nag-stats-panel {
+  width: min(90vw, 40rem);
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#nag-app .nag-stats-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nag-accent);
+}
+
+#nag-app .nag-stats-list {
+  margin: 0;
+}
+
+#nag-app .nag-stats-row {
+  display: grid;
+  grid-template-columns: 4rem 4rem 1fr;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--nag-panel-inset);
+  border: 1px solid var(--nag-panel-border);
+  font-size: 0.9rem;
+}
+
+#nag-app .nag-stats-row + .nag-stats-row {
+  margin-top: 0.35rem;
+}
+
+#nag-app .nag-stats-caption {
+  color: var(--nag-ink-faint);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+#nag-app .nag-stats-value {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  text-align: right;
+}
+
+#nag-app .nag-status-region {
+  min-height: 1.4rem;
+}
+
+#nag-app .nag-status-text {
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--nag-ink-soft);
+}
+
+#nag-app .nag-status[data-tone="warning"] .nag-status-text {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-status[data-tone="good"] .nag-status-text {
+  color: var(--nag-good);
+}
+
+#nag-app .nag-board-region {
+  display: flex;
+  justify-content: center;
+}
+
+#nag-app .nag-order-region {
+  display: block;
+}
+
+#nag-app .nag-order-popup-region {
+  display: block;
+}
+
+#nag-app .nag-reveal-region {
+  display: flex;
+  justify-content: center;
+}
+
+#nag-app .nag-reveal-region:has(.nag-reveal-order[hidden]) {
+  display: none;
+}
+
+#nag-app .nag-order-popup {
+  width: min(90vw, 34rem);
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+  background: var(--nag-panel-bg);
+  border: 2px solid var(--nag-accent);
+  border-radius: 1rem;
+  padding: 1rem 1.25rem;
+  text-align: left;
+}
+
+#nag-app .nag-order-popup[hidden] {
+  display: none;
+}
+
+#nag-app .nag-order-popup-title {
+  margin: 0;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nag-accent);
+}
+
+#nag-app .nag-order-popup-meter {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--nag-ink-soft);
+}
+
+#nag-app .nag-order-popup-session,
+#nag-app .nag-order-popup-total {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0 0 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 0.5rem;
+  background: var(--nag-panel-inset);
+  border: 1px solid var(--nag-panel-border);
+  font-size: 0.9rem;
+}
+
+#nag-app .nag-order-popup-total {
+  margin-bottom: 0.9rem;
+}
+
+#nag-app .nag-order-popup-label {
+  color: var(--nag-ink-faint);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+#nag-app .nag-order-popup-timer {
+  font-variant-numeric: tabular-nums;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--nag-ink);
+  text-align: right;
+}
+
+#nag-app .nag-order-popup-cost {
+  color: var(--nag-ink-faint);
+  font-weight: 600;
+}
+
+#nag-app .nag-order-popup-cost.is-negative {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-order-popup-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  counter-reset: nag-popup-order;
+}
+
+#nag-app .nag-order-popup-item {
+  counter-increment: nag-popup-order;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 2.4rem;
+  justify-content: center;
+  padding: 0.3rem 0.55rem;
+  border-radius: 0.5rem;
+  background: var(--nag-panel-inset);
+  border: 1px solid var(--nag-panel-border);
+  color: var(--nag-ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+#nag-app .nag-order-popup-item::before {
+  content: counter(nag-popup-order);
+  font-size: 0.65rem;
+  color: var(--nag-ink-faint);
+  font-weight: 600;
+}
+
+#nag-app .nag-order-popup-item.is-target {
+  background: var(--nag-accent);
+  border-color: var(--nag-accent);
+  color: #1a0f00;
+}
+
+#nag-app .nag-order-popup-item.is-target::before {
+  color: #4a2600;
+}
+
+#nag-app .nag-order-popup-item.is-done {
+  background: #14532d;
+  border-color: #4ade80;
+  color: #bbf7d0;
+  opacity: 0.65;
+  text-decoration: line-through;
+}
+
+#nag-app .nag-order-popup-close {
+  display: block;
+  margin: 0 auto;
+}
+
+#nag-app .nag-order-panel {
+  width: min(90vw, 34rem);
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#nag-app .nag-order-panel[hidden] {
+  display: none;
+}
+
+#nag-app .nag-order-title {
+  margin: 0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nag-accent);
+}
+
+#nag-app .nag-order-note {
+  margin: 0.3rem 0 0.6rem;
+  font-size: 0.85rem;
+  color: var(--nag-ink-muted);
+}
+
+#nag-app .nag-order-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: nag-order;
+}
+
+#nag-app .nag-order-chip {
+  counter-increment: nag-order;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  min-width: 2.1rem;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background: var(--nag-panel-inset);
+  border: 1px solid var(--nag-panel-border);
+  color: var(--nag-ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+#nag-app .nag-order-chip::before {
+  content: counter(nag-order);
+  font-size: 0.65rem;
+  color: var(--nag-ink-faint);
+  font-weight: 600;
+}
+
+#nag-app .nag-order-chip.is-target {
+  background: var(--nag-accent);
+  border-color: var(--nag-accent);
+  color: #1a0f00;
+}
+
+#nag-app .nag-order-chip.is-target::before {
+  color: #4a2600;
+}
+
+#nag-app .nag-order-chip.is-done {
+  background: #14532d;
+  border-color: #4ade80;
+  color: #bbf7d0;
+  opacity: 0.65;
+  text-decoration: line-through;
+}
+
+#nag-app .nag-history-region {
+  display: block;
+}
+
+#nag-app .nag-history-panel {
+  width: min(90vw, 40rem);
+  max-width: 100%;
+  margin: 0 auto;
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 0.75rem 1rem;
+  box-sizing: border-box;
+  text-align: left;
+}
+
+#nag-app .nag-history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+#nag-app .nag-history-title {
+  margin: 0;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--nag-accent);
+}
+
+#nag-app .nag-history-empty {
+  margin: 0.6rem 0 0;
+  font-size: 0.9rem;
+  color: var(--nag-ink-faint);
+}
+
+#nag-app .nag-history-scroll {
+  overflow-x: auto;
+  margin-top: 0.6rem;
+}
+
+/*
+ * The history table is wider than a phone, so it scrolls sideways. A
+ * scrolling region has to be reachable with the keyboard, or a keyboard
+ * player cannot reach the columns that do not fit.
+ */
+#nag-app .nag-history-scroll:focus-visible {
+  outline: var(--nag-focus-ring) solid #fde68a;
+  outline-offset: 0.125rem;
+}
+
+#nag-app .nag-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+#nag-app .nag-history-th {
+  text-align: left;
+  padding: 0.35rem 0.5rem;
+  color: var(--nag-ink-faint);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  border-bottom: 1px solid var(--nag-panel-border);
+  white-space: nowrap;
+}
+
+#nag-app .nag-history-td {
+  padding: 0.35rem 0.5rem;
+  border-bottom: 1px solid rgba(58, 42, 92, 0.5);
+  white-space: nowrap;
+}
+
+#nag-app .nag-history-time,
+#nag-app .nag-history-score {
+  font-variant-numeric: tabular-nums;
+}
+
+#nag-app .nag-history-score.is-negative {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-history-row[data-won="true"] .nag-history-score {
+  color: var(--nag-good);
+}
+
+#nag-app .nag-button-quiet {
+  background: transparent;
+  color: var(--nag-ink-muted);
+  border-color: var(--nag-panel-border);
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  min-height: 2rem;
+}
+
+#nag-app .nag-controls-region {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+}
+
+#nag-app .nag-button {
+  font: inherit;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 0.7rem 1.6rem;
+  border: 2px solid transparent;
+  cursor: pointer;
+  min-height: 2.75rem;
+  transition: transform 120ms ease, filter 120ms ease;
+}
+
+#nag-app .nag-button:hover {
+  filter: brightness(1.1);
+}
+
+#nag-app .nag-button:active {
+  transform: scale(0.97);
+}
+
+#nag-app .nag-button:focus-visible {
+  outline: var(--nag-focus-ring) solid #fde68a;
+  outline-offset: 0.1875rem;
+}
+
+/*
+ * The cards are not buttons in the nag-button sense, so they need their own
+ * focus ring. The ring is drawn outside the card, because the card faces are
+ * absolutely positioned and would paint over a ring drawn inside.
+ *
+ * The second selector is there because the live-board hint uses an outline as
+ * well, and the focus ring has to win over the hint.
+ */
+#nag-app .nag-card:focus-visible,
+#nag-app .nag-board.is-live .nag-card:not(.is-revealed):focus-visible {
+  outline: var(--nag-focus-ring) solid #fde68a;
+  outline-offset: 0.125rem;
+}
+
+#nag-app .nag-button-primary {
+  background: var(--nag-accent);
+  color: #1a0f00;
+}
+
+#nag-app .nag-button-secondary {
+  background: transparent;
+  color: var(--nag-accent);
+  border-color: var(--nag-accent);
+}
+
+#nag-app .nag-play {
+  font-size: 1.25rem;
+  letter-spacing: 0.2em;
+  padding: 0.85rem 3rem;
+}
+
+#nag-app .nag-screen-region {
+  display: flex;
+  justify-content: center;
+}
+
+#nag-app .nag-screen {
+  background: var(--nag-panel-bg);
+  border: 1px solid var(--nag-panel-border);
+  border-radius: 1rem;
+  padding: 1.25rem 1.5rem;
+  max-width: 32rem;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+#nag-app .nag-screen[hidden] {
+  display: none;
+}
+
+#nag-app .nag-screen-title {
+  margin: 0 0 0.4rem;
+  font-size: 1.6rem;
+}
+
+#nag-app .nag-screen[data-screen="win"] .nag-screen-title {
+  color: var(--nag-good);
+}
+
+#nag-app .nag-screen[data-screen="fail"] .nag-screen-title {
+  color: var(--nag-warning);
+}
+
+#nag-app .nag-screen-summary,
+#nag-app .nag-screen-details {
+  margin: 0.2rem 0;
+}
+
+#nag-app .nag-screen-details {
+  font-variant-numeric: tabular-nums;
+  color: var(--nag-ink-muted);
+}
+
+#nag-app .nag-screen-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+#nag-app .nag-board {
+  display: grid;
+  width: min(90vw, 34rem);
+  max-width: 100%;
+  gap: var(--nag-card-gap);
+  padding: 1rem;
+  border-radius: 1.25rem;
+  background: var(--nag-board-canvas);
+  box-sizing: border-box;
+  perspective: 75rem;
+  touch-action: manipulation;
+}
+
+#nag-app .nag-board.is-locked {
+  opacity: 0.96;
+}
+
+#nag-app .nag-board.is-live .nag-card {
+  cursor: pointer;
+}
+
+#nag-app .nag-board.is-live .nag-card:not(.is-revealed) {
+  outline: 0.125rem solid var(--nag-warning);
+  outline-offset: -0.125rem;
+}
+
+#nag-app .nag-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  border-radius: var(--nag-card-radius);
+  perspective: 75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#nag-app .nag-card.is-locked {
+  cursor: default;
+}
+
+#nag-app .nag-card-inner {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 400ms ease;
+  border-radius: var(--nag-card-radius);
+}
+
+#nag-app .nag-card.is-revealed .nag-card-inner {
+  transform: rotateY(180deg);
+}
+
+#nag-app .nag-card-face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  border-radius: var(--nag-card-radius);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  font-weight: 800;
+  line-height: 1;
+  box-shadow: inset 0 0 0 0.125rem rgba(255, 255, 255, 0.35);
+}
+
+#nag-app .nag-card-back {
+  background: var(--nag-card-back);
+  color: #ffffff;
+  font-size: clamp(1.3rem, 4vw, 2.2rem);
+}
+
+#nag-app .nag-card-front {
+  background: var(--nag-card-front);
+  color: var(--nag-card-glyph);
+  font-size: clamp(1.4rem, 4vw, 2.6rem);
+  transform: rotateY(180deg);
+}
+
+/*
+ * The face is turned away by the flip, so it must not count as visible text
+ * while the card is face down. A hidden card names its face in the
+ * accessible name instead, which keeps the name and the visible text in step.
+ */
+#nag-app .nag-card:not(.is-revealed) .nag-card-front {
+  visibility: hidden;
+}
+
+/*
+ * The playground layout stills every animation on the page, because the site
+ * chrome should not move while a game is running. The card flip is the one
+ * animation the game cannot do without, so the game's own rules put it back
+ * inside the game container and leave the chrome alone.
+ *
+ * The site rule is a blanket "animation: none" on every element, so the game
+ * rules need the same weight to win. They are scoped to the game container,
+ * so they change nothing outside the game.
+ */
+body[data-layout="playground"] #nag-app .nag-card-inner {
+  transition: transform 400ms ease !important;
+}
+
+body[data-layout="playground"] #nag-app .nag-card.is-revealed .nag-card-inner {
+  transform: rotateY(180deg) !important;
+}
+
+body[data-layout="playground"] #nag-app .nag-hud-deduction.is-flashing {
+  animation: nag-deduction-flash 1.6s ease-out !important;
+}
+
+body[data-layout="playground"] #nag-app .nag-button {
+  transition: transform 120ms ease, filter 120ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #nag-app .nag-card-inner {
+    transition: none;
+  }
+
+  #nag-app .nag-button {
+    transition: none;
+  }
+
+  #nag-app .nag-hud-deduction.is-flashing {
+    animation: none;
+    opacity: 1;
+  }
+
+  #nag-app .nag-card:not(.is-revealed) .nag-card-front,
+  #nag-app .nag-card.is-revealed .nag-card-back {
+    opacity: 0;
+  }
+
+  #nag-app .nag-card.is-revealed .nag-card-inner {
+    transform: none;
+  }
+
+  body[data-layout="playground"] #nag-app .nag-card-inner {
+    transition: none !important;
+  }
+
+  body[data-layout="playground"] #nag-app .nag-hud-deduction.is-flashing {
+    animation: none !important;
+  }
+
+  body[data-layout="playground"] #nag-app .nag-button {
+    transition: none !important;
+  }
+}

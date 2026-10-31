@@ -1,0 +1,21 @@
+/* Single responsibility: @font-face declarations and font stacks. */
+@font-face {
+  font-family: "Fiendish";
+  src: url("../assets/fonts/Fiendish.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Candy Crypt";
+  src: url("../assets/fonts/CandyCrypt-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maven Pro Medium";
+  src: url("../assets/fonts/MavenPro-Medium.woff2") format("woff2");
+  font-display: swap;
+}
+@font-face {
+  font-family: "Maven Pro Regular";
+  src: url("../assets/fonts/MavenPro-Regular.woff2") format("woff2");
+  font-display: swap;
+}

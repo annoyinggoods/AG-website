@@ -1,0 +1,45 @@
+<section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
+<h2 class="section-heading" id="download-heading">Download</h2>
+<article class="content-article" data-admin="content:content.css" id="download-get">
+<h3 class="article-heading">Get AGony 0.9.0</h3>
+<p>AGony ships as a small portable archive: the binary, a short install note and the Apache-2.0 license text. No installer wizard, no registry entries, no background service — unpack it and run <code>agony.exe</code> in a terminal. Everything AGony stores lives under one folder in your user profile and deleting that folder uninstalls the desktop completely.</p>
+<p><a href="/downloads/agony-0.9.0/agony-0.9.0-x86_64-pc-windows-msvc.tar.gz" download>Download the Windows archive (3.0 MB)</a> — AGony 0.9.0 for Windows 10/11, 64-bit.</p>
+<div class="table-scroll"><table class="download-table">
+<thead>
+<tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="/downloads/agony-0.9.0/agony-0.9.0-x86_64-pc-windows-msvc.tar.gz">AGony portable archive</a></th><td>Windows 64-bit</td><td>3.0 MB</td><td><code>SHA256:05bc79c16e47300f4a2a6f524333852bb9d0d5da379ef313d02965b54300f6ba</code></td></tr>
+<tr><th scope="row">AGony portable archive</th><td>Linux 64-bit</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
+<tr><th scope="row">AGony portable archive</th><td>macOS Apple Silicon</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
+</tbody>
+</table></div>
+<p>The Linux and macOS archives are built by the same release pipeline from the same source — the project's build and test suite runs on all three platforms on every change — but those desktops have not yet had their full manual passes. They appear on this page as soon as the release lands.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-prereqs" aria-labelledby="download-prereqs-heading">
+<h2 class="section-heading" id="download-prereqs-heading">The two free prerequisites</h2>
+<article class="content-article" data-admin="content:content.css" id="download-prereqs-engine">
+<h3 class="article-heading">The rmux engine — required</h3>
+<p>AGony is a tenant on the rmux multiplexer engine, which owns the terminal plumbing and your process tree. It is free, open source, and installed with <code>cargo install rmux</code> (Rust's installer puts it on your PATH). AGony starts and manages the engine's daemon for you — connect if one is running, start one if not — you never operate it by hand.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-prereqs-carapace">
+<h3 class="article-heading">The carapace completion binary — recommended</h3>
+<p>The command bar's completions come from carapace-bin, a free, open-source completion engine. Install it any way you like — scoop, winget or its GitHub release — and AGony finds it on PATH, or point the <code>AGONY_CARAPACE</code> environment variable at it. Without it the desktop works completely; only the command suggestions go quiet.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-install" aria-labelledby="download-install-heading">
+<h2 class="section-heading" id="download-install-heading">Install in four steps</h2>
+<article class="content-article" data-admin="content:content.css" id="download-install-steps">
+<h3 class="article-heading">From the archive to the desktop</h3>
+<p>1. Unpack the archive — in PowerShell: <code>tar -xzf agony-0.9.0-x86_64-pc-windows-msvc.tar.gz</code>.</p>
+<p>2. Put <code>agony.exe</code> somewhere on PATH, or run it from where you unpacked it.</p>
+<p>3. Run <code>agony doctor</code> once — it reports the environment (the engine, the daemon, the completion binary, your font's icon support) and never repairs anything.</p>
+<p>4. Run <code>agony</code> in Windows Terminal. The desktop opens with a welcome window naming the three things worth trying.</p>
+<p>Optional: <code>agony selftest</code> proves the whole hosting chain — a real daemon, a real pane, render, input and resize — before your first session. Your settings, history, themes and installed apps live under <code>%APPDATA%\agony\</code> and survive updates.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-install-notes">
+<h3 class="article-heading">Good to know</h3>
+<p>AGony has no telemetry, no accounts and no network calls of its own. The one network feature — the app directory fetching its curated catalog — degrades silently to the bundled seed when offline, and tells you so on a status line. Building from source is equally plain: it is Rust and Cargo, and the license is <a href="/products/agony/license/">Apache-2.0</a>.</p>
+</article>
+</section>

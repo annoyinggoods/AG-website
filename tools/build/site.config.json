@@ -1,0 +1,6 @@
+{
+  "domain": "https://annoyinggoods.com",
+  "basePath": "",
+  "event": "halloween",
+  "events": ["normal", "halloween", "winter", "spring-day"]
+}

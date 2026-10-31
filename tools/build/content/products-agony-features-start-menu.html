@@ -1,0 +1,31 @@
+<section class="content-section" data-admin="content:content.css" id="start-menu" aria-labelledby="start-menu-heading">
+<h2 class="section-heading" id="start-menu-heading">The start menu</h2>
+<p><code>Ctrl-Space</code> opens a menu with four roots: SEARCH opens the command bar, FILE MANAGER lists the common folders and drives, PROGRAMS holds the app catalog, and SETTINGS opens the settings window. The roots expand one at a time, and typing anywhere filters — apps, places and setting names rank as you type, so the menu is also a launcher you never scroll through.</p>
+<figure class="feature-media">
+<img src="assets/agony/startmenu-live.webp" alt="The AGony start menu open on its PROGRAMS root, with the right-click row menu showing Open, Pin to desktop and Copy launch command" width="762" height="557" loading="lazy">
+<figcaption>A live capture: the menu's PROGRAMS root, and the right-click row menu — Open, Pin to desktop, Copy launch command.</figcaption>
+</figure>
+</section>
+<section class="content-section" data-admin="content:content.css" id="start-menu-places" aria-labelledby="start-menu-places-heading">
+<h2 class="section-heading" id="start-menu-places-heading">Places and the panel</h2>
+<article class="content-article" data-admin="content:content.css" id="start-menu-places-detail">
+<h3 class="article-heading">FILE MANAGER</h3>
+<p>The common folders — documents, downloads and friends — plus a probe of the machine's drives. Enter on a place re-roots the docked <a href="/products/agony/features/file-panel/">file panel</a> there and reopens it if it was closed, so "go to my Downloads" is one keypress in a menu instead of a typed path.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="start-menu-pin">
+<h3 class="article-heading">Pinning to the desktop</h3>
+<p>Right-click a PROGRAMS row for Open, Pin to desktop and Copy launch command. A pin writes a shortcut stub and a tile appears on the desktop grid without a restart — double-click the tile (or focus it with the arrow keys and Enter) to launch. Documents and folders from the AGony desktop directory appear as tiles too.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="start-menu-directory" aria-labelledby="start-menu-directory-heading">
+<h2 class="section-heading" id="start-menu-directory-heading">PROGRAMS and the app directory</h2>
+<article class="content-article" data-admin="content:content.css" id="start-menu-directory-detail">
+<h3 class="article-heading">A curated catalog, installed for you</h3>
+<p>PROGRAMS ▸ Get more apps… opens the directory: a curated catalog seeded from the awesome-terminal and awesome-tui lists, licenses verified by hand, grouped into installed, available and a separate GPL shelf. Every row carries a description, its license and its source. Press Enter on an available entry and AGony shows the exact command it will run — Enter again installs, Esc cancels — through the app's own recipe: winget first, then scoop, then cargo or go, or a hash-checked release download into your AGony bin directory, which discovery scans afterwards. A failed install prints the recipe's own output and leaves nothing half-landed.</p>
+<p>The same verbs work from a plain terminal: <code>agony apps list</code> prints the effective catalog, <code>agony apps install &lt;id&gt;</code> installs any entry, and <code>agony apps add</code> registers your own tool with a small manifest.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="start-menu-gpl">
+<h3 class="article-heading">The GPL shelf, in the open</h3>
+<p>Copyleft programs are never bundled into AGony's download — that rule is enforced by a test in the catalog validator, not by good intentions. They ship as ordinary catalog entries on their own shelf, with their license named on the row, and they install through their own recipes like everything else.</p>
+</article>
+</section>

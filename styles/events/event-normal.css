@@ -1,0 +1,8 @@
+/* Single responsibility: the normal Annoying Goods theme as an event overlay. */
+:root[data-event="normal"][data-theme="dark"],
+:root[data-event="normal"]:not([data-theme]) {
+  --event-art: url("../assets/events/normal/spider.svg");
+}
+:root[data-event="normal"][data-theme="light"] {
+  --event-art: url("../assets/events/normal/spider.svg");
+}

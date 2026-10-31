@@ -1,0 +1,95 @@
+# Annoying Goods deployment rules for IONOS shared hosting.
+# The site is served from the domain root over HTTPS with HTTP/2.
+# The build replaces fUJdqT5BoTlRkLLfmH4Wjd3TI+mJiHMSSHjPwqwUAOg= with the digest of the one
+# inline script the site is allowed to run, so the policy never drifts.
+
+# ---------------------------------------------------------------- HTTPS ----
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# Enable HSTS only after the redirect above has been verified in the browser.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains" env=HTTPS
+</IfModule>
+
+# ------------------------------------------------------------- MIME type ----
+<IfModule mod_mime.c>
+  AddType application/wasm .wasm
+  AddType font/woff2 .woff2
+  AddType image/webp .webp
+  AddType application/ld+json .jsonld
+</IfModule>
+
+# ------------------------------------------------------------ Compression ----
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript text/javascript
+  AddOutputFilterByType DEFLATE application/json application/ld+json
+  AddOutputFilterByType DEFLATE image/svg+xml application/xml
+  AddOutputFilterByType DEFLATE application/wasm
+</IfModule>
+
+<IfModule mod_brotli.c>
+  AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/xml
+  AddOutputFilterByType BROTLI_COMPRESS application/javascript text/javascript
+  AddOutputFilterByType BROTLI_COMPRESS application/json application/ld+json
+  AddOutputFilterByType BROTLI_COMPRESS image/svg+xml application/xml
+  AddOutputFilterByType BROTLI_COMPRESS application/wasm
+</IfModule>
+
+# --------------------------------------------------------- Cache control ----
+# HTML stays fresh so content updates propagate immediately.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/xml "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType text/xml "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # Hashed bundles carry a content digest in the file name, so they can be
+  # cached for a year and never change under the same name.
+  <FilesMatch "^(bundle|demo-chart)\.[0-9a-f]{10}\.(min\.css|js)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+  # Every other asset keeps a stable name, so it is revalidated after an hour
+  # instead of being pinned in a visitor cache for a year.
+  <FilesMatch "\.(css|js|wasm|woff2|webp|png|jpg|jpeg|svg|ico)$">
+    Header set Cache-Control "public, max-age=3600, must-revalidate"
+  </FilesMatch>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set Permissions-Policy "accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()"
+
+  # The site loads nothing but its own files, and the only script it runs
+  # inline is the pre-paint theme snippet the build hashes into this policy.
+  Header always set Content-Security-Policy "default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'self'; form-action 'self'; script-src 'self' 'sha256-fUJdqT5BoTlRkLLfmH4Wjd3TI+mJiHMSSHjPwqwUAOg='; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; upgrade-insecure-requests"
+</IfModule>
+
+# ------------------------------------------------------- Endpoint privacy ----
+# The rate limit counters and the failure log live next to the endpoint. They
+# are server side only and must never be readable over HTTP.
+<IfModule mod_alias.c>
+  RedirectMatch 404 ^/api/\.rate
+  RedirectMatch 404 ^/api/\.contact\.log
+  # The playground moved out of Products and became its own section.
+  RedirectMatch 301 ^/products/playground/(.*)$ /playground/$1
+  RedirectMatch 301 ^/products/playground$ /playground/
+</IfModule>
+<FilesMatch "^\.contact\.log$">
+  Require all denied
+</FilesMatch>
+
+# ------------------------------------------------------------- Error doc ----
+ErrorDocument 404 /404.html
+DirectoryIndex index.html
+Options -Indexes

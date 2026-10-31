@@ -1,0 +1,30 @@
+<section class="content-section" data-admin="content:content.css" id="file-panel" aria-labelledby="file-panel-heading">
+<h2 class="section-heading" id="file-panel-heading">The file panel</h2>
+<p>The panel is a tree of your working directory docked beside the shells. It is ignore-aware with git's exact semantics — inside a repository, <code>target/</code> and friends simply do not appear, because the walker is ripgrep's. Arrows navigate, right expands a folder inline, left collapses, <code>/</code> opens a fuzzy search with matched characters highlighted, <code>r</code> refreshes.</p>
+<figure class="feature-media">
+<img src="assets/agony/pastemenu-live.webp" alt="The paste menu captured live: a held file offered as its name, its absolute path, or the path relative to the command bar" width="1216" height="126" loading="lazy">
+<figcaption>A live capture: a file grabbed in the panel and dropped into the command bar, with the paste menu showing all three exact strings.</figcaption>
+</figure>
+</section>
+<section class="content-section" data-admin="content:content.css" id="file-panel-drop" aria-labelledby="file-panel-drop-heading">
+<h2 class="section-heading" id="file-panel-drop-heading">Grab, drop, choose the exact text</h2>
+<article class="content-article" data-admin="content:content.css" id="file-panel-drop-detail">
+<h3 class="article-heading">The paste menu</h3>
+<p>Press <code>g</code> on a file to grab it — the panel title gains "held" — then <code>Ctrl-G</code> to drop it into the <a href="/products/agony/features/command-bar/">command bar</a>. The paste menu opens with three rows: the bare name, the absolute path, and the path relative to the bar's working directory. Every row shows the exact string it will insert, and Enter inserts it quoted at the cursor. Esc drops the held file. The three forms are computed by one small pure module with its own tests — the same math everywhere, no path is ever typed by hand and mistyped.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="file-panel-settings">
+<h3 class="article-heading">The panel's own settings</h3>
+<p>Hidden files, ignore rules, depth and entry caps are settings — show everything, respect nothing, or keep the calm defaults — and a refresh applies them without a restart. Enter on a folder in the start menu's FILE MANAGER re-roots the panel anywhere you like.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="file-panel-audience" aria-labelledby="file-panel-audience-heading">
+<h2 class="section-heading" id="file-panel-audience-heading">Who it serves</h2>
+<article class="content-article" data-admin="content:content.css" id="file-panel-newcomers">
+<h3 class="article-heading">If <code>cd</code> is where you get lost</h3>
+<p>You see where you are, you see what is around you, and moving means arrows — the directory stops being a concept you hold in your head and becomes a place you look at. Dropping a file into a command means the path is right because you never typed it.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="file-panel-pros">
+<h3 class="article-heading">If you already know where your files are</h3>
+<p>The panel is gitignore-aware the way your tools are, so it shows a work tree, not a cache dump; the fuzzy find is a keystroke; and holding a file while you compose a command in the bar is faster than a copy-paste round trip through the mouse — the relative-path form lands exactly right for the pane you are typing into.</p>
+</article>
+</section>

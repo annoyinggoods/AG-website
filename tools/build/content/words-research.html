@@ -1,0 +1,46 @@
+<section class="content-section" data-admin="content:content.css" id="research" aria-labelledby="words-research-heading">
+<h2 class="section-heading" id="words-research-heading">Research</h2>
+<article class="content-article" data-admin="content:content.css" id="words-research-intro">
+<h3 class="article-heading">Notes from the library web</h3>
+<p>Research notes behind the fiction and the tools. The method is stated first, then the findings.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="research-local-first-notes">
+<h3 class="article-heading"><a class="entry-open" href="#research-local-first-notes">Why Local First Tools Keep Their Notes</a></h3>
+<p class="entry-standfirst">A short look at why plain local files age better than accounts.</p>
+<p class="entry-excerpt">A file on your own disk outlives the company that made it. Accounts expire, formats change, and exports are promises that nobody audited. When your notes live in plain files, the tool becomes optional and the work still stays yours. That is the whole argument...</p>
+<div class="entry-body" data-entry-body="research-local-first-notes" hidden>
+<p>A file on your own disk outlives the company that made it. Accounts expire, formats change, and exports are promises that nobody audited. When your notes live in plain files, the tool becomes optional and the work still stays yours. That is the whole argument... The method is plain. We kept a folder of plain text notes for a season, moved them between three tools and two file systems, and wrote down what happened at each move.</p>
+<p>Nothing was lost, but not nothing was lost. Two notes were still on disk and gone in the way that matters, because nothing pointed at them any more and no search found them. A file you cannot find is a file you have lost.</p>
+<p>The formats were the second surprise. Every word we wrote was plain text and every word still opens, but the structure around it was proprietary in practice. The links between notes, the tags, the order. The words survived the move. The relationships did not, and the relationships were the work.</p>
+<p>The accounts were the third. We do not think that is a moral failing on anybody's part. Businesses close, software is dropped, and a service that promises your data is not yours has told you the truth about itself. The lesson is not distrust. It is that a tool holding your work has a future you do not control, and a file on your disk does not. So the studio keeps notes as plain files, in a folder structure a person can read. The tool is useful. The tool is also optional, and that is the part we wanted.</p>
+<p>The sources for this note were the four tools we moved between, the folder of notes itself, the migration notes we wrote as we went, and a short comparison of the export options each tool offered. Everything was measured on our own files over about three months.</p>
+</div>
+<p class="entry-author">Author note: the spider reads first and writes second, and cites what it used.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="research-cost-of-a-paragraph">
+<h3 class="article-heading"><a class="entry-open" href="#research-cost-of-a-paragraph">Measuring the Cost of a Paragraph</a></h3>
+<p class="entry-standfirst">Counting words is easy. Deciding what the count is for is not.</p>
+<p class="entry-excerpt">A word count is a number, and numbers are comfortable. It says little about a draft. The same paragraph can be short because it is clear, or short because it was cut. We use the count to notice drift, and never to judge the writing...</p>
+<div class="entry-body" data-entry-body="research-cost-of-a-paragraph" hidden>
+<p>A word count is a number, and numbers are comfortable. It says little about a draft. The same paragraph can be short because it is clear, or short because it was cut. We use the count to notice drift, and never to judge the writing... The method is a small internal benchmark. We took three drafts of the same scene at three stages, counted them, and wrote down what the number missed.</p>
+<p>The three drafts were a first pass, a cut, and a cut of the cut. The counts fell at every stage, which is the expected shape of revision. What was interesting was how little the numbers moved where the writing improved most.</p>
+<p>In the middle draft a paragraph of around sixty words was replaced by two of about forty. The count went down by a few words and the scene got faster. Nothing in the count would have told you that. You can see the change by reading the two versions side by side, and no arithmetic does it for you.</p>
+<p>We also counted what the tools count well: length, the number of repeated words, the average length of a sentence. The repeated word count turned out to be the most useful, because a word that appears nine times in a short scene is usually one the writer is leaning on, whether they meant to or not. What we do not do is set a target. There is no number at which a scene is finished, and a target turns a draft into a task, which is a different activity from writing and a worse one.</p>
+<p>The sources for this note were the three drafts of the scene, the counts taken from the local text tool in this studio, the sentence lengths worked out by hand for the middle draft, and trial runs on earlier chapters to see whether the repeated word count held up elsewhere.</p>
+</div>
+<p class="entry-author">Author note: the spider reads first and writes second, and cites what it used.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="research-indexing-without-a-database">
+<h3 class="article-heading"><a class="entry-open" href="#research-indexing-without-a-database">Notes on Indexing Without a Database</a></h3>
+<p class="entry-standfirst">How a folder of plain text can still be searched.</p>
+<p class="entry-excerpt">A desktop search box can be surprisingly good indeed, and a small index of your own files is easier to keep than a service. The trade is speed and housekeeping. You get answers that stay on your machine, and the cost is the daily upkeep...</p>
+<div class="entry-body" data-entry-body="research-indexing-without-a-database" hidden>
+<p>A desktop search box can be surprisingly good indeed, and a small index of your own files is easier to keep than a service. The trade is speed and housekeeping. You get answers that stay on your machine, and the cost is the daily upkeep... The method is a small set of trial runs. We built the same tiny index three ways over the same folder of notes, timed the answers, and wrote down what each version asked of us to maintain.</p>
+<p>The first version was the simplest. It walked the folder on every search and read the files. It was slow on a large folder and instant on a small one, and it needed no upkeep at all. If your notes live in a few hundred files, this is the honest answer.</p>
+<p>The second version wrote an index file, a list of the files, their modification times and the words they contained, so a search could look there and only open what matched. It was fast. It was also wrong whenever a file changed and the index did not, which is a bug you live with or fix.</p>
+<p>The third version was the second one with a check. Before searching, it compared the times in the index against the files on disk and rebuilt what had changed. It added a minute of housekeeping and removed a category of wrong answer. The larger lesson was about expectations. A search box that is slow and correct is more useful than one that is fast and confidently wrong, and the difference is usually a file you forgot to reindex. That is housekeeping, not a database problem.</p>
+<p>The sources for this note were the folder of notes we used as the test corpus, the timing runs from each of the three versions, the modification times recorded before and after each rebuild, and the failure list we kept for the second version.</p>
+</div>
+<p class="entry-author">Author note: the spider reads first and writes second, and cites what it used.</p>
+</article>
+</section>

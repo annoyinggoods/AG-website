@@ -1,0 +1,43 @@
+<section class="content-section" data-admin="content:content.css" id="comparison" aria-labelledby="comparison-heading">
+<h2 class="section-heading" id="comparison-heading">Comparison</h2>
+<p>AGony is a desktop environment that lives in a terminal, so its real neighbors are the terminal multiplexers people reach for when one shell window stops being enough, and the terminal emulator Windows gives you. Here is the honest table — including every row where the established tools win.</p>
+<div class="table-scroll"><table class="download-table">
+<caption>AGony 0.9.0 next to tmux, Zellij and Windows Terminal</caption>
+<thead>
+<tr><th scope="col">What you want</th><th scope="col">AGony</th><th scope="col">tmux</th><th scope="col">Zellij</th><th scope="col">Windows Terminal</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row">What it is</th><td>A desktop environment over a multiplexer</td><td>A terminal multiplexer</td><td>A terminal multiplexer</td><td>A terminal emulator</td></tr>
+<tr><th scope="row">Runs on</th><td>Windows first; Linux and macOS young</td><td>Linux, macOS, BSD — not Windows</td><td>Linux and macOS; Windows experimental</td><td>Windows</td></tr>
+<tr><th scope="row">First thing you see</th><td>A desktop: taskbar, start menu, file panel, welcome</td><td>A status bar and key chords</td><td>A status bar with a hint line</td><td>A prompt in a tab</td></tr>
+<tr><th scope="row">Opening a program</th><td>Start menu or command bar, ranked as you type</td><td>Type its command</td><td>Type its command</td><td>Type its command</td></tr>
+<tr><th scope="row">Command suggestions</th><td>Built-in bar: apps, history, files, ~1000-command completion</td><td>Your shell's own</td><td>Your shell's own</td><td>Your shell's own</td></tr>
+<tr><th scope="row">Browsing files</th><td>Docked ignore-aware panel, drag-and-drop paths</td><td>Not built in</td><td>Not built in</td><td>Not built in</td></tr>
+<tr><th scope="row">Panes and windows</th><td>Overlapping windows: drag, resize, minimize, maximize</td><td>Fixed splits; bounded popups</td><td>Splits plus floating panes</td><td>Splits in tabs</td></tr>
+<tr><th scope="row">Installing terminal apps</th><td>Built-in directory: winget, scoop, cargo, go, checked releases</td><td>You do it yourself</td><td>You do it yourself</td><td>You do it yourself</td></tr>
+<tr><th scope="row">Session survives the UI closing</th><td>Yes — the engine's daemon holds it</td><td>Yes — the server holds it</td><td>Yes — sessions resume</td><td>No — closing it ends the programs</td></tr>
+<tr><th scope="row">Themes</th><td>3 built in, per-role recoloring with contrast checks</td><td>Status-line colors via config</td><td>Themes via config</td><td>Full graphical settings</td></tr>
+<tr><th scope="row">Configuring</th><td>Settings window with live preview, or a text file</td><td>A text file</td><td>A text file plus layouts</td><td>Graphical settings</td></tr>
+<tr><th scope="row">License</th><td>Apache-2.0</td><td>ISC</td><td>MIT</td><td>MIT</td></tr>
+</tbody>
+</table></div>
+</section>
+<section class="content-section" data-admin="content:content.css" id="comparison-others" aria-labelledby="comparison-others-heading">
+<h2 class="section-heading" id="comparison-others-heading">Where the others win</h2>
+<article class="content-article" data-admin="content:content.css" id="comparison-others-tmux">
+<h3 class="article-heading">tmux</h3>
+<p>tmux is old, everywhere, and battle-tested to a degree no young project can claim. It runs on every server you will ever SSH into, its scripting is a way of life, and it needs nothing installed on the machine in front of you. If you already speak tmux, AGony will not out-multiplex it — AGony's engine, rmux, is itself a young multiplexer. The AGony pitch is not "better tmux"; it is "a desktop, for the person chords leave behind".</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="comparison-others-zellij">
+<h3 class="article-heading">Zellij</h3>
+<p>Zellij already solved the "friendly multiplexer" problem from the inside: a hint line that teaches you the chords as you go, layouts, floating panes and WASM plugins, in Rust, on Unix. If you are on Linux or macOS and want a kinder multiplexer today, Zellij is the finished answer. AGony bets further — menus and a file panel instead of a cheat sheet — and its Unix desktops are still young.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="comparison-others-terminal">
+<h3 class="article-heading">Windows Terminal</h3>
+<p>Windows Terminal is not really a rival — it is the room AGony lives in on Windows, and the recommended host for it. It is an excellent terminal emulator: fast, pretty, graphical settings, split panes in tabs. What it does not try to be is a workspace: its panes do not overlap, its sessions do not survive closing it, and it will not suggest the second word of your command. If tabs of raw shells are all you want, you do not need AGony.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="comparison-verdict" aria-labelledby="comparison-verdict-heading">
+<h2 class="section-heading" id="comparison-verdict-heading">The one-sentence version</h2>
+<p>Choose tmux or Zellij when the terminal is already home and you want more of it, faster; choose Windows Terminal when you want a beautiful place to type; choose <a href="/products/agony/">AGony</a> when you — or someone you support — want the terminal's power without first memorizing its doors and knock codes. The <a href="/products/agony/download/">download</a> is 2.9 MB and the license is <a href="/products/agony/license/">Apache-2.0</a>.</p>
+</section>

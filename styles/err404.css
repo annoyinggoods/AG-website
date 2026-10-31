@@ -1,0 +1,174 @@
+/* Single responsibility: 404 spider stage, swing, boom, fade, empty states. */
+.spider-error {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: clamp(1.25rem, 4vw, 3.5rem);
+  min-height: 100dvh;
+  padding: clamp(1.25rem, 6vh, 4rem);
+  align-items: center;
+}
+.spider-art {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding-block: 2.4rem 1.8rem;
+}
+.spider-web {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(100%, 22rem);
+  height: auto;
+  transform: translate(-50%, -50%);
+  color: var(--accent);
+  opacity: 0.85;
+}
+.spider-web path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.spider-thread {
+  position: absolute;
+  top: -0.3rem;
+  left: 50%;
+  width: var(--hairline-w);
+  height: 25%;
+  background: var(--accent);
+  transform: translateX(-50%);
+  transition: opacity var(--dur-404-fade) ease;
+}
+.err-spider {
+  position: relative;
+  z-index: 1;
+  width: min(72%, 20rem);
+  height: auto;
+  transform-origin: 50% -60px;
+  animation: err-swing var(--dur-404-swing) ease-in-out infinite;
+  transition: opacity var(--dur-404-fade) ease;
+}
+.spider-error[data-err-state="fade"] .err-spider,
+.spider-error[data-err-state="empty"] .err-spider,
+.spider-error[data-err-state="fade"] .spider-thread,
+.spider-error[data-err-state="empty"] .spider-thread {
+  opacity: 0;
+}
+.spider-error.is-boom .err-spider {
+  animation: err-boom var(--dur-404-boom) ease-out both;
+}
+@keyframes err-boom {
+  0% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+  12% {
+    transform: scale(1.28) rotate(-4deg);
+    filter: brightness(2.6);
+  }
+  26% {
+    transform: scale(1.06) rotate(3deg);
+    filter: brightness(1.7);
+  }
+  38% {
+    transform: scale(1.18) rotate(-2deg);
+    filter: brightness(2.2);
+  }
+  55% {
+    transform: scale(1.04) rotate(1deg);
+    filter: brightness(1.4);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    filter: brightness(1);
+  }
+}
+.err-splash {
+  position: absolute;
+  inset: 8% 4% auto 4%;
+  z-index: 2;
+  text-align: center;
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 6vw, 3.5rem);
+  color: var(--accent);
+}
+.err-splash-top {
+  inset: 2% 4% auto 4%;
+  font-size: clamp(1rem, 2.2vw, 1.6rem);
+}
+.err-splash-art {
+  inset: auto 0 0 0;
+  font-size: clamp(0.9rem, 1.9vw, 1.4rem);
+}
+.err-splash-corner {
+  inset: 0.6rem 0.9rem auto auto;
+  font-size: clamp(1rem, 2.4vw, 1.7rem);
+}
+.err-splash-button {
+  position: static;
+  display: inline-block;
+  margin-inline-start: 0.6rem;
+  vertical-align: middle;
+  font-size: clamp(0.9rem, 2vw, 1.4rem);
+}
+@keyframes err-swing {
+  0%, 100% { transform: rotate(-2.6deg) translateX(-3px); }
+  50% { transform: rotate(2.6deg) translateX(3px); }
+}
+.spider-message {
+  position: relative;
+  padding: clamp(1.5rem, 4vw, 2.75rem);
+}
+.spider-over {
+  margin: 0 0 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+}
+.spider-title {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-title);
+  font-weight: 700;
+  font-size: clamp(1rem, 1.6vw, 1.35rem);
+  line-height: 1.95;
+  color: var(--ink);
+}
+.spider-text {
+  margin: 0 0 0.75rem;
+  color: var(--ink-soft);
+  font-family: var(--font-body);
+}
+.spider-text:last-child { margin-bottom: 0; }
+.spider-poke {
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+}
+.spider-poke:hover {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.spider-poke:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.spider-poke:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
+@media (max-width: 47.5rem) {
+  .spider-error {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+    align-content: center;
+  }
+  .err-spider { width: min(56%, 14rem); }
+}

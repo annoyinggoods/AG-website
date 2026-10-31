@@ -1,0 +1,63 @@
+/* Single responsibility: print output with chrome hidden and boxes flattened. */
+@media print {
+  /* The print sheet carries its own palette. Without it the dark theme keeps
+     white ink on the white print ink and the page comes out blank. */
+  :root,
+  :root[data-theme="dark"],
+  :root:not([data-theme]),
+  :root[data-theme="light"] {
+    --ink: #000000;
+    --ink-soft: #1c1c1c;
+    --ink-muted: #333333;
+    --nav-ink: #000000;
+    --accent: #000000;
+    --accent-ink: #ffffff;
+    --bg: var(--print-ink);
+    --panel: var(--print-ink);
+    --stage-tint: var(--print-ink);
+    --chip: var(--print-ink);
+    --chip-active: var(--print-ink);
+    --chip-ink: #000000;
+    --input-bg: var(--print-ink);
+    --input-ink: #000000;
+  }
+  .menu-bubble {
+    display: none;
+  }
+  .hero,
+  .hero-strip,
+  .stage-header {
+    display: none;
+  }
+  .lens {
+    display: none;
+  }
+  .glow {
+    display: none;
+  }
+  .lightbox {
+    display: none;
+  }
+  .cookie-banner {
+    display: none;
+  }
+  .stage {
+    display: block;
+    width: 100%;
+    max-width: none;
+  }
+  .main-box {
+    grid-column: 1 / -1;
+    width: 100%;
+    box-shadow: none;
+    background: var(--print-ink);
+    min-height: 0;
+  }
+  .menu-box,
+  .site-footer {
+    display: none;
+  }
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+}

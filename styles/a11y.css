@@ -1,0 +1,101 @@
+/* Single responsibility: fallbacks for the operating system accessibility
+   settings that a visitor can switch on: forced colours, raised contrast and
+   reduced transparency. */
+@media (forced-colors: active) {
+  .site-background {
+    display: none;
+  }
+  .glass-surface,
+  .title-box,
+  .menu-box,
+  .main-box,
+  .cookie-banner,
+  .menu-bubble,
+  .lightbox-frame {
+    background: Canvas;
+    border: 1px solid CanvasText;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+  .menu-link,
+  .menu-parent-link,
+  .menu-toggle,
+  .chip,
+  .article-heading,
+  .section-heading {
+    color: CanvasText;
+  }
+  .menu-link[aria-current="page"] {
+    color: Highlight;
+    outline: 1px solid Highlight;
+  }
+  .carousel-dot::before {
+    border-color: CanvasText;
+  }
+  .carousel-dot[aria-selected="true"]::before {
+    background: Highlight;
+  }
+  .cookie-ok,
+  .hero-start,
+  .spider-poke,
+  .demo-run {
+    background: ButtonFace;
+    color: ButtonText;
+    border: 1px solid ButtonText;
+  }
+  .skip-link {
+    background: Highlight;
+    color: HighlightText;
+  }
+  .hero-sprite,
+  .hero-web-layer,
+  .glow,
+  .lens {
+    display: none;
+  }
+}
+@media (prefers-contrast: more) {
+  :root[data-theme="dark"] {
+    --ink-soft: #ffffff;
+    --ink-muted: #e8e3f7;
+    --ink-faint: #d4cdea;
+    --nav-ink: #ffffff;
+    --nav-ink-dim: #dcd6f0;
+    --hairline: #b9a2ff;
+  }
+  :root[data-theme="light"] {
+    --ink-soft: #191233;
+    --ink-muted: #2b2445;
+    --ink-faint: #3a3159;
+    --nav-ink: #191233;
+    --nav-ink-dim: #2b2445;
+    --hairline: #4a3d78;
+  }
+  .menu-link,
+  .menu-parent-link,
+  .entry-open {
+    text-decoration: underline;
+  }
+  .menu-link[aria-current="page"] {
+    outline: 2px solid var(--accent);
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface,
+  .title-box,
+  .menu-box,
+  .main-box,
+  .cookie-banner,
+  .menu-bubble {
+    background: var(--panel);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  /* The boxes separate by tint at rest; on an opaque stage the title and menu
+     boxes step down a tone so they stay distinguishable without shadows. */
+  .title-box,
+  .menu-box {
+    background: var(--panel-dim);
+  }
+}

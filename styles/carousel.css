@@ -1,0 +1,90 @@
+/* Single responsibility: carousel region, slides, dots, no-JS fallback row. */
+.media-row {
+  display: flex;
+  gap: var(--gap-box);
+  overflow-x: auto;
+}
+.media-row figure {
+  margin: 0;
+  flex: 0 0 auto;
+}
+.carousel {
+  position: relative;
+  overflow: hidden;
+}
+.carousel-track {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  transition: transform var(--dur-carousel) ease-out;
+  overflow: visible;
+  scrollbar-width: none;
+}
+.carousel-slide {
+  flex: 0 0 100%;
+  max-width: 100%;
+  min-width: 0;
+  padding-right: var(--gap-box);
+  box-sizing: border-box;
+}
+.carousel-slide figure {
+  margin: 0;
+  max-width: 100%;
+}
+.carousel-slide img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.carousel-status {
+  font-family: var(--font-tiny);
+  color: var(--ink-muted);
+  margin: 0.5rem 0 0 0;
+}
+.carousel-prev,
+.carousel-next {
+  border: 0;
+  min-height: 2.75rem;
+  padding: 0.5rem 0.9rem;
+}
+.carousel-prev:focus-visible,
+.carousel-next:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.carousel-dots {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.6rem;
+}
+/* The dot is drawn inside a 24 pixel target so it can be hit with a finger
+   or a mouse without changing the look of the control. */
+.carousel-dot {
+  position: relative;
+  width: 1.5rem;
+  height: 1.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  transition: transform var(--dur-hover) ease;
+}
+.carousel-dot::before {
+  content: "";
+  position: absolute;
+  inset: 0.2rem;
+  border-radius: var(--radius-chip);
+  border: var(--hairline-w) solid var(--accent);
+  background: transparent;
+  transition: background var(--dur-hover) ease;
+}
+.carousel-dot:hover {
+  transform: scale(1.18);
+}
+.carousel-dot[aria-selected="true"]::before {
+  background: var(--accent);
+}
+.carousel-dot:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}

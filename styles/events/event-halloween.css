@@ -1,0 +1,16 @@
+/* Single responsibility: the halloween event overlay. */
+/* The event warms the base accent with a colour mix and tints the atmosphere;
+   it never replaces the accent hue, so the palette stays coherent. */
+:root[data-event="halloween"][data-theme="dark"],
+:root[data-event="halloween"]:not([data-theme]) {
+  --accent: color-mix(in srgb, var(--accent-dark) 88%, #fb923c);
+  --accent-tint: #c084fc26;
+  --stage-tint: color-mix(in srgb, #1c1026 calc(var(--opacity-glass) * 100%), transparent);
+  --event-art: url("../assets/events/halloween/candy.svg");
+}
+:root[data-event="halloween"][data-theme="light"] {
+  --accent: color-mix(in srgb, var(--accent-light) 88%, #fb923c);
+  --accent-tint: #6d28d91f;
+  --stage-tint: color-mix(in srgb, #ede6fa calc(var(--opacity-glass) * 100%), transparent);
+  --event-art: url("../assets/events/halloween/candy.svg");
+}

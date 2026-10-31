@@ -1,0 +1,44 @@
+<section class="content-section" data-admin="content:content.css" id="design-decisions" aria-labelledby="design-decisions-heading">
+<h2 class="section-heading" id="design-decisions-heading">Design Decisions</h2>
+<article class="content-article" data-admin="content:content.css" id="design-decisions-intro">
+<h3 class="article-heading">Why it is built this way</h3>
+<p>Decisions the studio is willing to defend, written down so they can be argued with.</p>
+<p>Older posts live on the <a href="/blog/">blog index</a>.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="decision-folder-per-page">
+<h3 class="article-heading"><a class="entry-open" href="#decision-folder-per-page">Why every page is a folder</a></h3>
+<p class="entry-excerpt">Every page is a folder with an index file inside it, so an address always ends in a slash. It is plain, it survives any host, and it lets you open one page in a text editor and see what the server sends. Boring wins...</p>
+<div class="entry-body" data-entry-body="decision-folder-per-page" hidden>
+<p>Every page is a folder with an index file inside it, so an address always ends in a slash. It is plain, it survives any host, and it lets you open one page in a text editor and see what the server sends. Boring wins... We looked at the alternatives for a week and this one cost the least to explain.</p>
+<p>A flat file at the root of the site has an address without a trailing slash and an address with one, and the server decides whether those are the same page. That is a small decision with a long tail. Caches treat them differently, relative links break in one of them, and every copy of the site somewhere that forgot the slash produces a redirect that did not have to exist.</p>
+<p>A folder with an index file inside it makes the address complete. The slash is part of the name. There is nothing to negotiate with the server, and a link written by hand works exactly as written.</p>
+<p>The other argument matters more for a static site. Every page is a directory you can open. You can read the file the server sends, compare it with the source it was built from, and edit it with anything. Nothing is hidden behind a router and nothing is assembled at request time, so what is on the server is exactly what was written.</p>
+<p>The cost is a repository full of small folders and a build that has to know the order of things. We accept the cost. A site that can be read with the plainest tools on the machine is worth more than the elegance of the alternative, and elegance only one person understands is a trap with good typography.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-10-06">6 October 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="decision-theme-pill">
+<h3 class="article-heading"><a class="entry-open" href="#decision-theme-pill">Why the theme button became a pill</a></h3>
+<p class="entry-excerpt">The old theme button was a single switch, and half the people who met it pressed it twice. A small pill with two named halves is slower to misunderstand. You can still find it in the same corner, and it says what it does now...</p>
+<div class="entry-body" data-entry-body="decision-theme-pill" hidden>
+<p>The old theme button was a single switch, and half the people who met it pressed it twice. A small pill with two named halves is slower to misunderstand. You can still find it in the same corner, and it says what it does now... The corner did not move, which mattered more than the shape did.</p>
+<p>We counted, from our own records of the page, how often people pressed the theme switch twice in a row. The switch was not wrong. It was a light that could be on or off, and a light that is off when you meant to turn it on is a light you press again. Half of them pressed it twice and then stayed in the theme they started in, which is a reasonable outcome for a light and a bad outcome for a switch.</p>
+<p>The pill has two halves and each half is named. One says light, one says dark, and the half you are in is the marked one. There is no state to infer, because the state is written on the control. It is a longer object and it takes slightly longer to explain in a single line, which is the trade we wanted.</p>
+<p>The colours were checked against the text rather than against the background, because a theme is a set of contrasts and not a set of shades. The dark theme was too dim in three places, and we found them by reading the panels rather than by looking at the landing page, which was in good shape and hid the problem.</p>
+<p>Nothing about the pill is clever. It is a pair of radio buttons dressed as a control, it works from the keyboard, and it announces its state because it is a real control with a real role. The point of a switch is to be understood without instruction, and this one finally is.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-09-18">18 September 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="decision-local-demo">
+<h3 class="article-heading"><a class="entry-open" href="#decision-local-demo">Why the demo runs on your machine</a></h3>
+<p class="entry-excerpt">The demo runs where the text already is. Sending a private draft to a server to count its words would be silly, and it would make the privacy page longer. So the counting happens locally, and the page says so plainly in a single sentence...</p>
+<div class="entry-body" data-entry-body="decision-local-demo" hidden>
+<p>The demo runs where the text already is. Sending a private draft to a server to count its words would be silly, and it would make the privacy page longer. So the counting happens locally, and the page says so plainly in a single sentence... That sentence is the whole policy, and everything else on the site follows it.</p>
+<p>A demo that counts words does not need a server. The counting is a loop over a string. Sending the string somewhere to have it counted and sent back would add a round trip, a place where the text rests, and a promise that the text is deleted after use. That last promise is the kind we would have to make and then keep, and we would rather not make it at all.</p>
+<p>The demo is the only part of the site that touches the writing a person brought to it, so it is also the part most likely to be used with something private. A paragraph of a novel that has not been published is exactly the sort of thing a writer pastes into a tool to see how it reads. It should not leave the room.</p>
+<p>There is a cost. The browser does the work, so the demo needs a modern browser and a fair amount of memory for a very long paste. A server would be faster for enormous inputs and would scale on its own. We have not needed that yet, and the trade is worth making while the text stays local.</p>
+<p>The same rule applies across the studio. Tools that keep your notes in plain files on your own disk are harder to shut down, and that is a feature. We would rather build something you can keep than something we can lock you out of.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-09-07">7 September 2026</time></p>
+</article>
+</section>

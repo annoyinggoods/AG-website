@@ -1,0 +1,275 @@
+/* Single responsibility: desktop menu tree, arrows, indents, highlights, dim state. */
+.menu-box {
+  position: sticky;
+  top: 1.5rem;
+  align-self: start;
+  max-height: calc(var(--main-height) - var(--menu-offset));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-radius: var(--radius-menu);
+  opacity: 1;
+  transition: opacity var(--dur-fade) ease;
+}
+.menu-box.is-dimmed {
+  background: color-mix(in srgb, var(--panel-dim) calc(var(--opacity-box) * 100%), transparent);
+}
+.menu-box.is-dimmed .menu-search {
+  background: var(--panel-dim);
+}
+.menu-box.is-dimmed .menu-link,
+.menu-box.is-dimmed .menu-parent-link,
+.menu-box.is-dimmed .menu-toggle,
+.menu-box.is-dimmed .menu-summary::before {
+  color: var(--nav-ink-dim);
+}
+.menu-box.is-dimmed:hover,
+.menu-box.is-dimmed:focus-within {
+  background: color-mix(in srgb, var(--panel) calc(var(--opacity-box) * 100%), transparent);
+}
+.menu-box.is-dimmed:hover .menu-search,
+.menu-box.is-dimmed:focus-within .menu-search {
+  background: var(--panel);
+}
+.menu-box.is-dimmed:hover .menu-link,
+.menu-box.is-dimmed:hover .menu-parent-link,
+.menu-box.is-dimmed:hover .menu-toggle,
+.menu-box.is-dimmed:hover .menu-summary::before,
+.menu-box.is-dimmed:focus-within .menu-link,
+.menu-box.is-dimmed:focus-within .menu-parent-link,
+.menu-box.is-dimmed:focus-within .menu-toggle,
+.menu-box.is-dimmed:focus-within .menu-summary::before {
+  color: var(--nav-ink);
+}
+.menu-search {
+  position: sticky;
+  top: 0;
+  background: var(--panel);
+  padding: 0.75rem;
+  z-index: 2;
+  display: grid;
+  gap: 0.35rem;
+}
+.menu-search-label {
+  font-family: var(--font-tiny);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+}
+.menu-search-input {
+  width: 100%;
+  background: var(--input-bg);
+  border: var(--hairline-w) solid var(--hairline);
+  border-radius: var(--radius-field);
+  padding: 0.55rem 0.7rem;
+  color: inherit;
+  font: inherit;
+  font-family: var(--font-body);
+}
+.menu-search-input::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+.menu-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0.75rem 1rem;
+}
+/* The outer list keeps room above the sticky theme pill so the last items
+   can scroll clear of it. */
+.menu-box > .menu-list {
+  padding-bottom: 3.25rem;
+}
+.menu-list .menu-list {
+  padding-inline-start: var(--indent-step);
+}
+.menu-item {
+  margin-block: 0.15rem;
+}
+.menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.25rem 0.3rem 0.4rem;
+  border-radius: var(--radius-field);
+  text-decoration: none;
+  color: var(--nav-ink);
+  transition: transform var(--dur-hover) ease, background var(--dur-hover) ease;
+}
+.menu-link:hover {
+  transform: translateX(var(--hover-nudge));
+  background: var(--accent-tint);
+}
+.menu-link:focus-visible {
+  transform: translateX(var(--hover-nudge));
+  background: var(--accent-tint);
+}
+.menu-link[aria-current="page"] {
+  background: var(--chip-active);
+  color: var(--accent);
+  font-weight: 700;
+}
+.menu-link[aria-current="page"] .menu-arrow {
+  opacity: 1;
+}
+.menu-arrow {
+  width: 1em;
+  height: 1em;
+  opacity: 0;
+  transform-box: fill-box;
+  transition: opacity var(--dur-hover) ease;
+  color: var(--nav-ink, currentColor);
+}
+.menu-link:hover .menu-arrow {
+  opacity: 1;
+}
+.menu-link:focus-visible .menu-arrow {
+  opacity: 1;
+}
+.menu-item.is-parent-section > .menu-details > .menu-summary .menu-link,
+.menu-item.is-parent-section > .menu-parent-row > .menu-parent-link {
+  background: var(--accent-tint);
+}
+/* The open branch is tinted once per tier with the same colour, so the deeper
+   tiers stack the tint on top of each other and read brighter. The active
+   entry keeps its own chip on top of all of that. */
+.menu-item[data-branch-level] > .menu-parent-row,
+.menu-item[data-branch-level] > .menu-list {
+  background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+.menu-item[data-branch-level] > .menu-list {
+  border-inline-end: 2px solid var(--branch-edge);
+}
+.menu-item.is-active-page > .menu-parent-row {
+  background: transparent;
+}
+.menu-item.is-active-page > .menu-details > .menu-summary .menu-link,
+.menu-item.is-active-page > .menu-parent-row > .menu-parent-link {
+  box-shadow: inset 0 0 0 var(--hairline-w) var(--accent);
+}
+/* The menu tree is a list of links, not a list of sections, so the entry
+   label is a plain span. Headings inside the navigation were the only
+   markup validity error on the site. */
+.menu-heading {
+  font-size: 1rem;
+  font-weight: 400;
+  margin: 0;
+  display: inline;
+}
+.menu-details {
+  margin: 0;
+}
+.menu-details .menu-details {
+  margin-inline-start: 0.2rem;
+}
+.menu-summary {
+  list-style: none;
+  cursor: pointer;
+  border-radius: var(--radius-field);
+}
+.menu-summary::-webkit-details-marker {
+  display: none;
+}
+.menu-summary::before {
+  content: "▸";
+  display: inline-block;
+  width: 1.2em;
+  color: var(--nav-ink);
+}
+.menu-details[open] > .menu-summary::before {
+  content: "▾";
+}
+.menu-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem;
+  height: 1.6rem;
+  padding: 0;
+  border-radius: var(--radius-field);
+  border: 0;
+  background: transparent;
+  color: var(--nav-ink);
+  font: inherit;
+  cursor: pointer;
+  transition: transform var(--dur-hover) ease, background var(--dur-hover) ease;
+}
+.menu-toggle:hover {
+  transform: translateX(var(--hover-nudge));
+  background: var(--accent-tint);
+}
+.menu-toggle::before {
+  content: "▸";
+  display: inline-block;
+  color: var(--nav-ink);
+}
+.menu-toggle[aria-expanded="true"]::before {
+  content: "▾";
+}
+.menu-parent-row {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.menu-parent-link {
+  flex: 1;
+}
+.menu-search-results {
+  padding: 0 0.75rem 0.5rem;
+}
+.menu-search-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.25rem 0 0.5rem;
+}
+.menu-search-item::marker {
+  content: "";
+}
+.menu-search-item {
+  list-style: none;
+  margin-block: 0.15rem;
+}
+.menu-search-item.is-active .menu-link {
+  background: var(--accent-tint);
+}
+.menu-search-link mark {
+  background: var(--chip-active);
+  color: inherit;
+  border-radius: 0.25rem;
+  padding-inline: 0.1rem;
+}
+.menu-search-status {
+  font-family: var(--font-tiny);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0 0.75rem 0.75rem;
+}
+.menu-search-more {
+  font-family: var(--font-tiny);
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  margin: 0.25rem 0 0.5rem;
+}
+.menu-search-empty {
+  color: var(--ink-soft);
+  margin: 0.25rem 0 0.5rem;
+}
+.menu-marker {
+  position: absolute;
+  left: 0.35rem;
+  width: 0.25rem;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  pointer-events: none;
+}
+.menu-search-clear {
+  min-height: 2rem;
+  padding: 0.4rem 0.7rem;
+}
+.menu-bubble-nudge {
+  font-family: var(--font-tiny);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+}
+.menu-group {
+  background: var(--menu-group);
+  border-radius: var(--radius-field);
+}

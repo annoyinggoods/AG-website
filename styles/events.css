@@ -1,0 +1,21 @@
+/* Single responsibility: the event overlay contract and the decorative event mark. */
+/* Every event is a folder: styles/events/event-<name>.css plus assets/events/<name>/.
+   An event file speaks only when the root element carries data-event="<name>".
+   The asset paths in an event file are relative to the stylesheet bundle, which
+   lives in /styles/, so "../assets/events/<name>/" is the correct path there. */
+:root {
+  --event-art: none;
+}
+/* The mark rides inline inside the footer copyright line at text scale, so
+   it reads as part of the sentence and not as a floating ornament. */
+.event-mark {
+  display: inline-block;
+  width: 1.1em;
+  height: 1.1em;
+  margin-inline-end: 0.45em;
+  vertical-align: -0.18em;
+  background-image: var(--event-art);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}

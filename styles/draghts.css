@@ -1,0 +1,555 @@
+/* Single responsibility: the drAGhts game. The styles live on the game container
+   and on the draghts- hook, so they never reach the site chrome.
+   The game keeps its dark look in both themes, because the playground
+   stage it sits on is black either way. Every custom property is
+   namespaced with board- taregt so the site token names never collide. */
+
+/* The tokens live on the mount point, so the whole game picks them up from
+   one place and nothing outside the game sees them. */
+#draghts-app {
+  --board-dark: #1b1b22;
+  --board-light: #2e2e3a;
+  --purple: #8b5cf6;
+  --white: #f5f5f0;
+  --king-orange: #ff7a1a;
+  --legal-green: #a7e8a7;
+  --illegal-red: #ff3b3b;
+  --frenzy-red: #ff3b3b;
+  --focus-ring: #c4b5fd;
+  --pulse-purple: #c4b5fd;
+}
+
+/* The container is the game's own dark surface, so it reads the same in the
+   light theme and in the dark theme. */
+#draghts-app {
+  display: block;
+  padding: 1rem;
+  background: #0c0c10;
+  color: var(--white);
+  font-family: system-ui, sans-serif;
+  text-align: left;
+}
+
+#draghts-app *,
+#draghts-app *::before,
+#draghts-app *::after {
+  box-sizing: border-box;
+}
+
+#draghts-app .draghts-main {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+}
+
+#draghts-app h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.04em;
+}
+
+#draghts-app .turn-banner {
+  margin-top: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  min-height: 1.5rem;
+  color: var(--white);
+}
+
+#draghts-app .picker-banner {
+  margin-top: 0.5rem;
+  font-size: 1rem;
+  color: var(--focus-ring);
+  min-height: 1.25rem;
+}
+
+#draghts-app .picker-banner.hidden {
+  display: none;
+}
+
+#draghts-app .end-turn-wrapper {
+  margin-top: 0.5rem;
+}
+
+#draghts-app .end-turn-wrapper.hidden {
+  display: none;
+}
+
+#draghts-app .end-turn-wrapper button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.95rem;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  border: none;
+  border-radius: 0.35rem;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#draghts-app #board-grid {
+  display: contents;
+}
+
+#draghts-app #board {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-template-rows: repeat(8, 1fr);
+  gap: 0;
+  width: 100%;
+  max-width: 32rem;
+  aspect-ratio: 1 / 1;
+  border: 0.125rem solid var(--board-light);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--board-dark);
+}
+
+#draghts-app .square {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  cursor: default;
+  user-select: none;
+}
+
+#draghts-app .square.dark {
+  background: var(--board-dark);
+}
+
+#draghts-app .square.light {
+  background: var(--board-light);
+}
+
+#draghts-app .square.playable {
+  cursor: pointer;
+}
+
+#draghts-app .square.selected {
+  outline: 0.1875rem solid var(--pulse-purple);
+  outline-offset: -0.1875rem;
+  z-index: 2;
+}
+
+#draghts-app .square.pulse {
+  outline-color: #e0c8ff;
+  outline-width: 0.25rem;
+  outline-offset: -0.25rem;
+  outline-style: solid;
+}
+
+#draghts-app .square.legal-destination {
+  background-color: var(--legal-green);
+}
+
+#draghts-app .square.illegal-flash {
+  background-color: var(--illegal-red);
+}
+
+#draghts-app .piece {
+  width: 70%;
+  height: 70%;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  box-shadow: 0 0.0625rem 0.25rem rgba(0,0,0,0.6);
+}
+
+#draghts-app .piece.purple {
+  background: var(--purple);
+  color: #fff;
+}
+
+#draghts-app .piece.white {
+  background: var(--white);
+  color: #1b1b22;
+}
+
+#draghts-app .piece.king-ring {
+  box-shadow: 0 0 0 0.1875rem var(--king-orange), 0 0.0625rem 0.25rem rgba(0,0,0,0.6);
+}
+
+#draghts-app .piece.queen-buff {
+  box-shadow: 0 0 0 0.1875rem var(--king-orange), 0 0 0.5rem 0.125rem var(--king-orange), 0 0.0625rem 0.25rem rgba(0,0,0,0.6);
+}
+
+#draghts-app .piece.queen-buff::after {
+  content: "\265B";
+  color: var(--king-orange);
+  font-size: 0.6em;
+  position: absolute;
+  bottom: 4%;
+  right: 8%;
+  text-shadow: 0 0 0.125rem #fff;
+}
+
+#draghts-app .draghts-logo {
+  width: 60%;
+  height: 60%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+#draghts-app .hud-container {
+  background: #16161f;
+  border: 0.125rem solid var(--board-light);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+#draghts-app .hud-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.25rem 0;
+  flex-wrap: wrap;
+}
+
+#draghts-app .hud-player {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-weight: 600;
+}
+
+#draghts-app .player-label {
+  letter-spacing: 0.08em;
+  font-size: 0.85rem;
+  color: var(--focus-ring);
+}
+
+#draghts-app .player-score {
+  font-size: 1.1rem;
+  color: var(--white);
+}
+
+#draghts-app .streak-chips {
+  display: flex;
+  gap: 0.25rem;
+}
+
+#draghts-app .streak-chip {
+  background: var(--purple);
+  color: #fff;
+  border-radius: 50%;
+  width: 1.3rem;
+  height: 1.3rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+#draghts-app .frenzy-chip {
+  background: var(--illegal-red);
+  border-radius: 0.25rem;
+  width: auto;
+  padding: 0 0.35rem;
+  height: 1.3rem;
+  font-size: 0.65rem;
+}
+
+#draghts-app .countdown-chip {
+  background: var(--king-orange);
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.35rem;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+#draghts-app .hud-container.frenzy-active {
+  background: #3b0f0f;
+  border-color: var(--frenzy-red);
+  color: #fff;
+}
+
+#draghts-app .hud-container.frenzy-active .player-label,
+#draghts-app .hud-container.frenzy-active .player-score {
+  color: #fff;
+}
+
+#draghts-app .hud-container.frenzy-active .streak-chip {
+  background: var(--frenzy-red);
+  color: #fff;
+  border-color: var(--frenzy-red);
+}
+
+#draghts-app .hud-container.frenzy-active .countdown-chip {
+  background: var(--frenzy-red);
+  color: #fff;
+}
+
+#draghts-app .hud-container.frenzy-active #hud-turn-banner {
+  color: var(--frenzy-red);
+}
+
+#draghts-app .hud-container.frenzy-active .mute-btn {
+  background: var(--frenzy-red);
+  color: #fff;
+}
+
+#draghts-app .hud-container.frenzy-active .rule-chip {
+  background: var(--frenzy-red);
+  color: #fff;
+}
+
+#draghts-app .mute-btn {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.8rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#draghts-app .rule-chip {
+  display: inline-block;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  border-radius: 0.25rem;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-right: 0.15rem;
+}
+
+#draghts-app .start-screen {
+  background: #16161f;
+  border: 0.125rem solid var(--board-light);
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  margin-top: 1rem;
+}
+
+#draghts-app .start-screen h2 {
+  margin: 0 0 1rem;
+  font-size: 1.6rem;
+}
+
+#draghts-app .start-screen h3 {
+  margin: 0.75rem 0 0.5rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  color: var(--focus-ring);
+  text-transform: uppercase;
+}
+
+#draghts-app .mode-choices,
+#draghts-app .preset-choices,
+#draghts-app .difficulty-choices,
+#draghts-app .toggles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+#draghts-app .toggle-label {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+#draghts-app .start-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+#draghts-app .start-actions button {
+  padding: 0.5rem 1rem;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+#draghts-app .end-overlay {
+  background: #16161f;
+  border: 0.125rem solid var(--king-orange);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 28rem;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+#draghts-app .end-overlay h2 {
+  margin: 0 0 1rem;
+}
+
+#draghts-app .end-scores,
+#draghts-app .end-kills {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 0.5rem 0;
+  font-size: 1rem;
+}
+
+#draghts-app .end-rules {
+  margin: 0.75rem 0 1.5rem;
+}
+
+#draghts-app .end-actions {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+#draghts-app .end-actions button {
+  padding: 0.55rem 1.2rem;
+  font-size: 0.95rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#draghts-app .dashboard-modal {
+  background: #16161f;
+  border: 0.125rem solid var(--board-light);
+  border-radius: 1rem;
+  padding: 2rem;
+  max-width: 40rem;
+  margin: 2rem auto;
+}
+
+#draghts-app .dashboard-modal h2 {
+  margin-top: 0;
+}
+
+#draghts-app .dashboard-table-wrapper {
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+#draghts-app .dashboard-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+#draghts-app .dashboard-table th,
+#draghts-app .dashboard-table td {
+  padding: 0.35rem 0.5rem;
+  text-align: left;
+  border-bottom: 0.0625rem solid var(--board-light);
+}
+
+#draghts-app .dashboard-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  justify-content: flex-end;
+}
+
+#draghts-app .dashboard-actions button {
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  border: none;
+  border-radius: 0.35rem;
+  background: var(--focus-ring);
+  color: #1b1b22;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+#toast-container {
+  position: fixed;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.toast {
+  background: #c4b5fd;
+  color: #1b1b22;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  box-shadow: 0 0.25rem 0.75rem rgba(0,0,0,0.5);
+}
+
+/*
+ * The site scrolls smoothly, and a smooth scroll is a moving target for
+ * anything that waits for the page to settle, such as a keyboard player
+ * tabbing to a square or an automated test clicking one. The game scrolls
+ * instantly instead, so a control is where it says it is.
+ */
+body:has(#draghts-app) {
+  scroll-behavior: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #draghts-app .square.pulse {
+    outline: none;
+  }
+  #draghts-app .square.selected {
+    outline: 0.1875rem solid var(--pulse-purple);
+    outline-offset: -0.1875rem;
+  }
+}
+
+@media (max-width: 26.25rem) {
+  #draghts-app .mute-btn,
+  #draghts-app .end-turn-wrapper button,
+  #draghts-app .end-actions button,
+  #draghts-app .start-actions button {
+    min-height: 2.75rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+@media (max-width: 24.375rem) {
+  #draghts-app .draghts-main {
+    padding: 1rem 0.5rem 2rem;
+  }
+  #draghts-app #board {
+    max-width: 100%;
+  }
+  #draghts-app .square {
+    min-height: 2.75rem;
+  }
+  #draghts-app .dashboard-table {
+    font-size: 0.75rem;
+  }
+  #draghts-app .dashboard-modal {
+    max-width: 90vw;
+    margin: 1rem auto;
+    padding: 1rem;
+  }
+  #draghts-app .end-overlay {
+    max-width: 90vw;
+    margin: 1rem auto;
+    padding: 1.25rem;
+  }
+  #draghts-app .hud-row {
+    gap: 0.5rem;
+  }
+}

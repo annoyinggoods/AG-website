@@ -1,0 +1,44 @@
+<section class="content-section" data-admin="content:content.css" id="dev-updates" aria-labelledby="dev-updates-heading">
+<h2 class="section-heading" id="dev-updates-heading">Dev Updates</h2>
+<article class="content-article" data-admin="content:content.css" id="dev-updates-intro">
+<h3 class="article-heading">Notes from the workbench</h3>
+<p>What moved this week, what broke, and what is still a mess. Short notes, written while the ink is wet.</p>
+<p>Older posts live on the <a href="/blog/">blog index</a>.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dev-update-menu-tree">
+<h3 class="article-heading"><a class="entry-open" href="#dev-update-menu-tree">The menu tree learned to remember</a></h3>
+<p class="entry-excerpt">The menu tree now remembers which branches you opened, so the panel returns the way you left it. The state lives in your browser for the tab and is gone when you close it. Nothing was sent anywhere and nothing was stored on our side...</p>
+<div class="entry-body" data-entry-body="dev-update-menu-tree" hidden>
+<p>The menu tree now remembers which branches you opened, so the panel returns the way you left it. The state lives in your browser for the tab and is gone when you close it. Nothing was sent anywhere and nothing was stored on our side... The open branches are written down under a single key, and they are cleared the moment the tab closes, which is a promise we can keep because we never asked a server to keep it for us.</p>
+<p>The first attempt remembered the wrong thing. It stored the last branch you opened instead of the whole set, so a reader who opened three sections and then went back to the top arrived at the third one alone. We wrote the shape of the problem on a card and left it on the desk for a week before touching the code.</p>
+<p>There is a rule in this project that state belongs to the page and not to us. A menu that forgets is an inconvenience. A menu that remembers on a server is a small amount of surveillance with a friendly name. The local version is duller, and dull is the correct amount of interesting for a navigation panel.</p>
+<p>What it does not do is remember across browsers or devices. If you open the menu on your phone, the tree on your laptop starts closed. We decided that was acceptable, because a cross device menu needs an account, and an account needs a database, and neither is worth the trouble of remembering which drawer you left open.</p>
+<p>The tests are dull too. Open two branches, reload the page, check that the two branches are still open, then clear the stored value and check that they are not. That is the whole feature.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-10-12">12 October 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dev-update-cookie-banner">
+<h3 class="article-heading"><a class="entry-open" href="#dev-update-cookie-banner">The cookie banner finally stays closed</a></h3>
+<p class="entry-excerpt">The cookie banner used to come back on every visit, which felt like a small punishment. Now your choice is written down once, in your own browser, and the banner stays out of the way. You can reopen it from the footer at any time...</p>
+<div class="entry-body" data-entry-body="dev-update-cookie-banner" hidden>
+<p>The cookie banner used to come back on every visit, which felt like a small punishment. Now your choice is written down once, in your own browser, and the banner stays out of the way. You can reopen it from the footer at any time... The footer link is deliberately small and always in the same place, because a banner that can be dismissed forever and a banner that can be changed forever are not the same promise.</p>
+<p>The bug was in how the stored value was read. We wrote down the word yes or the word no, and on some visits the page read the value before it had been written, so the banner appeared one more time and then behaved. A missing value now counts as an answer, which is the right reading. If you have already said yes, we should not ask again.</p>
+<p>We also stopped shipping the banner in the page and hiding it with a class. The check happens first, and the banner markup is only written when it is needed, so a reader who already answered never downloads the thing that asks.</p>
+<p>There is one stored value on this site and it is that choice. We are aware of how that sounds. Nothing is set for advertising and nothing is set for analytics, and if that changes the banner changes with it, and the footer link is where you would find out.</p>
+<p>The next version will let you clear the choice from the footer page itself, instead of sending you to the browser settings and leaving you to work out which entry to delete. It is a small thing, and small things are where trust is won.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-10-05">5 October 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dev-update-build-gate">
+<h3 class="article-heading"><a class="entry-open" href="#dev-update-build-gate">The build now stops on broken links</a></h3>
+<p class="entry-excerpt">The build now stops when a link points at a page that does not exist. It caught several dead ends on the first run, which was humbling. Every address on the site is checked against the menu tree before anything is published to the world...</p>
+<div class="entry-body" data-entry-body="dev-update-build-gate" hidden>
+<p>The build now stops when a link points at a page that does not exist. It caught several dead ends on the first run, which was humbling. Every address on the site is checked against the menu tree before anything is published to the world... The check is a short loop over the menu tree, and it fails loudly, with the offending address printed on its own line so you can paste it straight into a search.</p>
+<p>Before the gate, a broken link survived for months. Nothing about a static site warns you. The page still builds, the folder still copies, and the address still returns a cheerful not found page with a spider in it. Broken links stay invisible unless something is paid to look for them, so we made the build pay.</p>
+<p>The gate also insists that every page has a fragment file, because an empty page is a page with nothing on it, and shipping one is worse than shipping an error. It is the same rule in a different costume. The build should refuse to publish something incomplete rather than trust that a human will notice.</p>
+<p>One thing we did not do is check the text inside pages for links. That would need a parser and a lot of false alarms from the examples in this very note. The gate covers the navigation, the sitemap, and the addresses the build writes into pages, which is where the damage was being done anyway.</p>
+<p>The build is slower by a fraction of a second. We would make that trade again, because the alternative is a site that rots quietly and a studio that finds out from a reader.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-09-28">28 September 2026</time></p>
+</article>
+</section>

@@ -1,0 +1,16 @@
+/* Single responsibility: the winter event overlay. */
+/* The event cools the base accent with a colour mix and tints the atmosphere;
+   it never replaces the accent hue, so the palette stays coherent. */
+:root[data-event="winter"][data-theme="dark"],
+:root[data-event="winter"]:not([data-theme]) {
+  --accent: color-mix(in srgb, var(--accent-dark) 85%, #93c5fd);
+  --accent-tint: #93c5fd26;
+  --stage-tint: color-mix(in srgb, #101a26 calc(var(--opacity-glass) * 100%), transparent);
+  --event-art: url("../assets/events/winter/snowflake.svg");
+}
+:root[data-event="winter"][data-theme="light"] {
+  --accent: color-mix(in srgb, var(--accent-light) 85%, #60a5fa);
+  --accent-tint: #1d4ed81f;
+  --stage-tint: color-mix(in srgb, #e6eefb calc(var(--opacity-glass) * 100%), transparent);
+  --event-art: url("../assets/events/winter/snowflake.svg");
+}

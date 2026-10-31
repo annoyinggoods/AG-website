@@ -1,0 +1,48 @@
+/* Single responsibility: cookie banner card and OK / EXIT buttons. */
+.cookie-banner {
+  position: fixed;
+  inset-inline: 1rem;
+  bottom: 1rem;
+  z-index: var(--z-cookie);
+  background: var(--panel);
+  border-radius: var(--radius-box);
+  box-shadow: var(--shadow-float);
+  padding: 1rem 1.25rem;
+  display: grid;
+  gap: 0.9rem;
+}
+/* The banner is visible without scripting, so the notice reaches every
+   visitor. A stored choice marks the document as decided and hides it. */
+html[data-cookie="set"] .cookie-banner {
+  display: none;
+}
+/* The footer link can bring the banner back on demand. */
+html[data-cookie="set"] .cookie-banner.is-visible {
+  display: grid;
+}
+.cookie-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+.cookie-ok {
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  padding: 0.6rem 1.2rem;
+  min-width: 7rem;
+}
+.cookie-exit {
+  padding: 0.6rem 1.2rem;
+  min-width: 7rem;
+}
+/* On a phone the banner is fixed to the bottom of the screen, so the page
+   needs room under it or the last lines of the content stay covered. */
+@media (max-width: 56rem) {
+  html:not([data-cookie="set"]) body {
+    padding-bottom: 13rem;
+  }
+  html[data-cookie="set"] body:has(> .cookie-banner.is-visible) {
+    padding-bottom: 13rem;
+  }
+}

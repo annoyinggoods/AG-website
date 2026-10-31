@@ -1,0 +1,45 @@
+<section class="content-section" data-admin="content:content.css" id="technical-dives" aria-labelledby="technical-dives-heading">
+<h2 class="section-heading" id="technical-dives-heading">Technical Dives</h2>
+<article class="content-article" data-admin="content:content.css" id="technical-dives-intro">
+<h3 class="article-heading">Long reads on the small decisions</h3>
+<p>How the parts work and why they were built that way. Written for readers who like to know.</p>
+<p>Older posts live on the <a href="/blog/">blog index</a>.</p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dive-text-statistics">
+<h3 class="article-heading"><a class="entry-open" href="#dive-text-statistics">Counting words without a server</a></h3>
+<p class="entry-excerpt">Text statistics do not need a server, so the demo does not need one either. A small Rust crate compiles to WebAssembly, ships as a few kilobytes, and counts words, sentences, and repeated terms in your browser. The network tab stays empty. Everything is local...</p>
+<div class="entry-body" data-entry-body="dive-text-statistics" hidden>
+<p>Text statistics do not need a server, so the demo does not need one either. A small Rust crate compiles to WebAssembly, ships as a few kilobytes, and counts words, sentences, and repeated terms in your browser. The network tab stays empty. Everything is local... The only thing the page fetches after the first load is nothing at all, because the text never leaves the box you pasted it into.</p>
+<p>The counting is not clever. A word is a run of characters separated by whitespace or punctuation, a sentence ends at a period or a question mark, and a repeated term is a word that appears more than once once the common short words have been set aside. The difficult part was deciding where to put that logic so a browser could run it without asking permission.</p>
+<p>Rust compiled to WebAssembly does that in a few kilobytes. There is no runtime to download and no interpreter to warm up, so the cost of the tool is the cost of loading a file. A demo that runs locally can afford to be honest about what it does, and the alternative, sending a draft to a server to be counted, is a slow way to learn nothing.</p>
+<p>The counting happens in a worker, so a long paste does not freeze the page while it is measured. The results come back as plain numbers and a short list of terms, and the list is capped, because nobody needs the three hundredth most common word.</p>
+<p>The limit is honest too. The crate counts words. It does not know what a word means, it does not know which language you are writing in, and it does not know that you meant to cut that paragraph. It counts characters and leaves the judgement to you, which is the correct division of labour for a tool that claims to be local.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-10-08">8 October 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dive-one-index">
+<h3 class="article-heading"><a class="entry-open" href="#dive-one-index">One index, one source of truth</a></h3>
+<p class="entry-excerpt">One menu tree feeds the navigation, the page search, and the sitemap. When a page moves, it moves in one place. The build reads the same file, so the search box can never offer a page the sitemap forgot, or the other way around, ever...</p>
+<div class="entry-body" data-entry-body="dive-one-index" hidden>
+<p>One menu tree feeds the navigation, the page search, and the sitemap. When a page moves, it moves in one place. The build reads the same file, so the search box can never offer a page the sitemap forgot, or the other way around, ever... That property is not automatic. It holds only as long as nobody is allowed to keep a second list.</p>
+<p>The tree is a plain file describing the site as a set of sections and pages. The navigation is built from it, the search index is built from it, and the sitemap is built from it. Each is allowed to be wrong about something else, but none is allowed to be wrong about the shape of the site, because they are not told the shape separately.</p>
+<p>The failure this prevents is not dramatic. It is a page that appears in the search results and returns a not found page with a spider in it. It is a link in the footer to a page that was renamed three weeks ago. It is a sitemap that lists a section with nothing under it. These are the errors that survive for years because nothing is watching them.</p>
+<p>The tree also carries the metadata each page needs, such as its title and its description, and the build refuses to publish a page whose description is missing or the wrong length. That rule is separate from the tree, but it lives in the same place, which is the point. One file to read when you want to know what the site is.</p>
+<p>The cost is that adding a page means editing a file rather than creating a folder and hoping. It takes about a minute, and nobody has to wonder whether the site knows a page exists. We have made that trade often enough to have stopped noticing it, which is the usual test of a good decision.</p>
+</div>
+<p class="entry-meta"><time datetime="2026-09-21">21 September 2026</time></p>
+</article>
+<article class="content-article entry-card" data-admin="content:content.css" id="dive-chart-engine">
+<h3 class="article-heading"><a class="entry-open" href="#dive-chart-engine">The chart shows the words you already have</a></h3>
+<p class="entry-excerpt">The chart shows the words you already have. The demo takes a paste of text, counts what is inside it, and lists the terms that repeat most often. Nothing is uploaded, so a private draft can be used for a look without leaving your machine...</p>
+<div class="entry-body" data-entry-body="dive-chart-engine" hidden>
+<p>The chart shows the words you already have. The demo takes a paste of text, counts what is inside it, and lists the terms that repeat most often. Nothing is uploaded, so a private draft can be used for a look without leaving your machine... The count and the chart are the same operation with two different endings, and both run in the same place.</p>
+<p>The chart is a bar chart, drawn with a small drawing library rather than a charting framework, because it only ever has one series and one axis. It reads the counted terms from the same local module the text statistics use, so there is one definition of what a word is and one place where that definition can be wrong.</p>
+<p>The heavy part is loaded late. The chart draws itself once it is near the edge of the screen, so a reader who scrolls past the section, or never reaches it, does not pay for the library. The chart is drawn from the same tally the counts use, so the two numbers on the page cannot disagree with each other.</p>
+<p>There is a privacy note in the corner of the demo and it is short, because a long privacy note about not uploading something is a strange thing to write. The sentence says the text is counted in your browser and stays there. That is the whole claim, and the code is short enough to check by reading it.</p>
+<p>The limits are the usual ones. A chart of the top twenty terms is a rough map, not a measurement of importance, and the stop words are a short English list, so a passage in another language will look strange. Both are on the list of things to fix, and neither is a reason to send the text somewhere else.</p>
+</div>
+<p><a href="/products/agit/features/research/compute-and-chart/">See the Compute and Chart page</a></p>
+<p class="entry-meta"><time datetime="2026-09-14">14 September 2026</time></p>
+</article>
+</section>

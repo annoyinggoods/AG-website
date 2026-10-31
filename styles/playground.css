@@ -1,0 +1,59 @@
+/* Single responsibility: the playground layout — hero and menu on the left, the
+   title box on the right above a solid dark main box, and no animations at all. */
+
+/* The playground stage drops the glass surface, because a solid dark box has
+   no glass in it. The glass surface also carried the stacking order, so the
+   stage has to take it over. Without this the fixed background paints over
+   the static stage and swallows every click on the page. */
+body[data-layout="playground"] .stage {
+  position: relative;
+  z-index: var(--z-glass);
+}
+
+body[data-layout="playground"] .stage-header > .hero-strip {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+}
+body[data-layout="playground"] .stage-header > .title-box {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: end;
+  justify-self: end;
+  margin-top: 0;
+}
+body[data-layout="playground"] .stage > .menu-box,
+body[data-layout="playground"] .stage > .main-box {
+  margin-top: 0;
+}
+body[data-layout="playground"] .main-box {
+  background: var(--bg-dark);
+  min-width: min(45rem, 100%);
+  min-height: 45rem;
+}
+body[data-layout="playground"] .hero-strip .hero-fallback {
+  max-height: 100%;
+  object-fit: contain;
+  object-position: left top;
+}
+body[data-layout="playground"] *,
+body[data-layout="playground"] *::before,
+body[data-layout="playground"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+@media (max-width: 56rem) {
+  body[data-layout="playground"] .stage-header > .hero-strip {
+    grid-column: 1 / -1;
+    grid-row: 1;
+  }
+  body[data-layout="playground"] .stage-header > .title-box {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: stretch;
+  }
+  body[data-layout="playground"] .main-box {
+    min-width: 0;
+  }
+}

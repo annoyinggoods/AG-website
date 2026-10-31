@@ -1,0 +1,38 @@
+/* Single responsibility: background image plus matte glassmorphism stage surface. */
+.site-background {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-background);
+  background-color: var(--bg);
+  background-repeat: repeat;
+  background-size: auto;
+  background-position: center;
+  opacity: 0.45;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg);
+}
+@media (hover: none) {
+  .site-background {
+    background-attachment: scroll;
+  }
+}
+.glass-surface {
+  position: relative;
+  z-index: var(--z-glass);
+  background: var(--stage-tint);
+  -webkit-backdrop-filter: blur(var(--blur-stage));
+  backdrop-filter: blur(var(--blur-stage));
+  border-radius: var(--radius-box);
+  box-shadow: var(--shadow-float);
+  overflow: clip;
+}
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-surface {
+    background: rgb(21 14 38 / 96%);
+  }
+}

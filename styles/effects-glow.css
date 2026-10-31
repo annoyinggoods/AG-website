@@ -1,0 +1,19 @@
+/* Single responsibility: fixed cursor glow layer styling only. */
+.glow {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: var(--glow-size);
+  max-width: var(--glow-max);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: var(--z-glow);
+  background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
+  opacity: var(--glow-alpha, 0.08);
+  display: none;
+  transform: translate3d(var(--x, 0), var(--y, 0), 0) translate(-50%, -50%);
+}
+.glow.is-visible {
+  display: block;
+}

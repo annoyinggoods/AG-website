@@ -1,0 +1,127 @@
+/* Single responsibility: Compute and Chart demo panel, table, and SVG chart. */
+.demo-panel {
+  margin-block: 1rem;
+  border: var(--hairline-w) solid var(--hairline);
+  border-radius: var(--radius-box);
+  background: var(--menu-group);
+  padding: 1rem 1.25rem;
+}
+.demo-status {
+  margin: 0 0 0.75rem 0;
+  font-family: var(--font-tiny);
+  color: var(--ink-muted);
+}
+.demo-controls {
+  display: grid;
+  gap: 0.75rem;
+}
+.demo-field {
+  display: grid;
+  gap: 0.4rem;
+  font-weight: 700;
+}
+.demo-input {
+  width: 100%;
+  min-height: 8rem;
+  resize: vertical;
+  border-radius: 0.6rem;
+  border: var(--hairline-w) solid var(--hairline);
+  background: var(--input-bg);
+  color: var(--input-ink);
+  padding: 0.7rem 0.85rem;
+  font-family: var(--font-body);
+  line-height: 1.5;
+}
+.demo-input::placeholder {
+  color: var(--placeholder);
+  opacity: 1;
+}
+.demo-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+/* The loud chip variant: the shared quiet recipe lives in content.css. */
+.demo-sample,
+.demo-run {
+  border: 0;
+  border-radius: var(--radius-chip);
+  min-height: 2.75rem;
+  padding: 0.6rem 1.2rem;
+  cursor: pointer;
+  font-family: var(--font-body);
+  font-weight: 700;
+}
+.demo-sample {
+  background: var(--chip);
+  color: var(--chip-ink);
+}
+.demo-run {
+  border: 0;
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+.demo-run:hover {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.demo-sample:focus-visible,
+.demo-run:focus-visible,
+.demo-input:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.demo-live {
+  min-height: 1.4rem;
+  font-family: var(--font-tiny);
+  color: var(--ink-muted);
+}
+.demo-error {
+  border-left: 0.25rem solid var(--accent-strong);
+  padding: 0.6rem 0.9rem;
+  background: var(--accent-tint);
+  border-radius: 0.5rem;
+}
+.demo-table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-block: 0.75rem;
+}
+.demo-table caption {
+  text-align: left;
+  font-weight: 700;
+  padding-block: 0.4rem;
+}
+.demo-table th,
+.demo-table td {
+  border: var(--hairline-w) solid var(--hairline);
+  padding: 0.5rem 0.7rem;
+  text-align: left;
+}
+.demo-table th {
+  background: var(--menu-group);
+}
+.demo-chart-figure {
+  margin: 0.75rem 0 0 0;
+}
+.demo-chart {
+  width: 100%;
+  height: auto;
+  display: block;
+  color: var(--accent);
+  background: var(--panel);
+  border: var(--hairline-w) solid var(--hairline);
+  border-radius: 0.6rem;
+}
+.demo-chart text {
+  fill: var(--ink-muted);
+}
+.demo-chart-text {
+  font-family: var(--font-tiny);
+  color: var(--ink-muted);
+}
+@media (max-width: 56rem) {
+  .demo-panel {
+    padding: 0.85rem 1rem;
+  }
+}

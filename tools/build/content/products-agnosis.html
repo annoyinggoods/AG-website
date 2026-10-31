@@ -1,0 +1,130 @@
+<section class="content-section" data-admin="content:content.css" id="agnosis" aria-labelledby="agnosis-heading">
+<h2 class="section-heading" id="agnosis-heading">A hotkey, a parade, and nobody's business</h2>
+<p>The studio's joke that ships: press one hotkey and every open browser minimizes while a fullscreen parade of ASCII ducks claims the screen.</p>
+<div class="chip-row">
+<a class="chip" href="/products/">All products</a>
+<a class="chip" href="/labs/">The labs</a>
+<a class="chip" href="/contact/report-bug/">Report a bug</a>
+</div>
+<article class="content-article" data-admin="content:content.css" id="agnosis-pitch">
+<h3 class="article-heading">The parade arrives before the questions do</h3>
+<p>Someone walks in. You have about a second. AGnosis is that second.</p>
+<p>Press the hotkey and two things happen at once: every open browser window minimizes, and a borderless fullscreen window of marching ducks takes over the monitor. Eleven of them, two big and nine small, a band of grass, five balloons on ropes that swing like they are being paid to.</p>
+<p>What was on your screen is nobody's business but yours. AGnosis does not ask, does not record, and does not care. It just really enjoys ducks.</p>
+<p>Annoying Goods builds writing tools. It also built this, because the studio holds that a joke that works is a product, and this one works.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-name">
+<h3 class="article-heading">A word about the name</h3>
+<p>The app was built under the working name ducks, which described it perfectly. Studio names carry an ag somewhere, so the ducks got religion: gnosis, the knowing of things. The ducks know nothing. They march.</p>
+<p>The working name still lives in the commands and the config folders, which keeps the rename honest. You are reading the sales page; the ducks have not been informed.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-hotkey" aria-labelledby="agnosis-hotkey-heading">
+<h2 class="section-heading" id="agnosis-hotkey-heading">One chord, instant ducks</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-mechanics">
+<h3 class="article-heading">What the hotkey actually does</h3>
+<p>The default chord is <code>A+G+Shift+Space</code> on Windows and Linux and <code>Ctrl+Alt+Shift+Space</code> on macOS. Press it and the parade covers the display under your pointer, or the primary one if you pin it there. Press it again, or press <code>ESC</code>, and the parade packs up.</p>
+<p>AGnosis finds browsers by process name against a built-in list of more than twenty of them: Chrome, Edge, Firefox, Brave, Vivaldi, Opera, Tor and friends, Thunderbird included. You can add your own program names in the config, and on macOS the match also speaks bundle identifiers. Browsers only: the editor, the terminal and the spreadsheet stay exactly where they are.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-safety">
+<h3 class="article-heading">Minimized, never closed</h3>
+<p>Browsers are only ever minimized. Nothing is closed, so no tab, no half-filled form and no unsaved work is ever lost. The parade is a curtain, not a shredder.</p>
+<p>By default the browsers stay minimized after the parade ends, because a screen that snaps back open is exactly the moment the joke exists to prevent. If you would rather have your windows restored automatically, one line in the config makes the restore polite. The ducks will not judge you. Probably.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-parade" aria-labelledby="agnosis-parade-heading">
+<h2 class="section-heading" id="agnosis-parade-heading">The parade itself</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-scene">
+<h3 class="article-heading">Eleven ducks and a physics problem</h3>
+<p>The scene is ASCII art the way a cathedral is a pile of stones: a native fullscreen window, a grid of character cells, a simulation underneath, drawn through your GPU. The two big ducks lead, nine small ones follow, and the five balloons hang on ropes with real pendulum physics, wobbling through a hundred and twenty substeps a second.</p>
+<p>The sky is a gradient you can set by time of day. Up to three backdrop pictures scroll behind the parade at their own speeds. Every duck can wear a hat. Each duck can carry a personality of its own, bob, gait, phase and colour, and the one duck marching slightly out of step will be the one you love most.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-weather">
+<h3 class="article-heading">The weather</h3>
+<p>The parade has weather, seeded and deterministic, so the same storm always falls in the same order.</p>
+<dl>
+<dt>Rain</dt>
+<dd>Blue waves fill the gaps between the grass blades, and splashes bloom around every duck's feet.</dd>
+<dt>Snow</dt>
+<dd>The ground turns white and one chosen duck falls on its backside. Every duck behind it stops, in order, and keeps marching in place. The rhythm survives.</dd>
+<dt>Wind</dt>
+<dd>Every grass blade leans the other way.</dd>
+<dt>Lightning</dt>
+<dd>The tall blades flash, and the whole parade freezes for a second and a half. Then it resumes as if nothing happened.</dd>
+</dl>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-alive">
+<h3 class="article-heading">The ducks notice you</h3>
+<p>Click a duck and it hops, grimaces and clucks. Shift-click one and it stops dead, the ducks behind it stop too, and the ones in front keep marching; the held duck keeps walking on the spot, because the rhythm is a clock, not a video.</p>
+<p>Every sound is synthesized as it happens. No audio file ships, none is loaded, and a machine with no sound card simply marches in silence, unbothered. A note track can be composed in the editor and played in step with the marching, because a parade deserves a soundtrack.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-yours" aria-labelledby="agnosis-yours-heading">
+<h2 class="section-heading" id="agnosis-yours-heading">Make the parade yours</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-balloons">
+<h3 class="article-heading">Any picture becomes a balloon</h3>
+<p>Drop a picture into the balloons folder and a watcher inflates it without a restart. Type its name on the parade's own input line and it joins mid-march. Or point the command line at any image on disk. PNG, JPEG, GIF and BMP all work: the picture becomes ASCII art, mounted on a rope, and the next carrier duck walks it across the screen.</p>
+<p>A message of your own can march above the grass, in the block font, fading out after eight seconds or staying forever if you cannot let it go.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-editor">
+<h3 class="article-heading">Draw your own duck</h3>
+<p>The <code>D+Shift</code> chord opens the editor, and the D is for ducks: nineteen tools, eight colours, a canvas of character cells. Draw a duck, a balloon, a grass tile or a decoration, then assign your art to any of the sixteen parade slots, from the two leads to the five balloons.</p>
+<p>Undo works in whole strokes, not single cells, and a draft of the drawing is saved a second after you stop, so even a crash costs at most one second of art.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-share">
+<h3 class="article-heading">Send a parade to somebody</h3>
+<p>The parade is a pure function of a few numbers, so it can be written down and sent. One command exports a single self-contained web page, about 650 kB for a twenty second loop, with no network, no assets and no fonts, that opens anywhere and can be paused and scrubbed. The same command writes an animated GIF instead, or a package of your drawn art that another machine can import whole.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-local" aria-labelledby="agnosis-local-heading">
+<h2 class="section-heading" id="agnosis-local-heading">One binary, no leash</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-files">
+<h3 class="article-heading">Plain files, live reload</h3>
+<p>Everything lives in one <code>config.toml</code> beside the balloons folder. Edit it while the parade runs and the change lands on screen within a second, no restart. A settings panel does the same with clicks instead of typing, and every write is surgical: your comments and your own keys survive byte for byte, with a backup kept beside the file.</p>
+<p>No account, no cloud, no subscription, no telemetry. The parade fetches nothing from anywhere; your machine is the whole internet the ducks need.</p>
+<p>A quiet counter can tally the days, the parades, the streaks and the achievements, and the achievements are listed in a plain file, so nothing stops you from awarding yourself one.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-open">
+<h3 class="article-heading">Open source, in Rust</h3>
+<p>AGnosis is a Rust workspace under the MIT licence, with the simulation in a pure platform-free core and a second front end that runs the same code in a browser tab, so the web parade cannot drift from the native one. The suite stood at 895 tests on Windows at the last count, and the release gate renders the parade headless twice and demands the two runs be byte-identical.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-platforms" aria-labelledby="agnosis-platforms-heading">
+<h2 class="section-heading" id="agnosis-platforms-heading">Where it runs</h2>
+<p>The release pipeline turns one version tag into three packages, one per desk.</p>
+<article class="content-article" data-admin="content:content.css" id="agnosis-packages">
+<h3 class="article-heading">Three desks, three packages</h3>
+<p>One self-contained binary per platform, with the font embedded inside it, so there are no runtime assets to install.</p>
+<table>
+<caption>What the release pipeline builds for each platform</caption>
+<tr>
+<th scope="col">Platform</th>
+<th scope="col">Package</th>
+<th scope="col">The honest footnote</th>
+</tr>
+<tr>
+<td>Windows, x86-64</td>
+<td>a portable zip</td>
+<td>a GUI binary: double-click it and no console window ever flashes</td>
+</tr>
+<tr>
+<td>macOS, Intel and Apple silicon</td>
+<td>a universal dmg</td>
+<td>unsigned, so the first launch needs a right-click Open; the chord asks for Input Monitoring, and a menu-bar trigger works with no grant at all</td>
+</tr>
+<tr>
+<td>Linux, Debian and Ubuntu</td>
+<td>a deb package</td>
+<td>lands on PATH with an application-menu entry; it speaks X11, and a Wayland-only session needs XWayland</td>
+</tr>
+</table>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agnosis-status" aria-labelledby="agnosis-status-heading">
+<h2 class="section-heading" id="agnosis-status-heading">Status</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-forge">
+<h3 class="article-heading">In the forge, feathers still wet</h3>
+<p>AGnosis is at version 0.1.0. The packaging is real, the tests are green, and the release pipeline publishes all three packages on every version tag, but no tag has been cut yet, so today there is no download. The parade exists; the gate has not opened.</p>
+<p>Which makes now a fine time to shape it. Tell the studio what the first release needs on the <a href="/contact/request-feature/">request a feature form</a>, or report what the ducks broke on the <a href="/contact/report-bug/">bug report form</a>. The <a href="/labs/">labs page</a> shows how experiments graduate.</p>
+</article>
+</section>

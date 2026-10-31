@@ -1,0 +1,83 @@
+<section class="content-section" data-admin="content:content.css" id="agony-pitch" aria-labelledby="agony-pitch-heading">
+<h2 class="section-heading" id="agony-pitch-heading">A desktop that lives in a terminal</h2>
+<p>AGony is a desktop environment for people who hate terminals but want to learn to like them, and for people whose memory for commands is short. It gives the terminal furniture: windows you can drag, a taskbar with a clock, a start menu with a file manager, and a command bar that suggests the command you half-remember — so the machine remembers for you.</p>
+<figure class="feature-media">
+<img src="assets/agony/desktop-hero.webp" alt="The AGony desktop running in a terminal: the welcome window over the desktop, the THANK-YOU.md tile in the corner, and the taskbar at the bottom" width="1617" height="1100" loading="lazy">
+<figcaption>The AGony desktop on its first run: the welcome window names the three things worth trying, the THANK-YOU.md tile credits every dependency from the first paint, and the taskbar holds the Start button, the window buttons and the clock.</figcaption>
+</figure>
+<p>Version 0.9.0 is the current release. It is a real desktop, not a mock-up: the windows hold live shells, the suggestions come from a real completion engine, and everything runs on your machine — AGony has no accounts, no telemetry and no network calls of its own.</p>
+<div class="chip-row">
+<a class="chip" href="/products/agony/download/">Download 0.9.0</a>
+<a class="chip" href="/products/agony/features/">Take the tour</a>
+<a class="chip" href="/products/agony/comparison/">Compare</a>
+</div>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agony-new" aria-labelledby="agony-new-heading">
+<h2 class="section-heading" id="agony-new-heading">If the terminal scares you</h2>
+<article class="content-article" data-admin="content:content.css" id="agony-new-menu">
+<h3 class="article-heading">Nothing to memorize on day one</h3>
+<p>Open the start menu (<code>Ctrl-Space</code>) and AGony looks like any desktop you have used: SEARCH, FILE MANAGER, PROGRAMS, SETTINGS. Open the file panel and browse your folders with arrows instead of typing <code>cd</code> paths. A first-run welcome window names the three things worth trying, and it stays away after that.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agony-new-bar">
+<h3 class="article-heading">The command bar finishes your sentences</h3>
+<p>Press <code>Ctrl-K</code>, type <code>git che</code>, and the bar suggests <code>checkout</code> — the completion engine behind it knows around a thousand commands. Type the name of an app and it offers to launch it. Nothing runs until you press Enter, so a wrong guess costs you nothing. Grab a file in the panel with <code>g</code>, drop it into the bar with <code>Ctrl-G</code>, and a menu shows exactly how the path will be pasted — the name, the absolute path, or the path relative to where you are. No more mistyped paths.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agony-new-install">
+<h3 class="article-heading">It installs terminal apps for you</h3>
+<p>The start menu's PROGRAMS section opens an app directory: a curated catalog of terminal programs with a description, license and source on every row. Press Enter on one, see the exact command that will run, confirm once, and AGony installs it through winget, scoop, cargo or a hash-checked download. Copyleft apps are never bundled into the download — they sit on their own shelf with their license in the open.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agony-new-mouse">
+<h3 class="article-heading">You can point at it</h3>
+<p>Click a window to focus it, its titlebar buttons to drive it, a taskbar button to minimize or restore. Right-click a desktop tile for Open, Delete document and Copy path; right-click a start-menu row for Open, Pin to desktop and Copy launch command. Drag a titlebar to move, drag the bottom or right border to resize, and click your way through the settings window — every control that had a key still has it.</p>
+<figure class="feature-media">
+<img src="assets/agony/desktop-live.webp" alt="The AGony desktop with the start menu open over the app directory and welcome windows: menus, rows and buttons all answer the mouse" width="1592" height="1048" loading="lazy">
+<figcaption>The start menu open over the app directory and the welcome window — click any row, and the highlighted one is where the pointer landed.</figcaption>
+</figure>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agony-pro" aria-labelledby="agony-pro-heading">
+<h2 class="section-heading" id="agony-pro-heading">If the terminal is your home</h2>
+<article class="content-article" data-admin="content:content.css" id="agony-pro-real">
+<h3 class="article-heading">Real shells, real processes, no sandbox</h3>
+<p>Every AGony window is a live pane running your actual shell — on Windows, PowerShell or cmd through a real ConPTY owned by the rmux multiplexer engine. AGony never wraps your processes in anything: when a window closes, that pane's program ends, and when the desktop quits with <code>Ctrl-Q</code>, the session survives — run AGony again and your windows come back, adopted and titled.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agony-pro-keys">
+<h3 class="article-heading">Keyboard-first, and every key is yours to rebind</h3>
+<p>The whole desktop drives from the keyboard: <code>Ctrl-E</code> cycles windows, <code>Ctrl-M</code> minimizes, <code>Ctrl-F</code> maximizes, <code>Ctrl-W</code> closes, <code>Ctrl-K</code> is the command bar. The mouse works too — click windows, buttons and menus, right-click tiles and start-menu rows, drag titlebars and the resize borders — but it is a convenience, not a requirement. Every reserved combo can be rebound in SETTINGS ▸ Keys, and AGony refuses a binding that collides with another, naming both.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agony-pro-history">
+<h3 class="article-heading">History that survives hard kills</h3>
+<p>Every command-bar run lands in a history file that stays valid even after a hard kill, and previous lines reappear in the bar's suggestions above the completion engine's — a failed command wears a <code>✗</code> marker so you can skip re-running the ones that hurt. The <code>agony history</code> command prints it from outside; <code>agony doctor</code> reports the environment; <code>agony selftest</code> proves the hosting chain end to end.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agony-engine" aria-labelledby="agony-engine-heading">
+<h2 class="section-heading" id="agony-engine-heading">Built on an engine, not on luck</h2>
+<p>AGony never spawns a child process into a window itself. It asks the rmux daemon for a pane, the daemon owns the terminal plumbing and the process tree, and AGony renders pane snapshots and forwards input through the SDK. That separation is what keeps a window manager inside a terminal stable — the desktop is a tenant with good manners, not a new kind of shell.</p>
+<p>Under the hood it is Rust: ratatui draws, crossterm reads input, rmux hosts, carapace completes. Every dependency is credited where you can see it — <code>agony thanks</code> writes a THANK-YOU.md onto the AGony desktop listing each crate and its license.</p>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agony-features" aria-labelledby="agony-features-heading">
+<h2 class="section-heading" id="agony-features-heading">The standout parts, each with its own page</h2>
+<div class="chip-row">
+<a class="chip" href="/products/agony/features/command-bar/">The command bar</a>
+<a class="chip" href="/products/agony/features/windows/">Windows and the taskbar</a>
+<a class="chip" href="/products/agony/features/start-menu/">The start menu</a>
+<a class="chip" href="/products/agony/features/file-panel/">The file panel</a>
+<a class="chip" href="/products/agony/features/settings/">Settings and themes</a>
+</div>
+<p>Every feature page carries a capture of the real desktop — not a mock-up.</p>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agony-status" aria-labelledby="agony-status-heading">
+<h2 class="section-heading" id="agony-status-heading">Where it stands</h2>
+<article class="content-article" data-admin="content:content.css" id="agony-status-now">
+<h3 class="article-heading">Version 0.9.0, honestly labeled</h3>
+<p>AGony is Windows-first: Windows 10/11 64-bit is the platform the desktop is walked on. The same source builds and passes its test suite — including an end-to-end hosting self-test — on Linux and macOS, and the release pipeline packages archives for all three, but the Linux and macOS desktops have not yet had their full manual passes; treat them as young. It is all Apache-2.0, and the <a href="/products/agony/license/">license page</a> says what that lets you do.</p>
+<p>The <a href="/products/agony/download/">download page</a> has the archive, its checksum and the two free prerequisites. The <a href="/products/agony/comparison/">comparison page</a> puts AGony next to tmux, Zellij and Windows Terminal — including the rows where they win.</p>
+</article>
+<div class="chip-row">
+<a class="chip" href="/products/agony/download/">Download</a>
+<a class="chip" href="/products/agony/license/">License</a>
+<a class="chip" href="/products/agony/comparison/">Comparison</a>
+<a class="chip" href="/products/yagna/">yAGna</a>
+<a class="chip" href="/support/github/">GitHub</a>
+</div>
+</section>

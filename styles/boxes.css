@@ -1,0 +1,26 @@
+/* Single responsibility: title, menu, and main box surfaces and shadows. */
+/* The stage carries the one blur and the one shadow; the boxes separate from
+   it and from each other by a step in tint, not by more blur or more shadow. */
+.title-box {
+  display: grid;
+  place-items: center;
+  background: color-mix(in srgb, var(--panel) calc(var(--opacity-box) * 100%), transparent);
+  border-radius: var(--radius-box);
+  padding: 0.85rem 1.25rem;
+  margin: 0 var(--gap-box);
+}
+.menu-box {
+  background: color-mix(in srgb, var(--panel) calc(var(--opacity-box) * 100%), transparent);
+  border-radius: var(--radius-menu);
+  margin: var(--gap-box);
+}
+.main-box {
+  background: color-mix(in srgb, var(--panel) calc(var(--opacity-box) * 100%), transparent);
+  border-radius: var(--radius-box);
+  padding: 1.5rem 1.75rem;
+  margin: var(--gap-box);
+}
+.site-footer {
+  padding: 1rem 1.5rem;
+  text-align: center;
+}

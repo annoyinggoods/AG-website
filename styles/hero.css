@@ -1,0 +1,298 @@
+/* Single responsibility: hero strip, gate overlay, cue stages, resting ball. */
+.hero-strip {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: var(--hero-band);
+  overflow: clip;
+}
+.ha-web {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  transform-origin: 100% 0;
+  transform: rotate(0deg);
+  pointer-events: none;
+  object-fit: contain;
+  object-position: left top;
+}
+.ha-web[data-ha-web="plain"] {
+  clip-path: inset(0 0 0 100%);
+}
+.ha-web[data-ha-web="words"] {
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path 900ms ease;
+}
+.hero {
+  position: relative;
+  min-height: 12rem;
+  height: 100%;
+  margin-block: 0;
+  overflow: hidden;
+  border-radius: 0;
+  /* The hero art is decoration and the main box deliberately rides up under
+     it, so the strip never swallows a click meant for the content beneath.
+     The start button is the one live control and opts back in. */
+  pointer-events: none;
+}
+.hero-start {
+  pointer-events: auto;
+}
+/* The stage is a layout anchor the animation layers are inserted before; it
+   draws nothing itself, so it is a plain div and not a canvas. */
+.hero-stage {
+  width: 100%;
+  height: 100%;
+  min-height: inherit;
+  display: block;
+}
+/* On an animated hero the layers replace the resting ball once scripting is
+   on; static heroes (the playground) keep the fallback image visible. */
+html.js [data-hero-anim] .hero-fallback {
+  display: none;
+}
+.hero-gate {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-gate);
+  background: var(--gate-veil);
+  display: grid;
+  place-items: center;
+  gap: 1.5rem;
+  cursor: pointer;
+}
+.hero-gate.is-dismissed {
+  display: none;
+}
+.hero-gate:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.hero-gate-spider {
+  display: block;
+  max-width: 18vw;
+  height: auto;
+}
+.hero-gate-prompt {
+  margin: 0;
+  color: #ffffff;
+  background: #14102a;
+  border: var(--hairline-w) solid #ffffff;
+  border-radius: var(--radius-chip);
+  min-height: 2.75rem;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-tiny);
+  letter-spacing: 0.15em;
+  text-align: center;
+  cursor: pointer;
+}
+.hero-gate-prompt:focus-visible {
+  outline: var(--focus-ring) solid #ffffff;
+  outline-offset: var(--focus-ring);
+}
+.hero-fallback {
+  width: 100%;
+  height: auto;
+}
+.hero-prompt {
+  position: absolute;
+  left: 50%;
+  bottom: 4.6rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  margin: 0;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--font-tiny);
+  letter-spacing: 0.02em;
+  color: var(--overlay-ink);
+  background: var(--overlay);
+  border-radius: var(--radius-chip);
+  padding: 0.35rem 0.9rem;
+}
+.hero-start {
+  position: absolute;
+  left: 50%;
+  bottom: 1.2rem;
+  transform: translateX(-50%);
+  z-index: 3;
+  justify-self: center;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-body);
+  font-weight: 700;
+  min-height: 2.75rem;
+  padding: 0.6rem 1.4rem;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.hero-start:hover {
+  background: var(--accent-strong);
+  color: var(--accent-ink);
+}
+.hero-start:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.hero .hero-sprite {
+  position: absolute;
+  width: calc(13vw + var(--grow-px));
+  height: auto;
+  inset: auto;
+  object-fit: contain;
+  opacity: 0;
+  pointer-events: none;
+}
+.hero .hero-sprite-plain,
+.hero .hero-sprite-blink,
+.hero .hero-sprite-disappear,
+.hero .hero-sprite-walk {
+  object-fit: cover;
+  object-position: center 30%;
+}
+.hero .hero-ball {
+  inset: auto;
+  left: 50%;
+  top: 34%;
+  width: var(--hero-ball-rest);
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  object-fit: contain;
+}
+.hero .hero-web-layer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+  object-position: left top;
+}
+.hero.is-resting .hero-web-layer {
+  opacity: 1;
+}
+.hero[data-hero-state="blink"] .hero-sprite-blink {
+  opacity: 1;
+}
+.hero[data-hero-state="to-corner"] .hero-sprite-walk,
+.hero[data-hero-state="weave"] .hero-sprite-walk {
+  opacity: 1;
+}
+.hero[data-hero-state="weave"] .hero-web-layer-forward {
+  opacity: 0.85;
+}
+.hero[data-hero-state="return"] .hero-web-layer-return {
+  opacity: 1;
+}
+.hero[data-hero-state="return"] .hero-sprite-walk {
+  opacity: 1;
+  transform: scaleX(-1);
+}
+.hero[data-hero-state="morph"] .hero-ball {
+  animation: ha-finale-pop var(--dur-hero-finale) ease-out;
+}
+@keyframes ha-finale-pop {
+  0% {
+    transform: translate(-50%, -40%) scale(0.6);
+  }
+  60% {
+    transform: translate(-50%, -52%) scale(1.06);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+.hero.is-idle-rolling .hero-ball {
+  animation: ha-idle-roll var(--dur-hero-idle) ease-in-out infinite;
+}
+@keyframes ha-idle-roll {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  50% {
+    transform: translate(calc(-50% + 0.4vw), -50%) rotate(6deg);
+  }
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+}
+.hero-noscript-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+@media (max-width: 56rem) {
+  .hero {
+    min-height: 9rem;
+  }
+  .hero .hero-web-layer {
+    height: 100%;
+  }
+  .hero .hero-ball {
+    top: 19%;
+    width: min(19%, 4.75rem);
+  }
+  .hero-prompt {
+    bottom: 3.9rem;
+    font-size: 0.8rem;
+    padding: 0.3rem 0.7rem;
+  }
+  .hero-start {
+    bottom: 0.7rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+  }
+}
+.title-box.is-hidden,
+.main-box.is-hidden,
+.menu-box.is-hidden {
+  opacity: 0;
+}
+.logo-ball {
+  position: fixed;
+  left: 0;
+  top: 0;
+  transform: translate3d(var(--x, 0), var(--y, 0), 0) translate(-50%, -50%) rotate(var(--ball-spin, 0deg));
+  pointer-events: none;
+  z-index: var(--z-boxes);
+  width: var(--ball-size);
+  height: var(--ball-size);
+  aspect-ratio: 1;
+  object-fit: contain;
+  opacity: 0;
+}
+.logo-ball.is-choreo {
+  pointer-events: none;
+}
+.logo-ball.is-parked {
+  pointer-events: auto;
+  cursor: pointer;
+}
+.hero-sr-only {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}
+[data-ha-desc] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+  white-space: nowrap;
+}

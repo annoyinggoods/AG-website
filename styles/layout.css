@@ -1,0 +1,83 @@
+/* Single responsibility: stage wrapper, desktop grid areas, responsive collapse. */
+.stage {
+  width: var(--stage-width);
+  max-width: var(--max-stage);
+  margin-inline: auto;
+  display: grid;
+  grid-template-areas: "hero hero" "menu main" "footer footer";
+  grid-template-columns: minmax(18rem, 26rem) minmax(0, 1fr);
+  padding: 0;
+}
+.stage-header {
+  grid-area: hero;
+  display: grid;
+  grid-template-columns: minmax(18rem, 26rem) minmax(0, 1fr);
+  align-content: start;
+}
+.stage-header > .hero-strip {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  height: var(--hero-band);
+  overflow: clip;
+}
+.stage-header > .title-box {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+  width: fit-content;
+  min-width: min(max(var(--title-min), calc(var(--title-min) + (100vw - 1200px) / 2)), 66%);
+  max-width: 66%;
+  margin-top: max(calc(var(--hero-band) * 0.5 - 2rem), var(--title-clear));
+}
+.menu-box {
+  grid-area: menu;
+}
+.main-box {
+  grid-area: main;
+}
+.site-footer {
+  grid-area: footer;
+}
+.stage > .menu-box {
+  margin-top: calc(var(--hero-band) * -0.1);
+}
+.stage > .main-box {
+  margin-top: calc(var(--hero-band) * -0.24);
+  min-height: var(--main-height);
+  overflow: visible;
+}
+@media (max-width: 56rem) {
+  :root {
+    --opacity-glass: 0.56;
+    --hero-band: max(9rem, calc(var(--stage-width) * 0.43));
+  }
+  .stage {
+    grid-template-areas: "hero" "main" "footer";
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .stage-header {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .stage-header > .hero-strip {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    height: var(--hero-band);
+  }
+  .stage-header > .title-box {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: stretch;
+    width: auto;
+    min-width: 0;
+    max-width: none;
+    margin-top: 0;
+  }
+  .stage > .main-box {
+    margin-top: 0;
+    min-height: 100svh;
+    overflow: visible;
+  }
+}

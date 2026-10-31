@@ -1,0 +1,259 @@
+/* Single responsibility: light/dark theme token overrides, privacy-paper palette. */
+/* Contrast ledger (foreground on panel/stage, WCAG 2.1 text minimums 7:1 body, 4.5:1 secondary):
+   Dark: ink #ffffff 18.54, soft #d9d2ee 12.72, muted #a49cc4 7.18, faint #9a92b8 6.34, nav #b7afd4 8.91, nav-dim #8f88ad 5.56, accent #a78bfa 6.81, accent-strong #8b5cf6 4.38 (large/graphic only).
+   Dark surfaces: chip ink 16.50, chip-active ink 12.06, input ink 19.04, soft on stage #150e26 12.83, button ink #0e0817 on accent 7.24.
+   Light: ink #191233 17.09, soft #3a3159 11.40, muted #575073 7.18, faint #4f4770 8.14, nav #4d4668 8.40, nav-dim #6a6386 5.37, accent #6d28d9 6.80, accent-strong #5b21b6 8.60.
+   Light surfaces: chip ink 14.69, chip-active ink 11.91, input ink 16.22, soft on stage #ede6fa 9.81, white on accent 7.10, panel on strong 8.60. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0e0817;
+  --panel: #161023;
+  --accent: #a78bfa;
+  --accent-strong: #8b5cf6;
+  --accent-ink: #0e0817;
+  --branch-edge: var(--accent);
+  --ink: #ffffff;
+  --ink-soft: #d9d2ee;
+  --ink-muted: #a49cc4;
+  --ink-faint: #9a92b8;
+  --glow-color: var(--accent);
+  --glow-alpha: 0.08;
+  --nav-ink: var(--nav-ink-dark);
+  --nav-ink-dim: var(--nav-ink-dim-dark);
+  --placeholder: var(--placeholder-dark);
+  --panel-dim: var(--panel-dim-dark);
+  --stage-tint: color-mix(in srgb, #150e26 calc(var(--opacity-glass) * 100%), transparent);
+  --hairline: #a78bfa2e;
+  --accent-tint: #a78bfa1f;
+  --chip: #221a38;
+  --chip-active: #3b2d63;
+  --chip-ink: #ffffff;
+  --input-bg: #120d1f;
+  --input-ink: #ffffff;
+  --pill: #1a132c;
+  --overlay: #0b0812e6;
+  --menu-group: #ffffff08;
+  --shadow-float: 0 1.2vw 3.4vw #000000bf;
+  --bg-image: url("../assets/bg-dark.webp");
+  --hero-web-plain: url("../assets/hero/web-plain-dark.webp");
+  --theme-color: #0e0817;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #efeaf8;
+  --panel: #fbf9ff;
+  --accent: #6d28d9;
+  --accent-strong: #5b21b6;
+  --accent-ink: #ffffff;
+  --branch-edge: var(--accent);
+  --ink: #191233;
+  --ink-soft: #3a3159;
+  --ink-muted: #575073;
+  --ink-faint: #4f4770;
+  --glow-color: var(--accent);
+  --glow-alpha: 0.08;
+  --nav-ink: var(--nav-ink-light);
+  --nav-ink-dim: var(--nav-ink-dim-light);
+  --placeholder: var(--placeholder-light);
+  --panel-dim: var(--panel-dim-light);
+  --stage-tint: color-mix(in srgb, #ede6fa calc(var(--opacity-glass) * 100%), transparent);
+  --hairline: #6d5aa833;
+  --accent-tint: #7c5cd614;
+  --chip: #ece6fa;
+  --chip-active: #d9cdf5;
+  --chip-ink: #191233;
+  --input-bg: #f6f2ff;
+  --input-ink: #191233;
+  --pill: #fbf9ff;
+  --overlay: #191233d9;
+  --menu-group: #6d5aa814;
+  --shadow-float: 0 1.2vw 3.4vw #4c3f7a59;
+  --bg-image: url("../assets/bg-light.webp");
+  --hero-web-plain: url("../assets/hero/web-plain-light.webp");
+  --theme-color: #efeaf8;
+}
+:root:not([data-theme]) {
+  color-scheme: dark;
+  --bg: #0e0817;
+  --panel: #161023;
+  --accent: #a78bfa;
+  --accent-strong: #8b5cf6;
+  --accent-ink: #0e0817;
+  --branch-edge: var(--accent);
+  --ink: #ffffff;
+  --ink-soft: #d9d2ee;
+  --ink-muted: #a49cc4;
+  --ink-faint: #9a92b8;
+  --glow-color: var(--accent);
+  --glow-alpha: 0.08;
+  --nav-ink: var(--nav-ink-dark);
+  --nav-ink-dim: var(--nav-ink-dim-dark);
+  --placeholder: var(--placeholder-dark);
+  --panel-dim: var(--panel-dim-dark);
+  --stage-tint: color-mix(in srgb, #150e26 calc(var(--opacity-glass) * 100%), transparent);
+  --hairline: #a78bfa2e;
+  --accent-tint: #a78bfa1f;
+  --chip: #221a38;
+  --chip-active: #3b2d63;
+  --chip-ink: #ffffff;
+  --input-bg: #120d1f;
+  --input-ink: #ffffff;
+  --pill: #1a132c;
+  --overlay: #0b0812e6;
+  --menu-group: #ffffff08;
+  --shadow-float: 0 1.2vw 3.4vw #000000bf;
+  --bg-image: url("../assets/bg-dark.webp");
+  --hero-web-plain: url("../assets/hero/web-plain-dark.webp");
+  --theme-color: #0e0817;
+}
+.privacy-paper {
+  --bg: var(--privacy-paper);
+  --panel: var(--privacy-paper);
+  --ink: var(--privacy-ink);
+  --ink-soft: var(--privacy-ink-soft);
+  --ink-muted: var(--privacy-ink-muted);
+  --accent: var(--privacy-accent);
+  --accent-strong: var(--privacy-accent);
+  --accent-ink: var(--privacy-paper);
+  --hairline: var(--privacy-line);
+  --accent-tint: var(--privacy-field);
+  --chip: var(--privacy-field);
+  --chip-ink: var(--privacy-ink);
+  --input-ink: var(--privacy-ink);
+  --stage-tint: color-mix(in srgb, var(--privacy-paper) calc(var(--opacity-glass) * 100%), transparent);
+}
+body {
+  transition: background-color var(--dur-theme) ease, color var(--dur-theme) ease;
+}
+.site-background {
+  background-image: var(--bg-old, var(--bg-image));
+  transition: opacity var(--dur-theme) ease;
+}
+.site-background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-new, var(--bg-image));
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity var(--dur-theme) ease;
+  pointer-events: none;
+}
+.site-background.is-crossfading::before {
+  opacity: 1;
+}
+.site-background::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-image: var(--hero-web-plain);
+  opacity: 0;
+  transition: opacity var(--dur-theme) ease;
+  pointer-events: none;
+}
+:root[data-theme="light"] .site-background::after {
+  opacity: 0.34;
+}
+.glass-surface,
+.title-box,
+.menu-box,
+.main-box {
+  transition: background-color var(--dur-theme) ease, color var(--dur-theme) ease, box-shadow var(--dur-theme) ease, border-color var(--dur-theme) ease;
+}
+.hero .hero-web-layer,
+.hero .hero-web-layer-forward,
+.hero .hero-web-layer-return {
+  transition: opacity var(--dur-theme) ease;
+}
+.hero .hero-sprite,
+.hero .hero-ball {
+  filter: none;
+}
+:root[data-theme="light"] .hero .hero-sprite-plain,
+:root[data-theme="light"] .hero .hero-sprite-walk,
+:root[data-theme="light"] .hero .hero-sprite-blink,
+:root[data-theme="light"] .hero .hero-sprite-disappear {
+  filter: brightness(1.04) saturate(0.96);
+}
+:root[data-theme="light"] .hero .hero-ball {
+  filter: brightness(1.06) saturate(1.02);
+}
+:root[data-theme="dark"] .err-spider {
+  filter: none;
+}
+:root[data-theme="light"] .err-spider {
+  filter: brightness(1.05) saturate(0.97);
+}
+.theme-status {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+.menu-theme-pill {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0.5rem 0.75rem 0.9rem;
+  padding: 0.25rem;
+  border-radius: var(--radius-chip);
+  background: var(--pill);
+  box-shadow: var(--shadow-float);
+}
+.theme-pill-segment {
+  flex: 1 1 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--nav-ink);
+  font-family: var(--font-tiny);
+  padding: 0.45rem 0.75rem;
+  min-height: 2.75rem;
+  cursor: pointer;
+}
+.theme-pill-segment[aria-pressed="true"] {
+  background: var(--chip-active);
+  color: var(--chip-ink);
+}
+.theme-pill-segment:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+.theme-pill-icon {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  opacity: 0.35;
+  transform-box: fill-box;
+  transition: opacity var(--dur-theme-icon) ease;
+}
+.theme-pill-icon use {
+  stroke: currentColor;
+}
+.theme-pill-segment[aria-pressed="true"] .theme-pill-icon {
+  opacity: 1;
+}
+.theme-pill-hint {
+  width: 1.1rem;
+  height: 1.1rem;
+  flex: 0 0 auto;
+  opacity: 0;
+  transition: opacity var(--dur-theme-icon) ease;
+  color: var(--accent);
+}
+.menu-theme-pill:hover .theme-pill-hint,
+.menu-theme-pill:focus-within .theme-pill-hint {
+  opacity: 1;
+}
+/* The event overlays own their own accent tint, so this file stays about the theme. */

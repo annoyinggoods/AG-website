@@ -1,0 +1,38 @@
+<section class="content-section" data-admin="content:content.css" id="yagna-stars" aria-labelledby="yagna-stars-heading">
+<h2 class="section-heading" id="yagna-stars-heading">Your stars, offline</h2>
+<p>yAGna is a local-first library for a GitHub stars catalog that outgrew the GitHub UI. Every repo you ever starred comes down to your disk and stays there: READMEs with their images, licenses including the non-standard ones as full text, topics, languages, file trees, the first and last commit, and a twelve-point health index for each repository.</p>
+<article class="content-article" data-admin="content:content.css" id="yagna-stars-why">
+<h3 class="article-heading">Why a library</h3>
+<p>The GitHub stars page is a list, not a library. It cannot be searched the way you think, it forgets everything about a repo the moment the repo is deleted, and it shows you a star button where you wanted an answer. yAGna treats your stars as a collection worth keeping: user tags, fuzzy and full-text search across everything, and gitingest-style digests of any repository on demand.</p>
+<p>Everything the app displays is answerable from the local database. What is missing is requested through queues and rendered when it lands, so the collection reads the same whether you are online or not.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="yagna-stars-shape">
+<h3 class="article-heading">The shape of it</h3>
+<p>One sentence of architecture: the forge pulls, the store keeps, the app projects — and never the other way around. The UI never dials the network and never opens the database; every request goes through the forge facade, every query through the store facade.</p>
+<p>Under the hood it is Rust with GPUI for the interface, octocrab behind the Forge trait for gathering, SQLite with FTS5 for remembering, a content-hashed asset cache, and nucleo for the fuzzy matching. The seam is what keeps a second face — web or mobile — a new consumer of the same data crates instead of a rewrite.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="yagna-rules" aria-labelledby="yagna-rules-heading">
+<h2 class="section-heading" id="yagna-rules-heading">Rules it keeps</h2>
+<article class="content-article" data-admin="content:content.css" id="yagna-rules-licence">
+<h3 class="article-heading">Open, with ethics attached</h3>
+<p>yAGna ships under a Hippocratic-based open-source license: the closed-source clauses of the studio license are flipped to open-source grants, the ethical use restrictions stay, and yAGna is a reserved name. It is not OSI-open-source — the ethical restrictions are the point. Dependencies stay permissive-only, and no copyleft imports are allowed in, ever.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="yagna-rules-platforms">
+<h3 class="article-heading">Windows first, everywhere else welcome</h3>
+<p>yAGna is Windows-first, with macOS and Linux kept green. Web and mobile are not version-one targets: the crate seams keep them possible, and nothing more is promised.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="yagna-status" aria-labelledby="yagna-status-heading">
+<h2 class="section-heading" id="yagna-status-heading">Where it stands</h2>
+<article class="content-article" data-admin="content:content.css" id="yagna-status-now">
+<h3 class="article-heading">In development</h3>
+<p>yAGna is a workspace of four crates — the app, the core, the store and the forge — and it is under active development. This page will grow as the library does.</p>
+<p>Curious about the rest of the shelf? <a href="/products/agit/">AGIT</a> handles the writing, <a href="/products/agony/">AGony</a> rebuilds the terminal, and the <a href="/playground/">playground</a> holds the small experiments.</p>
+</article>
+<div class="chip-row">
+<a class="chip" href="/products/agit/">AGIT</a>
+<a class="chip" href="/products/agony/">AGony</a>
+<a class="chip" href="/playground/">Playground</a>
+</div>
+</section>
