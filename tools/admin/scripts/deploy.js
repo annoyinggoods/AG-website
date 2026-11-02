@@ -15,7 +15,8 @@ function settings() {
         user: required("[data-deploy-user]").value.trim(),
         password: required("[data-deploy-password]").value,
         folder: required("[data-deploy-folder]").value.trim() || "/home/www/annoyinggoods",
-        port: Number(required("[data-deploy-port]").value) || 22
+        port: Number(required("[data-deploy-port]").value) || 22,
+        testPort: Number(required("[data-deploy-test-port]").value) || 0
     };
 }
 function appendLine(line) {
@@ -32,14 +33,16 @@ function exportCommand() {
         "-Server " + (values.server || "<host>"),
         "-User " + (values.user || "<user>"),
         "-Folder " + values.folder,
-        "-Port " + String(values.port)
+        "-Port " + String(values.port),
+        "-TestPort " + String(values.testPort)
     ].join(" ");
     const note = [
         command,
         "",
         "Set the password in the environment variable before the run:",
         "$env:AG_DEPLOY_PASSWORD = \"your password\"",
-        "The password travels in AG_DEPLOY_PASSWORD and never in the command line."
+        "The password travels in AG_DEPLOY_PASSWORD and never in the command line.",
+        "A test port of 0 lets the helper pick a free port, because port 8000 is often taken."
     ].join("\n");
     required("[data-deploy-command]").textContent = note;
 }
@@ -70,9 +73,13 @@ async function run(mode) {
     output.textContent = "";
     setStatus("The " + mode + " run has started.", "plain");
     try {
-        await runDeploy(mode, values, appendLine);
+        const code = await runDeploy(mode, values, appendLine);
         await loadSnapshot();
-        setStatus("The " + mode + " run has finished.", "ok");
+        if (code === 0) {
+            setStatus("The " + mode + " run has finished without an error.", "ok");
+            return;
+        }
+        setStatus("The " + mode + " run failed with the code " + String(code) + ". The server reply above says why.", "error");
     }
     catch (err) {
         setStatus(err instanceof Error ? err.message : String(err), "error");

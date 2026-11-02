@@ -1840,7 +1840,7 @@ function initLens() {
     document.addEventListener("pointermove", function (event) {
         lastX = event.clientX;
         lastY = event.clientY;
-        if (isOverHero(event.clientX, event.clientY) || isLightboxOpen()) {
+        if (isOverHero(event.clientX, event.clientY) || isLightboxOpen() || isIntroCovering()) {
             hideLens(lens);
             activeImage = null;
             return;
@@ -1887,6 +1887,20 @@ function isOverHero(clientX, clientY) {
 function isLightboxOpen() {
     return document.body.classList.contains("lightbox-open");
 }
+// While the intro gate veil or the weaving itself covers the page, the boxes
+// underneath are invisible; magnifying them would only break the scene.
+function isIntroCovering() {
+    const gate = document.querySelector(".hero-gate:not(.is-dismissed)");
+    if (gate) {
+        return true;
+    }
+    const hero = document.querySelector("[data-hero-anim]");
+    if (!(hero instanceof HTMLElement)) {
+        return false;
+    }
+    const state = hero.getAttribute("data-hero-state");
+    return state !== null && state !== "done";
+}
 function findZoomImage(target) {
     if (!(target instanceof Element)) {
         return null;
@@ -1911,6 +1925,12 @@ function isZoomable(img) {
         return false;
     }
     if (img.closest(".site-footer")) {
+        return false;
+    }
+    if (img.closest(".hero-gate")) {
+        return false;
+    }
+    if (img.classList.contains("logo-ball")) {
         return false;
     }
     if (isMenuChrome(img)) {
@@ -2183,6 +2203,14 @@ function isLightboxImage(img) {
         return false;
     }
     if (img.closest(".site-footer")) {
+        return false;
+    }
+    // The gate veil and the parked ball run their own choreography; a zoom
+    // dialog opening over them would hide the animation it belongs to.
+    if (img.closest(".hero-gate")) {
+        return false;
+    }
+    if (img.classList.contains("logo-ball")) {
         return false;
     }
     if (img.classList.contains("err-spider")) {
@@ -3435,7 +3463,7 @@ function titleSpot() {
     if (title instanceof HTMLElement) {
         const rect = title.getBoundingClientRect();
         if (rect.width > 0) {
-            return [rect.left + rect.width / 2, rect.top];
+            return [rect.left + rect.width / 2, rect.top - ballRadius()];
         }
     }
     return [window.innerWidth / 2, 80];
@@ -3445,7 +3473,7 @@ function mainSpot() {
     if (main instanceof HTMLElement) {
         const rect = main.getBoundingClientRect();
         if (rect.width > 0) {
-            return [rect.left + rect.width / 2, rect.top];
+            return [rect.left + rect.width / 2, rect.top - ballRadius()];
         }
     }
     return [window.innerWidth / 2, 160];
@@ -3651,7 +3679,6 @@ async function runSequence(hero) {
     await walkPath(hero, [start, topRight], TO_CORNER_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
     });
     setHeroState("weave");
     if (webPlain) {
@@ -3663,7 +3690,6 @@ async function runSequence(hero) {
     await walkPath(hero, path, WEAVE_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
         if (webPlain) {
             revealPlain(webPlain, x - webRect.left);
         }
@@ -3679,7 +3705,6 @@ async function runSequence(hero) {
     await walkPath(hero, path.slice().reverse(), RETURN_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
         if (webWords) {
             revealWords(webWords, x - webRect.left, webW);
         }
@@ -3750,16 +3775,6 @@ function revealBoxes(boxes) {
             box.classList.add("is-entering");
         }
     }
-}
-// The spider carries a torque while it walks, so the web turns with it around
-// its topmost tip.
-function applyWebTorque(hero, angle) {
-    const layers = hero.querySelectorAll(".ha-web");
-    layers.forEach(function (node) {
-        if (node instanceof HTMLElement) {
-            node.style.transform = "rotate(" + angle.toFixed(2) + "deg)";
-        }
-    });
 }
 function updateDesc(text) {
     let desc = document.querySelector("[data-ha-desc]");
@@ -3912,6 +3927,14 @@ function showRestingBall(hero) {
     }
 }
 function revealWebLayers(hero) {
+    // An earlier run of the sequence could have left the webs turned; the
+    // resting hero always shows them upright and fully woven.
+    const layers = hero.querySelectorAll(".ha-web");
+    layers.forEach(function (node) {
+        if (node instanceof HTMLElement) {
+            node.style.transform = "";
+        }
+    });
     const webPlain = hero.querySelector("[data-ha-web='plain']");
     if (webPlain) {
         webPlain.style.opacity = "1";

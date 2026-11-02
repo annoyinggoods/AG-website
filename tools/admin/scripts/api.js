@@ -4,7 +4,7 @@
 const HELPER_ROOT = "/api";
 export class HelperMissingError extends Error {
     constructor() {
-        super("The helper is not running. Start it with node tools/admin/server.mjs.");
+        super("The helper is not running. Start it with npm run admin.");
         this.name = "HelperMissingError";
     }
 }
@@ -41,7 +41,27 @@ export async function fetchHealth() {
         ok: Boolean(body.ok),
         root: String(body.root || ""),
         stale: Boolean(body.stale),
-        staleReason: String(body.staleReason || "")
+        staleReason: String(body.staleReason || ""),
+        build: readBuild(body.build),
+        idleSeconds: Number(body.idleSeconds || 0),
+        idleTimeoutMinutes: Number(body.idleTimeoutMinutes || 0)
+    };
+}
+// The helper stops itself when the operator asks it to, so the work is done
+// and the port is free again.
+export async function shutdownHelper() {
+    const response = await fetch(HELPER_ROOT + "/shutdown", { method: "POST" });
+    await readJson(response);
+}
+// The outcome of the last build the helper started.
+function readBuild(raw) {
+    const body = raw && typeof raw === "object" ? raw : {};
+    return {
+        ran: Boolean(body.ran),
+        ok: Boolean(body.ok),
+        code: Number(body.code || 0),
+        message: String(body.message || ""),
+        startedAt: Number(body.startedAt || 0)
     };
 }
 export async function fetchRegistry() {
@@ -140,7 +160,9 @@ export async function trashEntry(collection, slug) {
     return (await readJson(response));
 }
 // The deploy runs stream their output line by line, so the operator sees the
-// server answer while it happens instead of after the fact.
+// server answer while it happens instead of after the fact. The answer of
+// the run is the exit code of the helper script, because a failed publish
+// must never look like a finished one.
 export async function runDeploy(mode, settings, onLine) {
     const response = await fetch(HELPER_ROOT + "/deploy", {
         method: "POST",
@@ -153,6 +175,7 @@ export async function runDeploy(mode, settings, onLine) {
     const reader = response.body.getReader();
     const decoder = new TextDecoder();
     let buffer = "";
+    let code = 0;
     for (;;) {
         const chunk = await reader.read();
         if (chunk.done) {
@@ -175,11 +198,16 @@ export async function runDeploy(mode, settings, onLine) {
                 onLine(raw);
                 continue;
             }
+            if (parsed.done === true) {
+                code = Number(parsed.code || 0);
+                continue;
+            }
             onLine(parsed.line);
         }
     }
     if (buffer.trim()) {
         onLine(buffer.trim());
     }
+    return code;
 }
 //# sourceMappingURL=api.js.map

@@ -46,6 +46,18 @@ export interface HealthReport {
   root: string;
   stale: boolean;
   staleReason: string;
+  build: BuildReport;
+  idleSeconds: number;
+  idleTimeoutMinutes: number;
+}
+
+// The outcome of the last build the panel started.
+export interface BuildReport {
+  ran: boolean;
+  ok: boolean;
+  code: number;
+  message: string;
+  startedAt: number;
 }
 
 export interface ExcerptReport {
@@ -98,8 +110,19 @@ export interface DeploySettings {
   password: string;
   folder: string;
   port: number;
+  testPort: number;
 }
 
 export interface DeployLine {
   line: string;
+  done?: boolean;
+  code?: number;
+}
+
+// The answer of a change the helper made in the repository.
+export interface ChangeReport {
+  ok: boolean;
+  message: string;
+  changed: boolean;
+  buildStartedAt: number;
 }

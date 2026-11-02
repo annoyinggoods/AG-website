@@ -1,15 +1,80 @@
 <section class="content-section" data-admin="content:content.css" id="yagna-stars" aria-labelledby="yagna-stars-heading">
 <h2 class="section-heading" id="yagna-stars-heading">Your stars, offline</h2>
-<p>yAGna is a local-first library for a GitHub stars catalog that outgrew the GitHub UI. Every repo you ever starred comes down to your disk and stays there: READMEs with their images, licenses including the non-standard ones as full text, topics, languages, file trees, the first and last commit, and a twelve-point health index for each repository.</p>
-<article class="content-article" data-admin="content:content.css" id="yagna-stars-why">
-<h3 class="article-heading">Why a library</h3>
-<p>The GitHub stars page is a list, not a library. It cannot be searched the way you think, it forgets everything about a repo the moment the repo is deleted, and it shows you a star button where you wanted an answer. yAGna treats your stars as a collection worth keeping: user tags, fuzzy and full-text search across everything, and gitingest-style digests of any repository on demand.</p>
+<p>yAGna is a local-first library for a GitHub stars catalog that outgrew the GitHub UI. Every repo you ever starred comes down to your disk and stays there: READMEs with their images, licenses including the non-standard ones as full text, topics, languages, file trees, the first and last commit, and a twelve-point health index for each repository. User tags, notes, fuzzy and full-text search across everything, and gitingest-style digests of any repository on demand.</p>
 <p>Everything the app displays is answerable from the local database. What is missing is requested through queues and rendered when it lands, so the collection reads the same whether you are online or not.</p>
+<article class="content-article feature-row" data-admin="content:content.css" id="yagna-stars-shape">
+<div class="feature-text">
+<h3 class="article-heading">A list is not a library</h3>
+<p>The GitHub stars page cannot be searched the way you think, it forgets everything about a repo the moment the repo is deleted, and it shows you a star button where you wanted an answer. yAGna treats your stars as a collection worth keeping: filter by topic, walk the health scores, keep a note on why you starred, and read the README years later even if the repository is long gone.</p>
+<p>Under the hood it is Rust with GPUI for the interface, octocrab behind a Forge trait for gathering, SQLite with FTS5 for remembering, and nucleo for the fuzzy matching. The forge pulls, the store keeps, the app projects — and never the other way around.</p>
+</div>
+<div class="feature-media">
+<figure>
+<img src="/assets/yagna/library.webp" alt="The yAGna library list filtered to the rust topic, with health scores, tags and expanded rows showing their notes" width="1372" height="1416" loading="lazy">
+<figcaption>The library filtered to one topic — health scores, tags and notes on every row.</figcaption>
+</figure>
+</div>
 </article>
-<article class="content-article" data-admin="content:content.css" id="yagna-stars-shape">
-<h3 class="article-heading">The shape of it</h3>
-<p>One sentence of architecture: the forge pulls, the store keeps, the app projects — and never the other way around. The UI never dials the network and never opens the database; every request goes through the forge facade, every query through the store facade.</p>
-<p>Under the hood it is Rust with GPUI for the interface, octocrab behind the Forge trait for gathering, SQLite with FTS5 for remembering, a content-hashed asset cache, and nucleo for the fuzzy matching. The seam is what keeps a second face — web or mobile — a new consumer of the same data crates instead of a rewrite.</p>
+<article class="content-article media-row" data-admin="content:content.css" id="yagna-stars-repo">
+<figure>
+<img src="/assets/yagna/repository-tab.webp" alt="A yAGna repository page: the metadata block, the health breakdown by point, the tags and note, and the rendered README below" width="1440" height="1755" loading="lazy">
+<figcaption>One repository's page: the facts it carried, the health index by point, and its README with images, all local.</figcaption>
+</figure>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="yagna-agent" aria-labelledby="yagna-agent-heading">
+<h2 class="section-heading" id="yagna-agent-heading">Your agent reads your library</h2>
+<article class="content-article feature-row" data-admin="content:content.css" id="yagna-agent-mcp">
+<div class="feature-text">
+<h3 class="article-heading">MCP, built in</h3>
+<p>yAGna ships a Model Context Protocol server: <code>yagna mcp</code>, or <code>npx yagna-mcp</code> from any MCP host. Your coding agent gets fifteen tools over your whole collection — search it with the app's deep-search grammar, read any README, list your tags and topics so it uses your words, pull one repository's full record with its health and fit scores, write the tags and notes you asked it to, and rewrite the fit spec you score by.</p>
+<p>No other stars manager does this. Not the browser extensions that export a JSON list, not the scripts that clone starred repos into a folder — the best existing option is a script that downloads a flat list of your stars, or asking the GitHub API the same questions by hand, every time, on the clock. yAGna is the memory your agent reads and writes locally, in seconds, for free.</p>
+</div>
+<div class="feature-media">
+<figure>
+<img src="/assets/yagna/score-and-agent.webp" alt="The yAGna score surface with the agent activity drawer open, listing the MCP tool calls an agent made and the line saying an agent was connected" width="1085" height="972" loading="lazy">
+<figcaption>The activity drawer lists every tool call an agent made; the title bar says an agent is connected.</figcaption>
+</figure>
+</div>
+</article>
+<article class="content-article" data-admin="content:content.css" id="yagna-agent-rules">
+<h3 class="article-heading">The agent spends, you watch</h3>
+<p>The reads are free — they never leave your disk. The live GitHub calls pass a spend ledger with per-hour and per-minute ceilings from a policy file you own, and past the confirmation threshold the server asks you first: the host shows one question, and a host that cannot be asked gets a refusal, never a silent yes. Every call lands in the activity trace, and the app's title bar tells you an agent is there. yAGna never acts on GitHub for you — no issues, no comments, no pushes. It is the memory, not a second client.</p>
+<p>The <a href="/products/yagna/download/">download page</a> has the two-line config that puts it into your MCP host.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="yagna-discover" aria-labelledby="yagna-discover-heading">
+<h2 class="section-heading" id="yagna-discover-heading">Find new stars on purpose</h2>
+<article class="content-article media-row" data-admin="content:content.css" id="yagna-discover-row">
+<figure>
+<img src="/assets/yagna/discover.webp" alt="The yAGna Discover surface: created-within, minimum stars and language fields, with a result list of Rust repositories and their stars" width="1370" height="2112" loading="lazy">
+<figcaption>Discover queries GitHub with five filters — created within, minimum stars, language, one topic, one word — and shows the cost of every search before you run it.</figcaption>
+</figure>
+</article>
+<article class="content-article" data-admin="content:content.css" id="yagna-discover-honest">
+<h3 class="article-heading">The honest pace</h3>
+<p>The first sweep of your stars takes about five minutes per thousand repositories — GitHub's rate limits set the speed, and yAGna runs serial with jitter because the fast way gets stars silently dropped. It is once: after the sweep, everything reads from your disk, and updates bring only what moved. Discover searches cost one of the thirty requests per minute GitHub allows, and the surface says so on every screen.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="yagna-score" aria-labelledby="yagna-score-heading">
+<h2 class="section-heading" id="yagna-score-heading">Score it your way</h2>
+<article class="content-article feature-row" data-admin="content:content.css" id="yagna-score-fit">
+<div class="feature-text">
+<h3 class="article-heading">The pinned health, the personal fit</h3>
+<p>Every repository carries a twelve-point health index computed from the facts the catalog stores — age, stars, maintenance, cadence, license, versioning. Beside it sits the fit score: a spec you own, in a JSON file you can edit in the app, that turns the same facts into a number that means something to you — recency over stars, permissive over copyleft, whatever the weights say. Your agent can read the spec, rewrite it, and re-score the catalog; the surface shows the distribution before and after.</p>
+</div>
+<div class="feature-media">
+<figure>
+<img src="/assets/yagna/spec-editor.webp" alt="The yAGna score surface with the fit spec open in its editor and apply and revert buttons below" width="1440" height="1532" loading="lazy">
+<figcaption>The fit spec, editable in place — apply validates and backs the file up, and a re-score moves the numbers.</figcaption>
+</figure>
+</div>
+</article>
+<article class="content-article media-row" data-admin="content:content.css" id="yagna-score-you">
+<figure>
+<img src="/assets/yagna/your-library.webp" alt="The yAGna you surface: totals, stars by language, the health distribution, stars per year and the top topics" width="1440" height="1496" loading="lazy">
+<figcaption>Your library in numbers: the languages, the health spread, the years, the topics.</figcaption>
+</figure>
 </article>
 </section>
 <section class="content-section" data-admin="content:content.css" id="yagna-rules" aria-labelledby="yagna-rules-heading">
@@ -19,18 +84,25 @@
 <p>yAGna ships under a Hippocratic-based open-source license: the closed-source clauses of the studio license are flipped to open-source grants, the ethical use restrictions stay, and yAGna is a reserved name. It is not OSI-open-source — the ethical restrictions are the point. Dependencies stay permissive-only, and no copyleft imports are allowed in, ever.</p>
 </article>
 <article class="content-article" data-admin="content:content.css" id="yagna-rules-platforms">
-<h3 class="article-heading">Windows first, everywhere else welcome</h3>
-<p>yAGna is Windows-first, with macOS and Linux kept green. Web and mobile are not version-one targets: the crate seams keep them possible, and nothing more is promised.</p>
+<h3 class="article-heading">Windows first, GitLab next</h3>
+<p>yAGna is Windows-first, with macOS and Linux kept green. The forge is built as a trait with GitHub as its first tenant, and GitLab support is coming — the same library, the same tools, the second forge on the roadmap. Web and mobile are not version-one targets: the crate seams keep them possible, and nothing more is promised.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="yagna-rules-settings">
+<figure>
+<img src="/assets/yagna/settings.webp" alt="The yAGna settings panel: four themes, sort and page size, the sweep switch, the cache cap" width="523" height="736" loading="lazy">
+<figcaption>Small settings: four themes, the sweep, the cache cap.</figcaption>
+</figure>
 </article>
 </section>
 <section class="content-section" data-admin="content:content.css" id="yagna-status" aria-labelledby="yagna-status-heading">
 <h2 class="section-heading" id="yagna-status-heading">Where it stands</h2>
 <article class="content-article" data-admin="content:content.css" id="yagna-status-now">
-<h3 class="article-heading">In development</h3>
-<p>yAGna is a workspace of four crates — the app, the core, the store and the forge — and it is under active development. This page will grow as the library does.</p>
+<h3 class="article-heading">Released</h3>
+<p>yAGna 0.9.0 ships the library, the Discover surface, the fit score and the MCP server. Grab the Windows archive on the <a href="/products/yagna/download/">download page</a>, or point your MCP host at <code>npx yagna-mcp</code> and give your agent the whole shelf.</p>
 <p>Curious about the rest of the shelf? <a href="/products/agit/">AGIT</a> handles the writing, <a href="/products/agony/">AGony</a> rebuilds the terminal, and the <a href="/playground/">playground</a> holds the small experiments.</p>
 </article>
 <div class="chip-row">
+<a class="chip" href="/products/yagna/download/">Download yAGna</a>
 <a class="chip" href="/products/agit/">AGIT</a>
 <a class="chip" href="/products/agony/">AGony</a>
 <a class="chip" href="/playground/">Playground</a>

@@ -26,7 +26,7 @@ export function initLens(): void {
   document.addEventListener("pointermove", function (event: PointerEvent): void {
     lastX = event.clientX;
     lastY = event.clientY;
-    if (isOverHero(event.clientX, event.clientY) || isLightboxOpen()) {
+    if (isOverHero(event.clientX, event.clientY) || isLightboxOpen() || isIntroCovering()) {
       hideLens(lens);
       activeImage = null;
       return;
@@ -73,6 +73,20 @@ function isOverHero(clientX: number, clientY: number): boolean {
 function isLightboxOpen(): boolean {
   return document.body.classList.contains("lightbox-open");
 }
+// While the intro gate veil or the weaving itself covers the page, the boxes
+// underneath are invisible; magnifying them would only break the scene.
+function isIntroCovering(): boolean {
+  const gate = document.querySelector(".hero-gate:not(.is-dismissed)");
+  if (gate) {
+    return true;
+  }
+  const hero = document.querySelector("[data-hero-anim]");
+  if (!(hero instanceof HTMLElement)) {
+    return false;
+  }
+  const state = hero.getAttribute("data-hero-state");
+  return state !== null && state !== "done";
+}
 function findZoomImage(target: EventTarget | null): HTMLImageElement | null {
   if (!(target instanceof Element)) {
     return null;
@@ -97,6 +111,12 @@ function isZoomable(img: HTMLImageElement): boolean {
     return false;
   }
   if (img.closest(".site-footer")) {
+    return false;
+  }
+  if (img.closest(".hero-gate")) {
+    return false;
+  }
+  if (img.classList.contains("logo-ball")) {
     return false;
   }
   if (isMenuChrome(img)) {

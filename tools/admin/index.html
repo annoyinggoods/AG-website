@@ -9,14 +9,18 @@
 <body class="panel-body">
 <a class="skip-link" href="#panel-main">Skip to the panel</a>
 <header class="panel-header">
+<div class="panel-head">
 <div class="panel-brand">
 <span class="panel-mark" aria-hidden="true"></span>
 <h1 class="panel-title">Annoying Goods control panel</h1>
 </div>
-<nav class="panel-tabs" aria-label="Panel views">
-<button type="button" class="panel-tab" data-panel-tab="inspector" aria-pressed="true" aria-controls="panel-view-inspector">Visual inspector</button>
-<button type="button" class="panel-tab" data-panel-tab="editor" aria-pressed="false" aria-controls="panel-view-editor">Content editor</button>
-<button type="button" class="panel-tab" data-panel-tab="deploy" aria-pressed="false" aria-controls="panel-view-deploy">Deploy panel</button>
+<button type="button" class="panel-button panel-button-danger" data-panel-disconnect disabled>Disconnect server</button>
+</div>
+<nav class="panel-tabs" role="tablist" aria-label="Panel views" data-panel-tabs>
+<button type="button" class="panel-tab" role="tab" id="panel-tab-inspector" data-panel-tab="inspector" aria-selected="true" aria-controls="panel-view-inspector" tabindex="0">Visual inspector</button>
+<button type="button" class="panel-tab" role="tab" id="panel-tab-editor" data-panel-tab="editor" aria-selected="false" aria-controls="panel-view-editor" tabindex="-1">Content editor</button>
+<button type="button" class="panel-tab" role="tab" id="panel-tab-deploy" data-panel-tab="deploy" aria-selected="false" aria-controls="panel-view-deploy" tabindex="-1">Deploy panel</button>
+<button type="button" class="panel-tab" role="tab" id="panel-tab-help" data-panel-tab="help" aria-selected="false" aria-controls="panel-view-help" tabindex="-1">How to use</button>
 </nav>
 <p class="panel-stale" data-panel-stale role="alert" hidden></p>
 <p class="panel-status" data-panel-status role="status"></p>
@@ -24,8 +28,8 @@
 
 <main class="panel-main" id="panel-main">
 
-<section class="panel-view" id="panel-view-inspector" data-panel-view="inspector" aria-labelledby="panel-view-inspector-heading">
-<h2 class="panel-heading" id="panel-view-inspector-heading">Visual inspector</h2>
+<section class="panel-view" id="panel-view-inspector" data-panel-view="inspector" role="tabpanel" aria-labelledby="panel-tab-inspector" tabindex="0">
+<h2 class="panel-heading">Visual inspector</h2>
 <div class="inspector-layout">
 <div class="inspector-frame">
 <div class="inspector-toolbar">
@@ -51,7 +55,7 @@
 </dl>
 <div class="inspector-fields" data-inspector-fields></div>
 <div class="inspector-actions">
-<button type="button" class="panel-button panel-button-primary" data-inspector-save>Save to file</button>
+<button type="button" class="panel-button panel-button-primary" data-inspector-save disabled>Save to file</button>
 <button type="button" class="panel-button" data-inspector-reset>Reset</button>
 <button type="button" class="panel-button" data-inspector-export>Export the change</button>
 </div>
@@ -70,18 +74,18 @@
 </div>
 </section>
 
-<section class="panel-view" id="panel-view-editor" data-panel-view="editor" aria-labelledby="panel-view-editor-heading" hidden>
-<h2 class="panel-heading" id="panel-view-editor-heading">Content editor</h2>
+<section class="panel-view" id="panel-view-editor" data-panel-view="editor" role="tabpanel" aria-labelledby="panel-tab-editor" tabindex="0" hidden>
+<h2 class="panel-heading">Content editor</h2>
 <div class="editor-layout">
 <div class="editor-list">
 <label class="panel-field">
-<span>Page</span>
+<span>Section</span>
 <select data-editor-page></select>
 </label>
 <p class="editor-hint" data-editor-hint></p>
 <ul class="editor-entries" data-editor-entries></ul>
 <div class="editor-actions">
-<button type="button" class="panel-button panel-button-primary" data-editor-create>Add new entry</button>
+<button type="button" class="panel-button panel-button-primary" data-editor-create disabled>Add new entry</button>
 </div>
 <div class="editor-trash">
 <h3 class="panel-subheading">Trash</h3>
@@ -92,11 +96,11 @@
 <div class="editor-form" data-editor-form hidden>
 <label class="panel-field">
 <span>Title</span>
-<input type="text" data-editor-title>
+<input type="text" data-editor-title required>
 </label>
 <label class="panel-field">
 <span>Date</span>
-<input type="date" data-editor-date>
+<input type="date" data-editor-date required>
 </label>
 <label class="panel-field">
 <span>Tags</span>
@@ -131,7 +135,7 @@
 <div class="editor-card" data-editor-card></div>
 </div>
 <div class="editor-actions">
-<button type="button" class="panel-button panel-button-primary" data-editor-publish>Create and publish</button>
+<button type="button" class="panel-button panel-button-primary" data-editor-publish>Write the entry and rebuild</button>
 <button type="button" class="panel-button" data-editor-draft>Save for later</button>
 <button type="button" class="panel-button panel-button-danger" data-editor-delete>Move to trash</button>
 <button type="button" class="panel-button" data-editor-export>Export the markdown</button>
@@ -147,8 +151,8 @@
 </div>
 </section>
 
-<section class="panel-view" id="panel-view-deploy" data-panel-view="deploy" aria-labelledby="panel-view-deploy-heading" hidden>
-<h2 class="panel-heading" id="panel-view-deploy-heading">Deploy panel</h2>
+<section class="panel-view" id="panel-view-deploy" data-panel-view="deploy" role="tabpanel" aria-labelledby="panel-tab-deploy" tabindex="0" hidden>
+<h2 class="panel-heading">Deploy panel</h2>
 <form class="deploy-form" data-deploy-form>
 <label class="panel-field">
 <span>SSH host address</span>
@@ -167,8 +171,12 @@
 <input type="text" data-deploy-folder value="/home/www/annoyinggoods" spellcheck="false">
 </label>
 <label class="panel-field">
-<span>Port</span>
+<span>SSH port</span>
 <input type="number" data-deploy-port value="22" min="1" max="65535">
+</label>
+<label class="panel-field">
+<span>Test port</span>
+<input type="number" data-deploy-test-port value="0" min="0" max="65535">
 </label>
 <div class="deploy-actions">
 <button type="button" class="panel-button" data-deploy-check>Check connection</button>
@@ -176,6 +184,7 @@
 <button type="button" class="panel-button" data-deploy-fix>Fix server permissions</button>
 </div>
 </form>
+<p class="editor-hint">The test port is the port the test suite runs on during a publish. Leave it at 0 and the helper picks a free one, because another program on this machine may already hold port 8000.</p>
 <div class="deploy-reply">
 <h3 class="panel-subheading">Server reply</h3>
 <pre class="deploy-output" data-deploy-output role="log" aria-live="polite" tabindex="0"></pre>
@@ -188,6 +197,90 @@
 <button type="button" class="panel-button" data-deploy-export>Export the publish command</button>
 <p class="editor-hint">A publish keeps a snapshot of the build output in dist/snapshots/, named after the release time, so a bad publish can be undone by publishing the snapshot again.</p>
 </div>
+</section>
+
+<section class="panel-view" id="panel-view-help" data-panel-view="help" role="tabpanel" aria-labelledby="panel-tab-help" tabindex="0" hidden>
+<h2 class="panel-heading">How to use this panel</h2>
+<p class="editor-hint">The panel runs on this machine only. It never ships with the site and it never writes outside the project folder.</p>
+
+<section class="help-block">
+<h3 class="panel-subheading">Start the panel</h3>
+<p>Double click <code>tools\admin\start-admin.cmd</code>. It starts the server and opens this page for you. Keep the window open while you work; close it, or press Ctrl+C, to stop the server.</p>
+<p>From a terminal <code>npm run admin</code> does the same. It first asks the port whether a helper is already running. If one is, it only opens this page again, which is the way back after the tab was closed by accident. If none is, it starts the helper and opens the page.</p>
+<p>The helper stops itself after 45 minutes without a request, so a forgotten window does not hold the port. The <strong>Disconnect server</strong> button at the top of the panel stops it right away when the work is finished, and <code>npm run admin</code> brings it back.</p>
+<p>The panel needs the built site, so run <code>npm run build</code> once before the first use. The red banner at the top appears when the build is older than the sources, and it turns off the buttons that write. A failed build looks the same, so read the banner before you write.</p>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">The four views</h3>
+<dl class="help-list">
+<dt>Visual inspector</dt>
+<dd>Shows the built site in a frame. Click an element to see the rule that draws it, change the values, and save them into the stylesheet. The export box shows the same change as text, so the file can also be edited by hand.</dd>
+<dt>Content editor</dt>
+<dd>Writes the markdown entries of the blog and the words sections. This is the source of the site, not the site itself.</dd>
+<dt>Deploy panel</dt>
+<dd>Opens the connection to the webspace and sends the release. This is the only part that touches the live site.</dd>
+<dt>How to use</dt>
+<dd>This page.</dd>
+</dl>
+<p>The tabs work with the arrow keys. The left and right arrows move between them, Home and End jump to the first and the last.</p>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">Writing an entry</h3>
+<ol class="help-steps">
+<li>Open the <strong>Content editor</strong> and pick the section from the list. Only the sections that carry entries are in the list.</li>
+<li>Press <strong>Add new entry</strong>. The title becomes the file name, so a clear title gives a clear address.</li>
+<li>Fill in the title, the date and the markdown. The excerpt, the standfirst and the author note are optional.</li>
+<li>Watch the <strong>Index card preview</strong> while you type. It shows the card the build will render.</li>
+<li>Press <strong>Write the entry and rebuild</strong>. The markdown file is written into <code>content/</code> and the site is rebuilt straight away.</li>
+<li>Press <strong>Save for later</strong> instead to keep the text in <code>content/drafts/</code>. The build never reads that folder, so a draft never reaches the site.</li>
+</ol>
+<p>The entry only goes live after a publish in the <strong>Deploy panel</strong>. The rebuild in the editor builds the site on this machine; it does not send anything to the webspace.</p>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">The markdown rules</h3>
+<ul class="help-list">
+<li>The page owns the H1, so the body starts at H2. A level one heading in the body stops the build.</li>
+<li>Every image needs a description, because the description becomes the alt text. <code>![A short description](assets/pictures/name.webp "800x450")</code></li>
+<li>The date must be a real day in the <code>yyyy-mm-dd</code> form.</li>
+<li>The excerpt replaces the first forty five words on the index card. Without one, the build cuts the body at forty five words.</li>
+</ul>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">Publishing a release</h3>
+<ol class="help-steps">
+<li>Fill in the host address, the user name and the password of the webspace. The folder is <code>/home/www/annoyinggoods</code>. The password stays in the page and is never written to a file.</li>
+<li>Press <strong>Check connection</strong> first. It opens the session, prints the banner and the target folder, and transfers nothing.</li>
+<li>Press <strong>Publish to IONOS</strong>. The helper runs the whole gate first: the type check, the build, the test suite and the packaging. Nothing is uploaded while the gate is red.</li>
+<li>Press <strong>Fix server permissions</strong> afterwards. It sets the folders to 755 and the files to 644. A page that renders unstyled is almost always this problem.</li>
+</ol>
+<p>Every publish keeps a snapshot of the release in <code>dist/snapshots/</code>, so a bad publish can be undone by publishing the snapshot folder again.</p>
+<p>The test suite needs a free port. Port 8000 is the default, and another program on this machine may already hold it, so the helper picks a free port on its own. The port it used is named in the server reply.</p>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">When something does not work</h3>
+<ul class="help-list">
+<li><strong>The red banner is up.</strong> The build is older than the sources. Run <code>npm run build</code>, or let the panel rebuild, and the banner clears on its own.</li>
+<li><strong>The publish fails at the test step.</strong> The gate ran the type check and the build, so the tests are the reason. The server reply names the failing test.</li>
+<li><strong>The publish fails at the upload.</strong> The host, the user name, the port or the folder is wrong. The check mode prints what the server says about the folder.</li>
+<li><strong>An entry does not appear on the site.</strong> It is still a draft, or the page needs a publish.</li>
+<li><strong>The panel says the helper is not running.</strong> Start it with <code>tools\admin\start-admin.cmd</code>, or with <code>npm run admin</code>, which opens this page again. The export boxes still work without it.</li>
+<li><strong>The helper stopped on its own.</strong> It stops after 45 minutes without a request. Run <code>npm run admin</code> to start it again.</li>
+</ul>
+</section>
+
+<section class="help-block">
+<h3 class="panel-subheading">The runbooks on disk</h3>
+<ul class="help-list">
+<li><code>REVIEW/deploy/IONOS-DEPLOY.md</code> — the full publish procedure, with the gate and the manual checklist.</li>
+<li><code>REVIEW/deploy/EVENT-RUNBOOK.md</code> — how the seasonal event is switched on and off.</li>
+<li><code>AGENTS.md</code> — the rules the agents and the scripts follow.</li>
+</ul>
+</section>
 </section>
 
 </main>

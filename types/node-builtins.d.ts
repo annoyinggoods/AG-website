@@ -75,10 +75,13 @@ declare module "node:child_process" {
   export interface Writable {
     write(chunk: string): boolean;
     end(): void;
+    on(event: string, listener: (...args: any[]) => void): Writable;
   }
   export interface ChildProcess {
     pid?: number;
     stdin: Writable | null;
+    stdout: Writable | null;
+    stderr: Writable | null;
     on(event: string, listener: (...args: any[]) => void): ChildProcess;
     kill(): boolean;
   }
@@ -90,6 +93,6 @@ declare module "node:child_process" {
   export function spawn(command: string, args: string[], options?: SpawnOptions): ChildProcess;
   export function execFileSync(command: string, args: string[], options?: { cwd?: string; stdio?: string }): Buffer;
   export function execFileSync(command: string, args: string[], options: { cwd?: string; stdio?: string; encoding: string }): string;
-  export function spawnSync(command: string, args: string[], options: { cwd?: string; encoding: string }): { status: number | null; stdout: string; stderr: string };
+  export function spawnSync(command: string, args: string[], options: { cwd?: string; encoding: string; env?: Record<string, string | undefined>; timeout?: number }): { status: number | null; stdout: string; stderr: string };
   export function spawnSync(command: string, args: string[], options?: { cwd?: string }): { status: number | null; stdout: Buffer; stderr: Buffer };
 }

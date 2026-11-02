@@ -73,7 +73,29 @@ function readFile(p) {
 
 function writeFile(p, data) {
   fs.mkdirSync(path.dirname(p), { recursive: true });
-  fs.writeFileSync(p, data);
+  writeFileWithRetry(p, data);
+}
+
+// Windows can hold a file for a moment while the preview, the test server or
+// another build reads it, so a write waits a little and tries again. The
+// panel rebuilds in the background, so two writes can meet on the same file.
+function writeFileWithRetry(p, data) {
+  for (let attempt = 0; attempt < 10; attempt += 1) {
+    try {
+      fs.writeFileSync(p, data);
+      return;
+    } catch (err) {
+      if (attempt === 9) {
+        throw err;
+      }
+      pauseSync(50);
+    }
+  }
+}
+
+function pauseSync(milliseconds) {
+  const buffer = new Int32Array(new SharedArrayBuffer(4));
+  Atomics.wait(buffer, 0, 0, milliseconds);
 }
 
 function escapeHtml(raw) {
@@ -1020,6 +1042,44 @@ function validateImages() {
   fail(String(problems.length) + " image problems were found. The list is above.");
 }
 
+// The entry pages are the only pages this build can stop generating, because
+// an entry can be moved to the trash. A folder under a collection index that
+// the tree does not name, that this run did not write and that carries the
+// marker of a generated entry page is left over from a removed entry, so it
+// is taken away. A folder without that marker is never touched, so a
+// hand-written page can never be removed by mistake.
+const ENTRY_PAGE_MARKER = 'id="entry-heading-';
+
+function pruneEntryPages() {
+  const keep = new Set();
+  for (let i = 0; i < allNodes.length; i += 1) {
+    keep.add(path.join(OUT_DIR, outputFile(allNodes[i])));
+  }
+  const removed = [];
+  for (let i = 0; i < COLLECTIONS.length; i += 1) {
+    const folder = path.join(OUT_DIR, COLLECTIONS[i].indexPath.replace(/^\/+/, ""));
+    if (!fs.existsSync(folder)) {
+      continue;
+    }
+    for (const child of fs.readdirSync(folder, { withFileTypes: true })) {
+      if (!child.isDirectory()) {
+        continue;
+      }
+      const target = path.join(folder, child.name);
+      const page = path.join(target, "index.html");
+      if (keep.has(page) || !fs.existsSync(page)) {
+        continue;
+      }
+      if (readFile(page).indexOf(ENTRY_PAGE_MARKER) === -1) {
+        continue;
+      }
+      fs.rmSync(target, { recursive: true, force: true });
+      removed.push(path.relative(ROOT, target).split(path.sep).join("/"));
+    }
+  }
+  return removed;
+}
+
 // Write all pages
 validateTitles();
 validateImages();
@@ -1030,6 +1090,7 @@ for (let i = 0; i < allNodes.length; i += 1) {
   writeFile(outPath, assemblePage(node));
   writtenCount = writtenCount + 1;
 }
+const removedPages = pruneEntryPages();
 writeFile(path.join(OUT_DIR, "404.html"), assembleErrorPage());
 
 // Search index
@@ -1056,6 +1117,9 @@ console.log("Build complete: " + writtenCount + " pages written plus 404.html.")
 console.log("search-index.json: " + searchIndex.length + " entries.");
 console.log("sitemap.xml: " + allNodes.length + " URLs.");
 console.log("entries: " + entries.length + " markdown entries rendered.");
+if (removedPages.length > 0) {
+  console.log("removed entry pages: " + removedPages.join(", ") + ".");
+}
 console.log("styles/bundle.min.css: " + String(styleBundleSize) + " bytes.");
 console.log("scripts/bundle.js: " + String(scriptBundleSize) + " bytes.");
 console.log("scripts/nag/nag.bundle.js: " + String(nagBundleSize) + " bytes.");

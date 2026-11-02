@@ -49,7 +49,8 @@ function runDeploy(mode, settings, respond, finish) {
     "-Server", String(settings.server || ""),
     "-User", String(settings.user || ""),
     "-Folder", String(settings.folder || "/home/www/annoyinggoods"),
-    "-Port", String(settings.port || 22)
+    "-Port", String(settings.port || 22),
+    "-TestPort", String(settings.testPort || 0)
   ];
   const child = spawn("powershell", args, {
     cwd: ROOT,
@@ -72,11 +73,11 @@ function runDeploy(mode, settings, respond, finish) {
   });
   child.on("error", function (err) {
     respond("The deploy helper could not be started: " + err.message);
-    finish();
+    finish(1);
   });
   child.on("close", function (code) {
     respond(code === 0 ? "The run finished with the code 0." : "The run finished with the code " + String(code) + ".");
-    finish();
+    finish(code === null ? 1 : code);
   });
 }
 
@@ -95,19 +96,25 @@ export async function handleDeploy(request, response) {
     }
     response.write(JSON.stringify({ line: line }) + "\n");
   }
-  try {
-    runDeploy(mode, settings, respond, function () {
-      const line = snapshotLine(mode);
-      if (line !== "") {
-        respond(line);
-      }
-      sent = true;
-      response.end();
-    });
-  } catch (err) {
-    respond(err instanceof Error ? err.message : String(err));
+  // The last line of the stream carries the exit code, so the panel can tell
+  // a failed publish from a finished one.
+  function finish(code) {
+    if (sent) {
+      return;
+    }
+    const line = snapshotLine(mode);
+    if (line !== "") {
+      respond(line);
+    }
+    response.write(JSON.stringify({ done: true, code: code }) + "\n");
     sent = true;
     response.end();
+  }
+  try {
+    runDeploy(mode, settings, respond, finish);
+  } catch (err) {
+    respond(err instanceof Error ? err.message : String(err));
+    finish(1);
   }
   response.on("close", function () {
     sent = true;

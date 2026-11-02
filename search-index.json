@@ -279,6 +279,18 @@
     "excerpt": "Your stars, offline yAGna is a local-first library for a GitHub stars catalog that outgrew the GitHub UI. Every repo you ever starred comes down to your disk and stays there: READMEs with their images…"
   },
   {
+    "title": "Download",
+    "path": "/products/yagna/download/",
+    "parent": "/products/yagna/",
+    "keywords": [
+      "yagna",
+      "download",
+      "archive",
+      "mcp"
+    ],
+    "excerpt": "Download Get yAGna 0.9.0 yAGna ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and…"
+  },
+  {
     "title": "AGony",
     "path": "/products/agony/",
     "parent": "/products/",
@@ -383,7 +395,7 @@
       "archive",
       "checksum"
     ],
-    "excerpt": "Download Get AGony 0.9.0 AGony ships as a small portable archive: the binary, a short install note and the Apache-2.0 license text. No installer wizard, no registry entries, no background service — un…"
+    "excerpt": "Download Get AGony 0.9.0 AGony ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and…"
   },
   {
     "title": "License",
@@ -395,7 +407,7 @@
       "apache",
       "credits"
     ],
-    "excerpt": "License AGony is Apache-2.0 AGony, the desktop environment that lives in a terminal, is free and open-source software under the Apache License 2.0. In plain terms: You may use it at home, use it at wo…"
+    "excerpt": "License AGony is open source, with ethics attached AGony, the desktop environment that lives in a terminal, is free and open-source software under the Annoying Goods Open Source License with Ethical R…"
   },
   {
     "title": "AG-web",

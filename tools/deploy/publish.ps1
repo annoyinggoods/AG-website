@@ -48,6 +48,12 @@
 .PARAMETER Port
     The SSH port, by default 22.
 
+.PARAMETER TestPort
+    The port the test suite runs on during the publish gate, by default 0.
+    Zero lets the script pick a free port, because another program on the
+    machine often holds port 8000 and the suite then fails for a reason that
+    has nothing to do with the release.
+
 .PARAMETER KeyFile
     A private key file used instead of a password, for key based access.
 
@@ -69,6 +75,7 @@ param(
     [string]$Password = "",
     [string]$Folder = "/home/www/annoyinggoods",
     [int]$Port = 22,
+    [int]$TestPort = 0,
     [string]$KeyFile = "",
     [switch]$Staging
 )
@@ -88,6 +95,40 @@ function Write-Fail {
     param([string]$Message)
     Write-Host "FAILED: $Message" -ForegroundColor Red
     exit 1
+}
+
+# True when nothing else on this machine holds the port.
+function Test-PortFree {
+    param([int]$Port)
+    $listener = $null
+    try {
+        $listener = New-Object System.Net.Sockets.TcpListener([System.Net.IPAddress]::Loopback, $Port)
+        $listener.Start()
+        return $true
+    } catch {
+        return $false
+    } finally {
+        if ($listener -ne $null) {
+            $listener.Stop()
+        }
+    }
+}
+
+# The port the test suite runs on. The suite needs port 8000 by default, and
+# another program often holds it, so a free port is picked when the caller
+# does not name one.
+function Get-TestPort {
+    param([int]$Requested)
+    if ($Requested -gt 0) {
+        return $Requested
+    }
+    $candidates = @(8000) + @(8123..8140)
+    foreach ($candidate in $candidates) {
+        if (Test-PortFree -Port $candidate) {
+            return $candidate
+        }
+    }
+    return 8000
 }
 
 function Get-TransferCommand {
@@ -123,6 +164,29 @@ function Write-SecretWarning {
         return
     }
     Write-Host "Note: the password travels as a process argument for PuTTY. A key file is safer." -ForegroundColor Yellow
+}
+
+# True when the run logs in with a password instead of a key. The OpenSSH
+# clients cannot be handed a password without a console, so that case is done
+# by the in-process SFTP transfer script.
+function Test-PasswordTransfer {
+    if ($KeyFile -ne "") {
+        return $false
+    }
+    return (Resolve-Secret) -ne ""
+}
+
+# Runs the in-process SFTP transfer, which talks to the server with the ssh2
+# library. The password travels in the environment of the child process and
+# never in the command line.
+function Invoke-NodeTransfer {
+    param([string]$Mode, [string]$TargetFolder)
+    $env:AG_DEPLOY_PASSWORD = Resolve-Secret
+    $transfer = Join-Path $repoRoot "tools\deploy\transfer.mjs"
+    # The output of the child goes straight to the host, so the panel shows the
+    # reply of the transfer line by line and only the code is returned.
+    & node $transfer "--mode" $Mode "--host" $Server "--user" $User "--port" $Port "--folder" $TargetFolder | Out-Host
+    return $LASTEXITCODE
 }
 
 function Invoke-OpenSsh {
@@ -164,6 +228,13 @@ function Invoke-Remote {
 }
 
 function Test-Connection {
+    if (Test-PasswordTransfer) {
+        $code = Invoke-NodeTransfer -Mode "check" -TargetFolder $Folder
+        if ($code -ne 0) {
+            Write-Fail "The session failed. Check the host, the user, the port and the password."
+        }
+        return
+    }
     Write-Step "Opening a session to $User@$Server on port $Port."
     $banner = Invoke-Remote -Command "echo CONNECTED; pwd; ls -ld $Folder"
     if ($banner -ne 0) {
@@ -174,12 +245,15 @@ function Test-Connection {
 
 function Invoke-Gate {
     Write-Step "Running the build gate."
+    $testPort = Get-TestPort -Requested $TestPort
+    $env:AG_TEST_PORT = [string]$testPort
     Push-Location $repoRoot
     try {
         & npm run lint
         if ($LASTEXITCODE -ne 0) { Write-Fail "The type check failed, so nothing was uploaded." }
         & npm run build
         if ($LASTEXITCODE -ne 0) { Write-Fail "The build failed, so nothing was uploaded." }
+        Write-Step "The test suite runs on port $testPort."
         & npm test
         if ($LASTEXITCODE -ne 0) { Write-Fail "The test suite failed, so nothing was uploaded." }
         & node tools/build/package.mjs
@@ -237,6 +311,14 @@ function Publish-Release {
         Write-Fail "The deployable folder $distDir does not exist."
     }
     New-Snapshot
+    if (Test-PasswordTransfer) {
+        $code = Invoke-NodeTransfer -Mode "upload" -TargetFolder $Folder
+        if ($code -ne 0) {
+            Write-Fail "The upload failed. Nothing was changed on the server beyond a partial copy."
+        }
+        Write-Step "The release is uploaded, and the permissions are repaired."
+        return
+    }
     Write-Step "Uploading the contents of dist/ to $Folder."
     $tool = Get-TransferCommand
     if ($tool -eq $null) {
@@ -270,6 +352,14 @@ function Publish-Release {
 
 function Repair-Permissions {
     Write-Step "Repairing the permissions under $Folder."
+    if (Test-PasswordTransfer) {
+        $code = Invoke-NodeTransfer -Mode "fix" -TargetFolder $Folder
+        if ($code -ne 0) {
+            Write-Fail "The permission repair failed."
+        }
+        Write-Step "Folders are 755 and files are 644."
+        return
+    }
     $command = "find $Folder -type d -exec chmod 755 {} + ; find $Folder -type f -exec chmod 644 {} + ; echo PERMISSIONS_REPAIRED"
     $result = Invoke-Remote -Command $command
     if ($result -ne 0) {

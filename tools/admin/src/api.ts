@@ -3,6 +3,8 @@
 // written and the operator runs the command by hand.
 
 import type {
+  BuildReport,
+  ChangeReport,
   DeployLine,
   DeploySettings,
   EntryDraft,
@@ -22,7 +24,7 @@ const HELPER_ROOT = "/api";
 
 export class HelperMissingError extends Error {
   constructor() {
-    super("The helper is not running. Start it with node tools/admin/server.mjs.");
+    super("The helper is not running. Start it with npm run admin.");
     this.name = "HelperMissingError";
   }
 }
@@ -60,7 +62,29 @@ export async function fetchHealth(): Promise<HealthReport> {
     ok: Boolean(body.ok),
     root: String(body.root || ""),
     stale: Boolean(body.stale),
-    staleReason: String(body.staleReason || "")
+    staleReason: String(body.staleReason || ""),
+    build: readBuild(body.build),
+    idleSeconds: Number(body.idleSeconds || 0),
+    idleTimeoutMinutes: Number(body.idleTimeoutMinutes || 0)
+  };
+}
+
+// The helper stops itself when the operator asks it to, so the work is done
+// and the port is free again.
+export async function shutdownHelper(): Promise<void> {
+  const response = await fetch(HELPER_ROOT + "/shutdown", { method: "POST" });
+  await readJson(response);
+}
+
+// The outcome of the last build the helper started.
+function readBuild(raw: unknown): BuildReport {
+  const body = raw && typeof raw === "object" ? (raw as Record<string, unknown>) : {};
+  return {
+    ran: Boolean(body.ran),
+    ok: Boolean(body.ok),
+    code: Number(body.code || 0),
+    message: String(body.message || ""),
+    startedAt: Number(body.startedAt || 0)
   };
 }
 
@@ -90,12 +114,12 @@ export async function fetchTrash(): Promise<TrashEntry[]> {
   return Array.isArray(body.entries) ? (body.entries as TrashEntry[]) : [];
 }
 
-export async function restoreEntry(collection: string, slug: string): Promise<{ ok: boolean; message: string }> {
+export async function restoreEntry(collection: string, slug: string): Promise<ChangeReport> {
   const response = await fetch(
     HELPER_ROOT + "/entry/restore?collection=" + encodeURIComponent(collection) + "&slug=" + encodeURIComponent(slug),
     { method: "POST" }
   );
-  return (await readJson(response)) as { ok: boolean; message: string };
+  return (await readJson(response)) as ChangeReport;
 }
 
 export async function fetchTree(): Promise<TreeEntry[]> {
@@ -155,39 +179,41 @@ export async function readStyle(target: StyleTarget): Promise<{ file: string; de
   return { file: String(body.file || ""), declarations: body.declarations || {} };
 }
 
-export async function saveDraft(draft: EntryDraft): Promise<{ ok: boolean; message: string }> {
+export async function saveDraft(draft: EntryDraft): Promise<ChangeReport> {
   const response = await fetch(HELPER_ROOT + "/entry/draft", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(draft)
   });
-  return (await readJson(response)) as { ok: boolean; message: string };
+  return (await readJson(response)) as ChangeReport;
 }
 
-export async function createEntry(draft: EntryDraft): Promise<{ ok: boolean; message: string }> {
+export async function createEntry(draft: EntryDraft): Promise<ChangeReport> {
   const response = await fetch(HELPER_ROOT + "/entry/create", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(draft)
   });
-  return (await readJson(response)) as { ok: boolean; message: string };
+  return (await readJson(response)) as ChangeReport;
 }
 
-export async function trashEntry(collection: string, slug: string): Promise<{ ok: boolean; message: string }> {
+export async function trashEntry(collection: string, slug: string): Promise<ChangeReport> {
   const response = await fetch(
     HELPER_ROOT + "/entry/trash?collection=" + encodeURIComponent(collection) + "&slug=" + encodeURIComponent(slug),
     { method: "POST" }
   );
-  return (await readJson(response)) as { ok: boolean; message: string };
+  return (await readJson(response)) as ChangeReport;
 }
 
 // The deploy runs stream their output line by line, so the operator sees the
-// server answer while it happens instead of after the fact.
+// server answer while it happens instead of after the fact. The answer of
+// the run is the exit code of the helper script, because a failed publish
+// must never look like a finished one.
 export async function runDeploy(
   mode: "check" | "publish" | "fix",
   settings: DeploySettings,
   onLine: (line: string) => void
-): Promise<void> {
+): Promise<number> {
   const response = await fetch(HELPER_ROOT + "/deploy", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -199,6 +225,7 @@ export async function runDeploy(
   const reader = response.body.getReader();
   const decoder = new TextDecoder();
   let buffer = "";
+  let code = 0;
   for (;;) {
     const chunk = await reader.read();
     if (chunk.done) {
@@ -220,10 +247,15 @@ export async function runDeploy(
         onLine(raw);
         continue;
       }
+      if (parsed.done === true) {
+        code = Number(parsed.code || 0);
+        continue;
+      }
       onLine(parsed.line);
     }
   }
   if (buffer.trim()) {
     onLine(buffer.trim());
   }
+  return code;
 }

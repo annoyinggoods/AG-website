@@ -26,11 +26,28 @@ import {
   restoreFromTrash
 } from "./entries.mjs";
 import { buildStamp, STALE_MESSAGE } from "./stamp.mjs";
+import { lastBuild, startBuild } from "./build.mjs";
 import { logChange, closeSession } from "./session.mjs";
 import { builtPages, readTree } from "./tree.mjs";
 
 const PORT = Number(process.env.ADMIN_PORT || 8787);
 const HOST = "127.0.0.1";
+
+// The helper stops itself when nobody uses it any more, so a forgotten
+// window does not hold the port and the machine forever.
+const IDLE_MINUTES = Number(process.env.ADMIN_IDLE_MINUTES || 45);
+const IDLE_MS = Math.max(0, IDLE_MINUTES) * 60 * 1000;
+const IDLE_CHECK_MS = Math.max(1000, Math.min(60000, Math.floor(IDLE_MS / 4)));
+let lastActivityAt = Date.now();
+
+// Every request counts as work, so the clock starts again on each one.
+function markActivity() {
+  lastActivityAt = Date.now();
+}
+
+function idleSeconds() {
+  return Math.floor((Date.now() - lastActivityAt) / 1000);
+}
 
 const TYPES = {
   ".html": "text/html; charset=utf-8",
@@ -149,36 +166,47 @@ function writeDraft(draft) {
   const file = draftFile(draft);
   writeText(file, entrySource(draft));
   logChange([relativeToRoot(file)]);
-  return { ok: true, message: "The draft is in content/drafts/" + path.basename(file) + ". The build never reads that folder." };
+  return { ok: true, message: "The draft is in content/drafts/" + path.basename(file) + ". The build never reads that folder.", changed: true, buildStartedAt: 0 };
 }
 
+// The site is rebuilt after every change, so the panel never shows a page
+// that is not the one on disk. The build runs in the background and the
+// panel waits for its answer.
 function createEntry(draft) {
   const target = entryFile(draft);
   writeText(target.file, entrySource(draft));
   logChange([relativeToRoot(target.file)]);
-  const build = spawn(process.execPath, [path.join(ROOT, "tools", "build", "build.mjs")], {
-    cwd: ROOT,
-    stdio: "ignore"
-  });
-  build.on("error", function (err) {
-    void err;
-  });
+  const buildStartedAt = startBuild();
   return {
     ok: true,
-    message: "The entry " + target.collection + "/" + target.slug + " is written and the build is running."
+    message: "The entry " + target.collection + "/" + target.slug + " is written.",
+    changed: true,
+    buildStartedAt: buildStartedAt
   };
 }
 
 function trashEntry(collection, slug) {
   const moved = moveToTrash(collection, slug);
   logChange([relativeToRoot(moved.source), relativeToRoot(moved.target)]);
-  return { ok: true, message: "The entry is in content/trash/" + path.basename(moved.target) + "." };
+  const buildStartedAt = startBuild();
+  return {
+    ok: true,
+    message: "The entry " + collection + "/" + slug + " is in content/trash/" + path.basename(moved.target) + ".",
+    changed: true,
+    buildStartedAt: buildStartedAt
+  };
 }
 
 function restoreEntry(collection, slug) {
   const moved = restoreFromTrash(collection, slug);
   logChange([relativeToRoot(moved.source), relativeToRoot(moved.target)]);
-  return { ok: true, message: "The entry " + collection + "/" + slug + " is back in its section." };
+  const buildStartedAt = startBuild();
+  return {
+    ok: true,
+    message: "The entry " + collection + "/" + slug + " is back in its section.",
+    changed: true,
+    buildStartedAt: buildStartedAt
+  };
 }
 
 // The style change of the inspector, with the text of the element.
@@ -216,7 +244,24 @@ async function handleApi(request, response, url) {
   const route = url.pathname;
   if (route === "/api/health") {
     const stamp = buildStamp();
-    sendJson(response, 200, { ok: true, root: ROOT, stale: stamp.stale, staleReason: stamp.reason });
+    sendJson(response, 200, {
+      ok: true,
+      root: ROOT,
+      stale: stamp.stale,
+      staleReason: stamp.reason,
+      build: lastBuild(),
+      idleSeconds: idleSeconds(),
+      idleTimeoutMinutes: IDLE_MINUTES
+    });
+    return true;
+  }
+  if (route === "/api/shutdown") {
+    if (request.method !== "POST") {
+      sendJson(response, 405, { ok: false, error: "The helper only stops on a POST." });
+      return true;
+    }
+    sendJson(response, 200, { ok: true, message: "The helper is stopping." });
+    setTimeout(shutdown, 200);
     return true;
   }
   if (route === "/api/tree") {
@@ -312,6 +357,7 @@ function refuseWhenStale() {
 }
 
 const server = http.createServer(function (request, response) {
+  markActivity();
   const url = new URL(request.url || "/", "http://" + HOST + ":" + String(PORT));
   void handleApi(request, response, url).then(function (handled) {
     if (handled) {
@@ -344,7 +390,8 @@ const server = http.createServer(function (request, response) {
   });
 });
 
-function shutdown() {
+function shutdown(reason) {
+  console.log(reason || "The control panel stopped.");
   try {
     server.close();
   } catch (err) {
@@ -355,6 +402,16 @@ function shutdown() {
   }
   process.exit(0);
 }
+
+// The helper watches its own idleness and stops when nobody has asked it
+// anything for the length of the idle window.
+const idleTimer = setInterval(function () {
+  if (idleSeconds() * 1000 < IDLE_MS) {
+    return;
+  }
+  shutdown("Nobody used the panel for " + String(IDLE_MINUTES) + " minutes, so the helper stopped itself.");
+}, IDLE_CHECK_MS);
+idleTimer.unref();
 
 process.on("exit", function () {
   closeSession();
@@ -367,6 +424,34 @@ if (process.env.ADMIN_SHUTDOWN_ON_STDIN === "1" && process.stdin.isTTY !== true)
   process.stdin.on("end", shutdown);
 }
 
+// The launcher start-admin.cmd sets this flag, so a double click opens the
+// panel in the browser. The flag stays off when the test suite starts the
+// server, because a test run must not open a window.
+const OPEN_BROWSER = process.env.AG_ADMIN_OPEN === "1";
+
+function openBrowser(url) {
+  if (process.platform !== "win32" || process.env.AG_ADMIN_NO_BROWSER === "1") {
+    return;
+  }
+  spawn("cmd", ["/c", "start", "", url], { detached: true, stdio: "ignore", windowsHide: true }).unref();
+}
+
+// A panel that is already running holds the port, so a second launch has to
+// say what happened instead of ending in a raw stack trace.
+server.on("error", function (err) {
+  if (err && err.code === "EADDRINUSE") {
+    console.log("The port " + String(PORT) + " is already taken, so the panel did not start.");
+    console.log("Another panel is most likely still running.");
+    console.log("Open http://" + HOST + ":" + String(PORT) + "/admin/ , or close that other window and start this one again.");
+    process.exit(1);
+  }
+  throw err;
+});
+
 server.listen(PORT, HOST, function () {
-  console.log("The control panel is on http://" + HOST + ":" + String(PORT) + "/admin/");
+  const url = "http://" + HOST + ":" + String(PORT) + "/admin/";
+  console.log("The control panel is on " + url);
+  if (OPEN_BROWSER) {
+    openBrowser(url);
+  }
 });

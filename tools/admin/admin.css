@@ -48,6 +48,13 @@ body.panel-body {
   border-bottom: 1px solid var(--panel-line);
   background: var(--panel-surface);
 }
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
 .panel-brand {
   display: flex;
   align-items: center;
@@ -79,13 +86,14 @@ body.panel-body {
   min-height: 2.5rem;
   cursor: pointer;
 }
-.panel-tab[aria-pressed="true"] {
+.panel-tab[aria-selected="true"] {
   background: var(--panel-accent);
   border-color: var(--panel-accent);
   color: var(--panel-bg);
   font-weight: 700;
 }
 .panel-tab:focus-visible,
+.panel-view:focus-visible,
 .panel-button:focus-visible,
 .panel-field input:focus-visible,
 .panel-field select:focus-visible,
@@ -125,6 +133,12 @@ body.panel-body {
   display: grid;
   gap: 1rem;
 }
+/* The tab list hides the views with the hidden attribute, so the rule above
+   must not win over it. Without this the three views sit under each other and
+   the tabs look like they do nothing. */
+.panel-view[hidden] {
+  display: none;
+}
 .panel-heading {
   margin: 0;
   font-size: 1.05rem;
@@ -149,6 +163,10 @@ body.panel-body {
 }
 .panel-button:hover {
   border-color: var(--panel-accent);
+}
+.panel-button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 .panel-button-primary {
   background: var(--panel-accent);
@@ -454,6 +472,52 @@ body.panel-body {
   margin: 0 0 0.6rem;
   font-size: 0.85rem;
   color: var(--panel-ink-muted);
+}
+
+/* View four: the guide */
+.help-block {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1rem;
+  border: 1px solid var(--panel-line);
+  border-radius: var(--panel-radius);
+  background: var(--panel-surface);
+}
+.help-block p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--panel-ink-soft);
+}
+.help-block code {
+  padding: 0.05rem 0.3rem;
+  border-radius: 0.3rem;
+  background: var(--panel-bg);
+  font-family: var(--panel-mono);
+  font-size: 0.8rem;
+  color: var(--panel-ink);
+}
+.help-list,
+.help-steps {
+  margin: 0;
+  padding-left: 1.4rem;
+  display: grid;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  color: var(--panel-ink-soft);
+}
+.help-list {
+  list-style: none;
+  padding-left: 0;
+}
+.help-list dt {
+  font-weight: 700;
+  color: var(--panel-ink);
+}
+.help-list dd {
+  margin: 0 0 0.5rem;
+}
+.help-steps li::marker {
+  color: var(--panel-accent);
 }
 
 @media (max-width: 60rem) {

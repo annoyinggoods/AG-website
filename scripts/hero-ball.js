@@ -269,7 +269,7 @@ function titleSpot() {
     if (title instanceof HTMLElement) {
         const rect = title.getBoundingClientRect();
         if (rect.width > 0) {
-            return [rect.left + rect.width / 2, rect.top];
+            return [rect.left + rect.width / 2, rect.top - ballRadius()];
         }
     }
     return [window.innerWidth / 2, 80];
@@ -279,7 +279,7 @@ function mainSpot() {
     if (main instanceof HTMLElement) {
         const rect = main.getBoundingClientRect();
         if (rect.width > 0) {
-            return [rect.left + rect.width / 2, rect.top];
+            return [rect.left + rect.width / 2, rect.top - ballRadius()];
         }
     }
     return [window.innerWidth / 2, 160];

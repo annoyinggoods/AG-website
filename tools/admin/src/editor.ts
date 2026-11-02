@@ -1,32 +1,37 @@
 // View two: the content editor.
-// It lists the pages from the menu tree, shows the entries of the sections
-// that carry them, and writes markdown that the build turns into a card and
-// a detail page.
+// It lists the sections that carry entries, shows the entries of the chosen
+// section, and writes markdown that the build turns into a card and a detail
+// page. The section list is the known list, so the editor can still write
+// and export its markdown when the helper is not running.
 
 import {
   createEntry,
   fetchEntries,
   fetchEntry,
   fetchExcerpt,
-  fetchTree,
   fetchTrash,
   restoreEntry,
   saveDraft,
   trashEntry
 } from "./api.js";
+import { waitForBuild } from "./build-state.js";
 import { clear, element, query, required, setStatus } from "./dom.js";
 import { entrySource, slugForTitle } from "./entry-source.js";
-import type { EntryDraft, EntrySummary, TrashEntry, TreeEntry } from "./types.js";
+import type { ChangeReport, EntryDraft, EntrySummary, TrashEntry } from "./types.js";
 
+// The sections that carry entries. It matches the list the build uses, so the
+// entry always lands in a section the build renders.
 const COLLECTIONS: { id: string; label: string }[] = [
   { id: "blog", label: "Blog" },
   { id: "words", label: "Words" }
 ];
 
-let pages: TreeEntry[] = [];
-let collection = "";
 let editing: EntryDraft | null = null;
 let excerptTimer = 0;
+
+function pathOf(collectionId: string): string {
+  return "/" + collectionId + "/";
+}
 
 function collectionOf(pagePath: string): string {
   const segments = pagePath.split("/").filter(function (part) { return part.length > 0; });
@@ -42,33 +47,68 @@ function collectionOf(pagePath: string): string {
   return "";
 }
 
-function fillPages(): void {
+function labelOf(collectionId: string): string {
+  for (const known of COLLECTIONS) {
+    if (known.id === collectionId) {
+      return known.label;
+    }
+  }
+  return collectionId;
+}
+
+// The section the chosen page belongs to.
+function currentCollection(): string {
+  const select = required<HTMLSelectElement>("[data-editor-page]");
+  return collectionOf(select.value);
+}
+
+// The section an entry belongs to. An entry that is open keeps its own
+// section, because an entry never moves between sections.
+function targetCollection(): string {
+  if (editing) {
+    return editing.collection;
+  }
+  return currentCollection();
+}
+
+function fillSections(): void {
   const select = required<HTMLSelectElement>("[data-editor-page]");
   const current = select.value;
   clear(select);
-  for (const page of pages) {
-    const option = element("option", "", page.title + " — " + page.path);
-    option.value = page.path;
+  for (const known of COLLECTIONS) {
+    const option = element("option", "", known.label);
+    option.value = pathOf(known.id);
     select.appendChild(option);
   }
-  if (current && pages.some(function (page) { return page.path === current; })) {
+  if (current && currentCollection() !== "") {
     select.value = current;
   }
+}
+
+// Puts the list on a section, so the entries of that section are the ones on
+// show.
+function selectSection(collectionId: string): void {
+  required<HTMLSelectElement>("[data-editor-page]").value = pathOf(collectionId);
 }
 
 async function loadEntries(): Promise<void> {
   const list = required<HTMLElement>("[data-editor-entries]");
   const hint = required<HTMLElement>("[data-editor-hint]");
   clear(list);
-  const select = required<HTMLSelectElement>("[data-editor-page]");
-  const pagePath = select.value;
-  collection = collectionOf(pagePath);
+  const collection = currentCollection();
   if (!collection) {
-    hint.textContent = "This page carries no entries. Only the blog and the words sections do.";
+    hint.textContent = "Choose a section. Only the sections that carry entries are in the list.";
     return;
   }
-  hint.textContent = "Entries of the " + collection + " section.";
-  const entries = await fetchEntries(collection);
+  hint.textContent = "The entries of the " + labelOf(collection) + " section. A new entry lands in the same section.";
+  let entries: EntrySummary[] = [];
+  try {
+    entries = await fetchEntries(collection);
+  } catch (err) {
+    void err;
+    hint.textContent = "The helper is not running, so the entries of the " + labelOf(collection) + " section cannot be read. The export still works.";
+    return;
+  }
   if (entries.length === 0) {
     const empty = element("li", "editor-entry", "No entry yet. Use Add new entry to write the first one.");
     list.appendChild(empty);
@@ -86,6 +126,7 @@ function entryRow(entry: EntrySummary): HTMLElement {
   const actions = element("div", "editor-entry-actions", "");
   const edit = element("button", "panel-button", "Edit");
   edit.type = "button";
+  edit.setAttribute("aria-label", "Edit " + entry.title);
   edit.addEventListener("click", function () {
     void openEntry(entry.collection, entry.slug);
   });
@@ -104,7 +145,7 @@ function formValues(): EntryDraft {
   const body = required<HTMLTextAreaElement>("[data-editor-body]").value;
   return {
     slug: editing ? editing.slug : "",
-    collection: collection,
+    collection: targetCollection(),
     title: title,
     date: date,
     tags: tags,
@@ -131,15 +172,20 @@ async function openEntry(entryCollection: string, slug: string): Promise<void> {
     setStatus("The entry " + slug + " could not be read.", "error");
     return;
   }
-  collection = entryCollection;
   editing = draft;
+  selectSection(entryCollection);
   fillForm(draft);
   required<HTMLElement>("[data-editor-form]").hidden = false;
-  required<HTMLElement>("[data-editor-note]").textContent = "Editing " + draft.collection + "/" + draft.slug + ".";
+  required<HTMLElement>("[data-editor-note]").textContent = "Editing " + draft.collection + "/" + draft.slug + ". The entry keeps its section.";
   await refreshPreview();
 }
 
 function newEntry(): void {
+  const collection = currentCollection();
+  if (!collection) {
+    setStatus("Choose a section first. Only the blog and the words sections carry entries.", "error");
+    return;
+  }
   editing = null;
   required<HTMLInputElement>("[data-editor-title]").value = "";
   required<HTMLInputElement>("[data-editor-date]").value = new Date().toISOString().slice(0, 10);
@@ -149,7 +195,7 @@ function newEntry(): void {
   required<HTMLInputElement>("[data-editor-author]").value = "";
   required<HTMLTextAreaElement>("[data-editor-body]").value = "## The first line\n\nWrite here.\n";
   required<HTMLElement>("[data-editor-form]").hidden = false;
-  required<HTMLElement>("[data-editor-note]").textContent = "A new entry for the " + collection + " section.";
+  required<HTMLElement>("[data-editor-note]").textContent = "A new entry for the " + labelOf(collection) + " section.";
   void refreshPreview();
 }
 
@@ -167,7 +213,7 @@ async function refreshPreview(): Promise<void> {
   }
   window.clearTimeout(excerptTimer);
   excerptTimer = window.setTimeout(function () {
-    void fetchExcerpt(body, excerpt, collection).then(function (report) {
+    void fetchExcerpt(body, excerpt, targetCollection()).then(function (report) {
       clear(card);
       card.appendChild(element("h4", "editor-card-title", title));
       const text = report.excerpt + (report.truncated ? "..." : "");
@@ -191,6 +237,31 @@ function exportMarkdown(): void {
   target.textContent = lines.join("\n");
 }
 
+// The helper rebuilds the site after every change. The panel waits for that
+// rebuild and then says what it did, so a failed build never looks like a
+// finished one.
+async function reportChange(answer: ChangeReport, done: string): Promise<void> {
+  if (!answer.ok) {
+    setStatus(answer.message, "error");
+    return;
+  }
+  if (answer.buildStartedAt === 0) {
+    setStatus(answer.message, "ok");
+    return;
+  }
+  setStatus(answer.message + " The site is rebuilding.", "plain");
+  const build = await waitForBuild(answer.buildStartedAt);
+  if (!build) {
+    setStatus(answer.message + " The rebuild did not report back in time.", "error");
+    return;
+  }
+  if (build.ok) {
+    setStatus(done, "ok");
+    return;
+  }
+  setStatus("The change was written, but the build failed: " + build.message, "error");
+}
+
 async function publish(): Promise<void> {
   const draft = formValues();
   if (!draft.title) {
@@ -201,14 +272,19 @@ async function publish(): Promise<void> {
     setStatus("The entry needs a date.", "error");
     return;
   }
+  if (!draft.collection) {
+    setStatus("Choose a section first. Only the blog and the words sections carry entries.", "error");
+    return;
+  }
   try {
     const answer = await createEntry(draft);
-    setStatus(answer.message, answer.ok ? "ok" : "error");
+    const name = draft.collection + "/" + slugForTitle(draft.slug || draft.title);
     if (answer.ok) {
       editing = null;
       required<HTMLElement>("[data-editor-form]").hidden = true;
       await loadEntries();
     }
+    await reportChange(answer, "The entry " + name + " is written and the site is rebuilt. The deploy panel sends it to the webspace.");
   } catch (err) {
     setStatus(err instanceof Error ? err.message : String(err), "error");
   }
@@ -222,7 +298,11 @@ async function saveForLater(): Promise<void> {
   }
   try {
     const answer = await saveDraft(draft);
-    setStatus(answer.message, answer.ok ? "ok" : "error");
+    if (!answer.ok) {
+      setStatus(answer.message, "error");
+      return;
+    }
+    setStatus(answer.message + " The build never reads the drafts folder.", "ok");
   } catch (err) {
     setStatus(err instanceof Error ? err.message : String(err), "error");
   }
@@ -235,13 +315,14 @@ async function moveToTrash(): Promise<void> {
   }
   try {
     const answer = await trashEntry(editing.collection, editing.slug);
-    setStatus(answer.message, answer.ok ? "ok" : "error");
+    const name = editing.collection + "/" + editing.slug;
     if (answer.ok) {
       editing = null;
       required<HTMLElement>("[data-editor-form]").hidden = true;
       await loadEntries();
       await loadTrash();
     }
+    await reportChange(answer, "The entry " + name + " is in the trash and the site is rebuilt without it.");
   } catch (err) {
     setStatus(err instanceof Error ? err.message : String(err), "error");
   }
@@ -275,10 +356,14 @@ function trashRow(entry: TrashEntry): HTMLElement {
   const actions = element("div", "editor-entry-actions", "");
   const restore = element("button", "panel-button", "Restore");
   restore.type = "button";
+  restore.setAttribute("aria-label", "Restore " + (entry.title || entry.slug));
   restore.addEventListener("click", function () {
-    void restoreEntry(entry.collection, entry.slug).then(function (answer) {
-      setStatus(answer.message, answer.ok ? "ok" : "error");
-      return loadTrash().then(function () { return loadEntries(); });
+    void restoreEntry(entry.collection, entry.slug).then(async function (answer: ChangeReport) {
+      if (answer.ok) {
+        await loadTrash();
+        await loadEntries();
+      }
+      await reportChange(answer, "The entry " + entry.collection + "/" + entry.slug + " is back in its section and the site is rebuilt.");
     }).catch(function (err) {
       setStatus(err instanceof Error ? err.message : String(err), "error");
     });
@@ -323,15 +408,14 @@ export async function startEditor(): Promise<void> {
     void refreshPreview();
   });
   try {
-    pages = await fetchTree();
-    fillPages();
+    fillSections();
     await loadEntries();
     await loadTrash();
   } catch (err) {
     setStatus(err instanceof Error ? err.message : String(err), "error");
     const hint = query<HTMLElement>("[data-editor-hint]");
     if (hint) {
-      hint.textContent = "The helper is not running, so the list of pages cannot be read.";
+      hint.textContent = "The helper is not running, so the list of entries cannot be read. The export still works.";
     }
   }
 }

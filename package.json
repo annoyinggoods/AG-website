@@ -15,12 +15,13 @@
     "test": "playwright test",
     "site": "node tools/build/build.mjs",
     "serve": "node tools/build/serve.mjs",
-    "admin": "node tools/admin/server.mjs"
+    "admin": "node tools/admin/launch.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0",
     "axe-core": "^4.14.0",
     "playwright": "^1.48.0",
+    "ssh2": "^1.17.0",
     "typescript": "^5.6.0"
   }
 }

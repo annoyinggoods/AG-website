@@ -118,6 +118,14 @@ function isLightboxImage(img) {
     if (img.closest(".site-footer")) {
         return false;
     }
+    // The gate veil and the parked ball run their own choreography; a zoom
+    // dialog opening over them would hide the animation it belongs to.
+    if (img.closest(".hero-gate")) {
+        return false;
+    }
+    if (img.classList.contains("logo-ball")) {
+        return false;
+    }
     if (img.classList.contains("err-spider")) {
         return false;
     }

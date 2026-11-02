@@ -182,7 +182,6 @@ async function runSequence(hero) {
     await walkPath(hero, [start, topRight], TO_CORNER_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
     });
     setHeroState("weave");
     if (webPlain) {
@@ -194,7 +193,6 @@ async function runSequence(hero) {
     await walkPath(hero, path, WEAVE_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
         if (webPlain) {
             revealPlain(webPlain, x - webRect.left);
         }
@@ -210,7 +208,6 @@ async function runSequence(hero) {
     await walkPath(hero, path.slice().reverse(), RETURN_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
-        applyWebTorque(hero, rot);
         if (webWords) {
             revealWords(webWords, x - webRect.left, webW);
         }
@@ -281,16 +278,6 @@ function revealBoxes(boxes) {
             box.classList.add("is-entering");
         }
     }
-}
-// The spider carries a torque while it walks, so the web turns with it around
-// its topmost tip.
-function applyWebTorque(hero, angle) {
-    const layers = hero.querySelectorAll(".ha-web");
-    layers.forEach(function (node) {
-        if (node instanceof HTMLElement) {
-            node.style.transform = "rotate(" + angle.toFixed(2) + "deg)";
-        }
-    });
 }
 function updateDesc(text) {
     let desc = document.querySelector("[data-ha-desc]");
@@ -443,6 +430,14 @@ function showRestingBall(hero) {
     }
 }
 function revealWebLayers(hero) {
+    // An earlier run of the sequence could have left the webs turned; the
+    // resting hero always shows them upright and fully woven.
+    const layers = hero.querySelectorAll(".ha-web");
+    layers.forEach(function (node) {
+        if (node instanceof HTMLElement) {
+            node.style.transform = "";
+        }
+    });
     const webPlain = hero.querySelector("[data-ha-web='plain']");
     if (webPlain) {
         webPlain.style.opacity = "1";
