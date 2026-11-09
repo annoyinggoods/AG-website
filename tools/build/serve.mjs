@@ -44,7 +44,50 @@ function resolveFile(urlPath) {
   return null;
 }
 
+const CONTACT_ENDPOINT = "/api/contact/";
+
+function isContactEndpoint(urlPath) {
+  const clean = urlPath.split("?")[0].split("#")[0];
+  return clean === CONTACT_ENDPOINT || clean === "/api/contact/index.php";
+}
+
+function readBody(req) {
+  return new Promise(function (resolve) {
+    let raw = "";
+    req.on("data", function (chunk) {
+      raw += chunk;
+      if (raw.length > 64 * 1024) {
+        req.destroy();
+      }
+    });
+    req.on("end", function () {
+      resolve(raw);
+    });
+  });
+}
+
+// The contact endpoint is a PHP file, so the dev server cannot run it. It
+// still answers the way the host does, so the form can be tried locally
+// without every message ending in a failure.
+async function handleContactEndpoint(req, res) {
+  const raw = await readBody(req);
+  let summary = "";
+  try {
+    const parsed = JSON.parse(raw);
+    summary = String(parsed.summary || parsed.title || "");
+  } catch (err) {
+    void err;
+  }
+  console.log("Contact form: " + (summary.length > 0 ? summary : "a message") + " (not sent, this server has no mail).");
+  res.writeHead(200, { "Content-Type": "application/json; charset=utf-8" });
+  res.end(JSON.stringify({ ok: true }));
+}
+
 const server = http.createServer(function (req, res) {
+  if (req.method === "POST" && isContactEndpoint(req.url || "")) {
+    void handleContactEndpoint(req, res);
+    return;
+  }
   const file = resolveFile(req.url || "/");
   if (!file) {
     res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });

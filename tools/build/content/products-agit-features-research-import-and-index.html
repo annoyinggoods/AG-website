@@ -1,12 +1,46 @@
-<article class="content-article feature-row" id="import-index">
+<article class="content-article feature-row" data-admin="content:content.css" id="import-index">
 <div class="feature-text">
 <h2 class="article-heading">Import and Index</h2>
-<p>Bring in documents and notes, then search them instantly with a local index.</p>
+<p>Every project carries a library. Drop your sources in — reports, papers, interviews, world notes, the previous book — and AGIT indexes them on your own machine so the whole pile becomes searchable in plain language.</p>
+<p>Two kinds of search ride on that index: the exact kind, for when you remember the phrase, and the meaning kind, for when all you remember is the idea. Both run against files on your disk. Neither uploads a page.</p>
 </div>
 <div class="feature-media">
 <figure>
-<img src="assets/agit/outline.webp" alt="AGIT outline view showing imported and indexed documents" width="1680" height="1050" loading="lazy">
-<figcaption>AGIT outline view showing imported and indexed documents</figcaption>
+<img src="/assets/agit/outline.webp" alt="AGIT's outline panel showing a structured project tree beside the manuscript" width="1680" height="1050" loading="lazy" decoding="async">
+<figcaption>The indexed project: sources, notes and draft in one tree.</figcaption>
 </figure>
 </div>
 </article>
+<section class="content-section" data-admin="content:content.css" id="import-index-formats" aria-labelledby="import-index-formats-heading">
+<h2 class="section-heading" id="import-index-formats-heading">What comes in</h2>
+<article class="content-article" data-admin="content:content.css" id="import-index-formats-list">
+<h3 class="article-heading">The formats at the door</h3>
+<ul>
+<li><strong>Documents:</strong> DOCX, PDF, RTF, plain text and Markdown, with structure kept where the file has it.</li>
+<li><strong>Books:</strong> EPUB, for the research that ships as a book.</li>
+<li><strong>Scans and images:</strong> OCR reads the text out of screenshots and scans, locally, so the receipt from 2019 joins the searchable pile.</li>
+<li><strong>Notes:</strong> your existing text notes import as first-class documents, not attachments.</li>
+</ul>
+<p>The point of the wide door is that your old material stops being dead weight. A folder of old PDFs becomes a source you can quote; last year's meeting notes become the answer to "what did we decide about the sequel?".</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="import-index-index" aria-labelledby="import-index-index-heading">
+<h2 class="section-heading" id="import-index-index-heading">What the index actually is</h2>
+<article class="content-article" data-admin="content:content.css" id="import-index-index-plain">
+<h3 class="article-heading">In plain words</h3>
+<p>Under the hood it is a vector index — the technology behind modern search — but the practical version is simpler: the index stores what your documents <em>mean</em>, not just what they say. Searching for "the harbour confrontation" can find the scene where the fight at the docks happens, even if neither the word "harbour" nor "confrontation" appears in it.</p>
+<p>Because the index is project-scoped, the same word in two projects never crosses streams: your pirate novel's "anchor" and your memoir's "anchor" live in different worlds, exactly like they should.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="import-index-index-local">
+<h3 class="article-heading">In local words</h3>
+<p>The index lives next to the project, in the same folder you can back up and move. Indexing runs on your machine — no account, no upload, no "processing may take up to 30 days". Delete a document and its indexed traces go with it.</p>
+<p>When you <em>do</em> connect a cloud AI, the chat can use the index to ground its answers in your sources — the retrieval happens locally, and what gets sent is the passage it found, under the provider settings you chose. That choice is always yours, and off is a valid setting.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="import-index-next" aria-labelledby="import-index-next-heading">
+<h2 class="section-heading" id="import-index-next-heading">Where material goes next</h2>
+<article class="content-article" data-admin="content:content.css" id="import-index-next-links">
+<h3 class="article-heading">The rest of the pipeline</h3>
+<p>Once the pile is indexed, the interesting part starts: <a href="/products/agit/features/research/compute-and-chart/">compute and chart</a> asks the data questions, <a href="/products/agit/features/research/mcp-and-external-tools/">MCP and external tools</a> bring in outside help, and <a href="/products/agit/features/research/automation/">automation</a> makes the whole pipeline repeatable.</p>
+</article>
+</section>

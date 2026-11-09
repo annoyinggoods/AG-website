@@ -247,6 +247,11 @@ function Invoke-Gate {
     Write-Step "Running the build gate."
     $testPort = Get-TestPort -Requested $TestPort
     $env:AG_TEST_PORT = [string]$testPort
+    # The specs that drive the control panel are left out of this run. The
+    # panel helper serves the site and rebuilds it while it runs, and that
+    # makes this gate and the panel that started it unstable. The site
+    # checks stay in.
+    $env:AG_SKIP_ADMIN_TESTS = "1"
     Push-Location $repoRoot
     try {
         & npm run lint

@@ -3,12 +3,26 @@
   position: sticky;
   top: 1.5rem;
   align-self: start;
-  max-height: calc(var(--main-height) - var(--menu-offset));
+  /* The menu takes the height its content needs and stops at the height of
+     the window, so a long tree scrolls inside the menu instead of being cut
+     off. The offset leaves room for the sticky edge and the page margin. */
+  height: auto;
+  max-height: calc(100vh - 3rem);
+  max-height: calc(100dvh - 3rem);
   overflow-y: auto;
   overscroll-behavior: contain;
   border-radius: var(--radius-menu);
   opacity: 1;
   transition: opacity var(--dur-fade) ease;
+}
+/* The cookie banner lies over the bottom of the window while it is there, so
+   the menu leaves room for it and the theme pill stays reachable. */
+@media (min-width: 56.01rem) {
+  html:not([data-cookie="set"]) .menu-box,
+  html[data-cookie="set"]:has(.cookie-banner.is-visible) .menu-box {
+    max-height: calc(100vh - 13rem);
+    max-height: calc(100dvh - 13rem);
+  }
 }
 .menu-box.is-dimmed {
   background: color-mix(in srgb, var(--panel-dim) calc(var(--opacity-box) * 100%), transparent);
@@ -80,6 +94,12 @@
 }
 .menu-list .menu-list {
   padding-inline-start: var(--indent-step);
+}
+/* A leaf has no caret of its own, so its label would sit one caret column
+   further left than the labels of the parent rows beside it. The margin
+   reserves that column, and it applies only inside the drawers. */
+.menu-list .menu-list .menu-item-leaf > .menu-heading .menu-link {
+  margin-inline-start: var(--menu-caret-col);
 }
 .menu-item {
   margin-block: 0.15rem;
@@ -190,10 +210,13 @@
   color: var(--nav-ink);
   font: inherit;
   cursor: pointer;
-  transition: transform var(--dur-hover) ease, background var(--dur-hover) ease;
+  transition: background var(--dur-hover) ease;
 }
+/* The caret button must not move on hover: the base hover lift and the old
+   nudge slid the tiny hit target out from under the pointer and the caret
+   became hard to click. The tint alone signals the hover. */
 .menu-toggle:hover {
-  transform: translateX(var(--hover-nudge));
+  transform: none;
   background: var(--accent-tint);
 }
 .menu-toggle::before {

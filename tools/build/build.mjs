@@ -13,6 +13,7 @@ import { buildNagPackage } from "./package-nag.mjs";
 import { buildDraghtsBundle } from "./bundle-draghts.mjs";
 import { buildDraghtsStandalone } from "./bundle-draghts-standalone.mjs";
 import { buildDraghtsPackage } from "./package-draghts.mjs";
+import { buildAgnosisPackage } from "./package-agnosis.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..", "..");
@@ -32,11 +33,16 @@ const HTACCESS_PATH = path.join(ROOT, ".htaccess");
 const CSP_HASH_PLACEHOLDER = "__AG_INLINE_SCRIPT_HASH__";
 const CONSENT_STORAGE_KEY = "ag-cookie-consent";
 const CONSENT_VERSION = 1;
+const THEME_STORAGE_KEY = "ag-theme";
+const THEME_STORAGE_VERSION = 3;
 
 // Runs before the first paint: it marks the document as scripted, restores the
 // stored theme, and hides the cookie banner when a consent record already
 // exists. The content security policy hashes this exact string.
-const THEME_SCRIPT = `(function(){var d=document.documentElement;d.classList.add("js");try{var raw=localStorage.getItem("${CONSENT_STORAGE_KEY}");if(raw){var choice="";var version=${CONSENT_VERSION};try{var rec=JSON.parse(raw);if(rec&&typeof rec==="object"){choice=String(rec.choice||"");version=rec.version;}}catch(e){choice=String(raw).replace(/^"|"$/g,"");version=${CONSENT_VERSION};}if((choice==="accepted"||choice==="declined")&&version===${CONSENT_VERSION}){d.setAttribute("data-cookie","set");}}}catch(e){}try{var k="ag-theme";var saved=localStorage.getItem(k);var theme="dark";if(saved){try{var p=JSON.parse(saved);if(p&&typeof p==="object"&&(p.theme==="light"||p.theme==="dark")){theme=p.theme;}}catch(e2){var t=String(saved).replace(/^"|"$/g,"");if(t==="light"||t==="dark"){theme=t;}}}else if(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches){theme="light";}d.setAttribute("data-theme",theme);var m=document.querySelector("meta[name='theme-color']:not([media])");if(m){m.content=theme==="dark"?"#0e0817":"#efeaf8";}}catch(e3){}})();`;
+// The theme rules here are the same as the ones in src/theme.ts: a stored
+// choice from this version wins, anything else follows the system setting and
+// falls back to the dark theme when the system cannot be read.
+const THEME_SCRIPT = `(function(){var d=document.documentElement;d.classList.add("js");try{var raw=localStorage.getItem("${CONSENT_STORAGE_KEY}");if(raw){var choice="";var version=${CONSENT_VERSION};try{var rec=JSON.parse(raw);if(rec&&typeof rec==="object"){choice=String(rec.choice||"");version=rec.version;}}catch(e){choice=String(raw).replace(/^"|"$/g,"");version=${CONSENT_VERSION};}if((choice==="accepted"||choice==="declined")&&version===${CONSENT_VERSION}){d.setAttribute("data-cookie","set");}}}catch(e){}try{var k="${THEME_STORAGE_KEY}";var mode="system";var saved=localStorage.getItem(k);if(saved){try{var p=JSON.parse(saved);if(p&&typeof p==="object"&&p.version===${THEME_STORAGE_VERSION}&&(p.theme==="light"||p.theme==="dark"||p.theme==="system")){mode=p.theme;}}catch(e2){mode="system";}}var theme=mode;if(theme==="system"){theme=(window.matchMedia&&window.matchMedia("(prefers-color-scheme: light)").matches)?"light":"dark";}d.setAttribute("data-theme",theme);var m=document.querySelector("meta[name='theme-color']:not([media])");if(m){m.content=theme==="dark"?"#0e0817":"#efeaf8";}}catch(e3){}})();`;
 
 const FONT_PRELOADS = [
   "/assets/fonts/Fiendish.woff2",
@@ -117,6 +123,67 @@ function outputFile(node) {
   return p + "/index.html";
 }
 
+function outputDir(node) {
+  return path.dirname(path.join(OUT_DIR, outputFile(node)));
+}
+
+// A carried page serves a finished build that was produced outside this site,
+// for example the site AGrrr! exports. The tree node carries the name of a
+// folder under tools/carried/; while that folder holds an index.html, the
+// build copies it over the page's folder verbatim instead of generating the
+// page, so nothing of the carried build is overwritten. Before the build
+// lands, the page is generated from its content fragment like any other.
+const CARRIED_DIR = path.join(ROOT, "tools", "carried");
+
+function carriedBuildDir(node) {
+  if (!node.carry) {
+    return null;
+  }
+  const source = path.join(CARRIED_DIR, String(node.carry));
+  if (!fs.existsSync(path.join(source, "index.html"))) {
+    return null;
+  }
+  return source;
+}
+
+function carryPage(node) {
+  const source = carriedBuildDir(node);
+  if (!source) {
+    return false;
+  }
+  const target = outputDir(node);
+  fs.cpSync(source, target, { recursive: true });
+  stampFreshTimes(target);
+  return true;
+}
+
+// The Windows file copy carries the source's time over to the copy, so a
+// carried page would read as a build from the day it was exported. The panel
+// reads the built pages' times to refuse a stale build, so every copied file
+// gets the build's own moment.
+function stampFreshTimes(folder) {
+  const moment = new Date();
+  for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
+    const full = path.join(folder, entry.name);
+    if (entry.isDirectory()) {
+      stampFreshTimes(full);
+    } else {
+      fs.utimesSync(full, moment, moment);
+    }
+  }
+}
+
+function bodySourceHtml(node) {
+  if (node.isEntry) {
+    return node.entry.bodyHtml;
+  }
+  const carried = carriedBuildDir(node);
+  if (carried) {
+    return readFile(path.join(carried, "index.html"));
+  }
+  return readFile(path.join(CONTENT_DIR, slugFor(node) + ".html"));
+}
+
 function canonicalUrl(node) {
   return SITE_DOMAIN + node.path;
 }
@@ -137,7 +204,8 @@ function flatten(nodes, inheritedParent) {
       parent: node.parent === undefined || node.parent === null ? inheritedParent : node.parent,
       depth: node.depth === undefined ? 0 : node.depth,
       keywords: Array.isArray(node.keywords) ? node.keywords.slice() : [],
-      children: Array.isArray(node.children) ? node.children : []
+      children: Array.isArray(node.children) ? node.children : [],
+      carry: node.carry === undefined || node.carry === null ? "" : String(node.carry)
     };
     out.push(entry);
     if (entry.children.length > 0) {
@@ -404,6 +472,10 @@ const nagPackage = buildNagPackage();
 const draghtsBundleSize = buildDraghtsBundle();
 const draghtsStandaloneSize = buildDraghtsStandalone();
 const draghtsPackage = buildDraghtsPackage();
+// AGnosis is built in its own project, so the site assembles the archive from
+// the release binary of that project and leaves the download alone when the
+// project is not on this machine.
+const agnosisPackage = buildAgnosisPackage();
 
 // Root-absolute asset/style URLs so nested folder pages resolve subresources
 function rootAbsoluteAssets(html) {
@@ -473,6 +545,19 @@ const PLACEHOLDERS = {
   "{{draghts_bytes}}": () => String(draghtsPackage.bytes),
   "{{draghts_sha256}}": () => draghtsPackage.sha256,
   "{{draghts_file}}": () => "draghts-" + draghtsPackage.version + ".zip",
+  // The duck of the AGnosis page is the sprite the parade draws, taken from
+  // the ducks project, so the page shows the real art and not a copy of it.
+  "{{agnosis_duck}}": () => readFile(path.join(ROOT, "assets", "agnosis", "duck-ascii.txt")).trim(),
+  // The AGnosis download page quotes the size and the checksum of the
+  // archive and of the Windows installer, so the page can never quote a
+  // checksum that does not match the file beside it.
+  "{{agnosis_version}}": () => agnosisPackage.version,
+  "{{agnosis_size}}": () => agnosisPackage.humanSize,
+  "{{agnosis_bytes}}": () => String(agnosisPackage.bytes),
+  "{{agnosis_sha256}}": () => agnosisPackage.sha256,
+  "{{agnosis_file}}": () => "agnosis-" + agnosisPackage.version + "-windows-x64.zip",
+  "{{agnosis_setup_size}}": () => agnosisPackage.setupHumanSize,
+  "{{agnosis_setup_sha256}}": () => agnosisPackage.setupSha256,
 };
 
 function fillPlaceholders(html) {
@@ -504,6 +589,15 @@ function contentModified(node) {
   if (node.isEntry) {
     try {
       return fs.statSync(path.join(ROOT, node.entry.sourceFile)).mtime;
+    } catch (err) {
+      void err;
+      return new Date();
+    }
+  }
+  const carried = carriedBuildDir(node);
+  if (carried) {
+    try {
+      return fs.statSync(path.join(carried, "index.html")).mtime;
     } catch (err) {
       void err;
       return new Date();
@@ -567,15 +661,17 @@ function buildNavItem(node, currentPath) {
       return buildNavItem(child, currentPath);
     }).join("") + "</ul></details>";
   }
-  return '<li class="menu-item" data-menu-path="' + escapeHtml(node.path) + '">' + inner + "</li>";
+  const leafClass = hasChildren ? "" : " menu-item-leaf";
+  return '<li class="menu-item' + leafClass + '" data-menu-path="' + escapeHtml(node.path) + '">' + inner + "</li>";
 }
 
 function buildNav(currentPath) {
   const roots = nodes.filter(function (node) { return node.parent === null; });
   const items = roots.map(function (node) { return buildNavItem(node, currentPath); }).join("");
-  const pill = `<div class="menu-theme-pill" role="group" aria-label="Theme">
-<button class="theme-pill-segment" type="button" data-theme-choice="dark" aria-pressed="true"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-moon"></use></svg><span class="theme-pill-label">dark theme</span></button>
-<button class="theme-pill-segment" type="button" data-theme-choice="light" aria-pressed="false"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-knife"></use></svg><span class="theme-pill-label">light theme</span></button>
+  const pill = `<div class="menu-theme-pill" role="group" aria-label="Theme" data-theme-effective="dark">
+<button class="theme-pill-segment" type="button" data-theme-choice="dark" aria-pressed="false" aria-label="dark theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-moon"></use></svg><span class="theme-pill-label">dark</span></button>
+<button class="theme-pill-segment" type="button" data-theme-choice="system" aria-pressed="true" aria-label="follow the system theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-auto"></use></svg><span class="theme-pill-label">auto</span></button>
+<button class="theme-pill-segment" type="button" data-theme-choice="light" aria-pressed="false" aria-label="light theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-knife"></use></svg><span class="theme-pill-label">light</span></button>
 <svg class="theme-pill-hint" aria-hidden="true" focusable="false"><use href="#icon-pentagram"></use></svg>
 </div>
 <span class="theme-status" data-theme-status role="status" aria-live="polite" hidden></span>`;
@@ -643,13 +739,12 @@ const products = readProducts(ROOT, tree, nodeByPath, CONTENT_DIR, slugFor);
 
 // Build search index
 const searchIndex = allNodes.map(function (node) {
-  const content = node.isEntry ? node.entry.bodyHtml : readFile(path.join(CONTENT_DIR, slugFor(node) + ".html"));
   return {
     title: node.title,
     path: node.path,
     parent: node.parent,
     keywords: node.keywords,
-    excerpt: excerpt(content)
+    excerpt: excerpt(bodySourceHtml(node))
   };
 });
 
@@ -857,6 +952,18 @@ function menuPayload() {
   };
 }
 
+// A product page that has a download subpage leads with a download chip at
+// the top of the main box, so the download is reachable without scrolling.
+function downloadCtaHtml(node) {
+  const child = (node.children || []).find(function (kid) {
+    return /\/download\/?$/.test(kid.path);
+  });
+  if (!child) {
+    return "";
+  }
+  return '<div class="chip-row page-download-cta"><a class="button-chip" href="' + escapeHtml(linkFor(child)) + '">Download ' + escapeHtml(node.title) + "</a></div>";
+}
+
 // Assemble one page
 function assemblePage(node) {
   const content = contentFor(node);
@@ -878,7 +985,7 @@ ${sprite}
 </div>
 </header>
 ${buildNav(node.path)}
-<main class="main-box" id="main-content" data-main-box data-admin="boxes:boxes.css">${rootAbsoluteAssets(rewriteFlatLinks(content))}</main>
+<main class="main-box" id="main-content" data-main-box data-admin="boxes:boxes.css">${downloadCtaHtml(node)}${rootAbsoluteAssets(rewriteFlatLinks(content))}</main>
 ${footerHtml()}
 </div>
 ${cookieBanner}
@@ -946,8 +1053,13 @@ function validate() {
   }
   written["/404.html"] = readFile(path.join(OUT_DIR, "404.html"));
   // The structure check runs on every written page, including the error page.
+  // A carried page is a foreign build, so the site's own page rules do not
+  // apply to it and the link checks below skip it too.
   for (let i = 0; i < allNodes.length; i += 1) {
     const node = allNodes[i];
+    if (carriedBuildDir(node)) {
+      continue;
+    }
     const problems = validatePageHtml(written[node.path], node.path);
     for (let j = 0; j < problems.length; j += 1) {
       errors.push(problems[j]);
@@ -977,6 +1089,9 @@ function validate() {
   const srcRe = /src=\x22([^\"]*)\x22/g;
   for (let i = 0; i < allNodes.length; i += 1) {
     const node = allNodes[i];
+    if (carriedBuildDir(node)) {
+      continue;
+    }
     const html = written[node.path];
     let m;
     hrefRe.lastIndex = 0;
@@ -1084,8 +1199,13 @@ function pruneEntryPages() {
 validateTitles();
 validateImages();
 let writtenCount = 0;
+let carriedCount = 0;
 for (let i = 0; i < allNodes.length; i += 1) {
   const node = allNodes[i];
+  if (carryPage(node)) {
+    carriedCount = carriedCount + 1;
+    continue;
+  }
   const outPath = path.join(OUT_DIR, outputFile(node));
   writeFile(outPath, assemblePage(node));
   writtenCount = writtenCount + 1;
@@ -1113,7 +1233,7 @@ writeFile(path.join(OUT_DIR, "robots.txt"), robots);
 validate();
 writeCspHash();
 
-console.log("Build complete: " + writtenCount + " pages written plus 404.html.");
+console.log("Build complete: " + writtenCount + " pages written plus 404.html" + (carriedCount > 0 ? " and " + carriedCount + " carried page(s)" : "") + ".");
 console.log("search-index.json: " + searchIndex.length + " entries.");
 console.log("sitemap.xml: " + allNodes.length + " URLs.");
 console.log("entries: " + entries.length + " markdown entries rendered.");

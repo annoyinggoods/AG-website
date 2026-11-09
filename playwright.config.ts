@@ -15,6 +15,13 @@ const profile = process.env.AG_TEST_PROFILE || "desktop";
 // the two specs that hardcode the URL keep working on the default port.
 const testPort = Number(process.env.AG_TEST_PORT || 8000);
 
+// The specs that drive the dev-only control panel carry the @admin tag in
+// their title. The run that guards a publish leaves them out, because the
+// panel helper serves and rebuilds the site while it runs, and that makes
+// the gate and the panel that started it unstable. A local run and the CI
+// test job still have them.
+const skipAdminSpecs = process.env.AG_SKIP_ADMIN_TESTS === "1";
+
 const projects: Project[] = [
   {
     name: "chromium",
@@ -62,6 +69,7 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   ...(process.env.CI ? { workers: 2 } : {}),
+  ...(skipAdminSpecs ? { grepInvert: /@admin/ } : {}),
   reporter: reporters(),
   use: {
     baseURL: `http://localhost:${testPort}`,

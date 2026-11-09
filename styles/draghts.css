@@ -526,16 +526,25 @@ body:has(#draghts-app) {
   }
 }
 
-@media (max-width: 24.375rem) {
+@media (max-width: 30rem) {
+  /* The board is a square grid, so a cell is as wide as the board is divided
+     by eight. A cell that is taller than it is wide would push the bottom
+     rows out of the square and out of view, and it would turn every piece
+     into an oval, so the cells keep the shape of the board. The board takes
+     the width it can get instead, and the game gives up its own padding to
+     get it. */
+  #draghts-app {
+    padding: 0.5rem 0.25rem;
+  }
   #draghts-app .draghts-main {
-    padding: 1rem 0.5rem 2rem;
+    padding: 1rem 0 2rem;
   }
   #draghts-app #board {
     max-width: 100%;
   }
-  #draghts-app .square {
-    min-height: 2.75rem;
-  }
+}
+
+@media (max-width: 24.375rem) {
   #draghts-app .dashboard-table {
     font-size: 0.75rem;
   }

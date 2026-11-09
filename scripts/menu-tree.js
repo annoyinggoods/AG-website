@@ -1,6 +1,5 @@
-import { getCanonicalPath, normalizePath, prefersReducedMotion, readSessionString, writeSessionString } from "./utils-dom.js";
+import { getCanonicalPath, normalizePath, prefersReducedMotion } from "./utils-dom.js";
 import { initMenuData } from "./menu-data.js";
-const MENU_TREE_STORAGE_KEY = "ag-menu-expanded";
 const EXPAND_MS = 250;
 export function initMenuTree() {
     initMenuData();
@@ -9,6 +8,7 @@ export function initMenuTree() {
         return;
     }
     upgradeDetailsToButtons(nav);
+    closeAllGroups(nav);
     expandActiveBranch(nav);
 }
 function upgradeDetailsToButtons(nav) {
@@ -80,11 +80,9 @@ function upgradeDetailsToButtons(nav) {
                 childList.hidden = false;
                 styleGroup(childList, true);
             }
-            persistExpandedBranches(nav);
         });
         item.setAttribute("data-menu-upgraded", "true");
     });
-    restoreExpandedBranches(nav);
 }
 function restoreArrow(link) {
     const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -126,7 +124,6 @@ function expandActiveBranch(nav) {
         return;
     }
     let cursor = active.closest("li.menu-item");
-    cursor = cursor ? cursor.parentElement?.closest("li.menu-item") || null : null;
     while (cursor) {
         const toggle = cursor.querySelector(".menu-toggle");
         const group = cursor.querySelector(":scope > [data-menu-group]");
@@ -174,50 +171,19 @@ function openParentGroups(group) {
         cursor = cursor.parentElement;
     }
 }
-function restoreExpandedBranches(nav) {
-    const raw = readSessionString(MENU_TREE_STORAGE_KEY);
-    if (!raw) {
-        return;
-    }
-    let saved = [];
-    try {
-        saved = JSON.parse(raw);
-    }
-    catch (err) {
-        void err;
-        return;
-    }
-    if (!Array.isArray(saved)) {
-        return;
-    }
+function closeAllGroups(nav) {
     const toggles = nav.querySelectorAll(".menu-toggle");
     toggles.forEach(function (toggle) {
-        const key = toggle.dataset.menuPath || "";
-        if (!key) {
-            return;
-        }
-        if (saved.indexOf(key) >= 0) {
-            toggle.setAttribute("aria-expanded", "true");
-            const item = toggle.closest("li.menu-item");
-            const group = item ? item.querySelector(":scope > [data-menu-group]") : null;
-            if (group instanceof HTMLElement) {
-                group.hidden = false;
-                styleGroup(group, false);
-            }
+        if (toggle instanceof HTMLElement) {
+            toggle.setAttribute("aria-expanded", "false");
         }
     });
-}
-function persistExpandedBranches(nav) {
-    const toggles = nav.querySelectorAll(".menu-toggle");
-    const open = [];
-    toggles.forEach(function (toggle) {
-        if (toggle.getAttribute("aria-expanded") === "true") {
-            const key = toggle.dataset.menuPath || "";
-            if (key) {
-                open.push(key);
-            }
+    const groups = nav.querySelectorAll("[data-menu-group]");
+    groups.forEach(function (group) {
+        if (group instanceof HTMLElement) {
+            group.hidden = true;
+            group.style.maxHeight = "0";
         }
     });
-    writeSessionString(MENU_TREE_STORAGE_KEY, JSON.stringify(open));
 }
 //# sourceMappingURL=menu-tree.js.map

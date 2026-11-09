@@ -16,6 +16,7 @@ export class BoardUI {
     }
     init() {
         this.clearPulse();
+        syncSelection(this, this.stateData.state, this.stateData.state);
         this.render();
         this.updateBanner();
         this.updatePickerBanner();
@@ -173,19 +174,38 @@ function offenderOf(state) {
     return state.pendingPunishment.victimPlayer;
 }
 function syncSelection(board, prev, curr) {
-    if (curr.pendingPunishment !== null && prev.pendingPunishment === null) {
-        board.clearSelectionFields();
-        board.clearPulse();
+    if (curr.pendingPunishment !== null) {
+        if (prev.pendingPunishment === null) {
+            board.clearSelectionFields();
+            board.clearPulse();
+        }
         board.stateData.pickerActive = true;
     }
-    else if (curr.pendingPunishment === null && prev.pendingPunishment !== null) {
+    else {
         board.stateData.pickerActive = false;
+    }
+    if (curr.pendingChain !== null) {
+        selectChainPiece(board, curr);
+    }
+    else if (prev.pendingChain !== null) {
+        board.clearSelectionFields();
+        board.clearPulse();
     }
     if (curr.status === "ended") {
         board.clearSelectionFields();
         board.clearPulse();
         board.stateData.pickerActive = false;
     }
+}
+function selectChainPiece(board, curr) {
+    const chain = curr.pendingChain;
+    if (chain === null) {
+        return;
+    }
+    board.stateData.selectedSquare = { ...chain.square };
+    board.stateData.selectedPieceId = chain.pieceId;
+    board.stateData.legalDestinations = legalMoves(curr).map((m) => ({ ...m.to }));
+    board.ensurePulse();
 }
 function renderInto(board) {
     const ui = board.stateData;
@@ -361,6 +381,9 @@ function onPickerClick(board, square) {
 function onChainClick(board, square) {
     const chain = board.stateData.state.pendingChain;
     if (!chain) {
+        return;
+    }
+    if (chain.square.row === square.row && chain.square.column === square.column) {
         return;
     }
     const moves = legalMoves(board.stateData.state);

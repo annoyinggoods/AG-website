@@ -1,6 +1,7 @@
 <article class="content-article" data-admin="content:content.css" id="compute-chart" data-demo-chart>
 <h2 class="article-heading">Compute and Chart</h2>
-<p>Run local computations over research data and turn the results into charts.</p>
+<p>Sources are not just for reading — sometimes they are for counting. Word frequencies across a whole manuscript, sentence lengths by chapter, how often each character actually appears versus how often you think they appear: these are computations, and AGIT runs them locally in Python, then draws the chart.</p>
+<p>Below is a small live demo of the idea: paste text, get statistics and a chart. It runs in your browser, and uploads nothing — the same deal the real tool offers, except the real one reads your project.</p>
 <p class="demo-static">Sample output without JavaScript: 120 words, 8 sentences, top terms spider, web, silk.</p>
 <noscript>
 <div class="demo-panel">
@@ -17,3 +18,29 @@
 </div>
 </noscript>
 </article>
+<section class="content-section" data-admin="content:content.css" id="compute-chart-workflow" aria-labelledby="compute-chart-workflow-heading">
+<h2 class="section-heading" id="compute-chart-workflow-heading">How it works in the app</h2>
+<article class="content-article feature-row" data-admin="content:content.css" id="compute-chart-workflow-canvas">
+<div class="feature-text">
+<h3 class="article-heading">A scratchpad with guard rails</h3>
+<p>AGIT includes a Python tool canvas — a scratchpad where small programs run against your project's data. Pick the scenes, documents or notes you want measured, describe or write the computation, and the output lands on the tool canvas: tables, numbers, charts. It never writes into the manuscript by accident, because the manuscript is not where tool output goes.</p>
+<p>Under the hood this is ordinary Python with the libraries data people already trust — pandas for tables, matplotlib for charts — running on your machine. Your data never leaves it.</p>
+</div>
+<div class="feature-media">
+<figure>
+<img src="/assets/agit/boards.webp" alt="AGIT's boards panel showing canvases including tool output alongside lore and timeline boards" width="1680" height="1050" loading="lazy" decoding="async">
+<figcaption>Tool output lands on its own canvas — never in the manuscript.</figcaption>
+</figure>
+</div>
+</article>
+<article class="content-article" data-admin="content:content.css" id="compute-chart-workflow-uses">
+<h3 class="article-heading">What it is good for</h3>
+<ul>
+<li><strong>Pacing checks:</strong> sentence length and paragraph length per chapter, so the chase scene is not written in the same rhythm as the tax returns.</li>
+<li><strong>Presence audits:</strong> which character names appear in how many scenes — and which have quietly disappeared since act one.</li>
+<li><strong>Vocabulary watch:</strong> your most-repeated words, the crutch words you promised to quit this draft.</li>
+<li><strong>Research counts:</strong> term frequencies and dates across imported sources, for the non-fiction writers keeping score.</li>
+</ul>
+<p>Numbers do not write the book. They just tell you which chapter is lying to you.</p>
+</article>
+</section>

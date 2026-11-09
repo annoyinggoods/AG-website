@@ -1,9 +1,163 @@
 <section class="content-section" data-admin="content:content.css" id="agdevelop" aria-labelledby="agdevelop-heading">
-<h2 class="section-heading" id="agdevelop-heading">AGDevelop</h2>
-<article class="content-article" data-admin="content:content.css" id="agdevelop-direction">
-<h3 class="article-heading">The studio workbench</h3>
-<p>AGDevelop is planned as the internal toolkit the studio uses to build the other tools: the build that assembles these pages, the menu tree that feeds the navigation, and the local index the demo reads from. It is aimed at people who want to work on the studio's own machinery rather than on the products. The copy is not written yet, so this page stays a shell until the shape of the tool is agreed.</p>
-<p>Status: announced</p>
-<p>If you already have a use case for it, send us a <a href="/contact/request-feature/">feature request</a> and we will read it before the tool is built.</p>
+<h2 class="section-heading" id="agdevelop-heading">GDevelop, with your own key</h2>
+<p>AGDevelop is the studio's fork of <a href="https://gdevelop.io" rel="noopener">GDevelop</a>, the full-featured open-source game engine. The fork's one substantial addition is a complete <strong>bring-your-own-key</strong> implementation of the "Ask AI" agent: the chat runs against your own OpenAI-compatible endpoint, on your machine, with your key.</p>
+<p>Everything else is upstream GDevelop — the editor, the GDJS game engine, the C++ Core, the extensions ecosystem — kept in sync by regular merges. The last upstream commit folded in is <code>4d867e222b</code>, merged on 2026-11-02. The fork's own code lives in <code>newIDE/app/src/AiGeneration/Byok/</code> and <code>newIDE/app/src/Fork/</code>, with the Electron-side pieces in <code>newIDE/electron-app/app/</code>.</p>
+<div class="chip-row">
+<a class="chip" href="https://github.com/annoyinggoods/GDevelop" rel="noopener">The repository</a>
+<a class="chip" href="/products/">All products</a>
+<a class="chip" href="/labs/">The labs</a>
+<a class="chip" href="/contact/report-bug/">Report a bug</a>
+</div>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-why">
+<h3 class="article-heading">Pay for your AI somewhere else, use it here</h3>
+<p>If you make games with GDevelop and pay for an AI subscription somewhere else, this fork lets the built-in assistant use that subscription instead of GDevelop's hosted service.</p>
+<p>You point it at any OpenAI-compatible endpoint — OpenAI, OpenRouter, Azure OpenAI, Groq, DeepSeek, a local Ollama or LM Studio server — and pick the model you want per chat. The agent keeps working the whole time, and the whole conversation stays on your machine.</p>
+<p>Nothing you type and no key you paste is sent to GDevelop's servers: the agent loop, the tools and the game edits all run inside the editor. You also get an MCP endpoint, so the AI agents you already use — Claude Code, Cursor, your own scripts — can read and edit your GDevelop project directly.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-fork" aria-labelledby="agdevelop-fork-heading">
+<h2 class="section-heading" id="agdevelop-fork-heading">Why the fork exists</h2>
+<p>Bring-your-own-key has been asked for upstream, repeatedly, and it never shipped. The request is not the studio's — it comes from the GDevelop community, and it is still open.</p>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-fork-issues">
+<h3 class="article-heading">Two open issues, two closed pull requests</h3>
+<p><a href="https://github.com/4ian/GDevelop/issues/7932" rel="noopener">Issue #7932</a> — "Feature Request: BYOK (Bring Your Own Key/Model) support for GDevelop AI Agent" — was opened in October 2025 and is still open. The maintainer answered it asking for use cases, and several users spelled out exactly why they need it: using an OpenRouter key to test models on demand, running a local model for privacy and zero marginal cost, and not being blocked when the official server is unavailable.</p>
+<p><a href="https://github.com/4ian/GDevelop/issues/8854" rel="noopener">Issue #8854</a>, opened in July 2026, is a second and independent request for the same thing, also still open.</p>
+<p>Two community contributors have already tried to implement it upstream: <a href="https://github.com/4ian/GDevelop/pull/8606" rel="noopener">PR #8606</a> ("Add BYOK custom AI provider support for Ask AI") and <a href="https://github.com/4ian/GDevelop/pull/8986" rel="noopener">PR #8986</a> ("Bring Your Own Key (BYOK) and local/custom model support"). Both were closed by their authors, without a maintainer decision.</p>
+<p>As of upstream <code>4d867e222b</code> the upstream tree contains no BYOK implementation at all, the feature is not part of any official release, and it is not advertised on the official website.</p>
+<p>This fork exists to make it real. The implementation below was written from scratch, is tested end to end, and is offered to everyone who needs it.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-agent" aria-labelledby="agdevelop-agent-heading">
+<h2 class="section-heading" id="agdevelop-agent-heading">The agent, running on your machine</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-agent-loop">
+<h3 class="article-heading">The same loop, a different transport</h3>
+<p>Upstream runs the agent server-side, which is exactly why it needs your key on their servers. The fork re-implements the loop locally in <code>ByokOrchestrator.js</code>: it composes the system prompt once per chat and reuses it byte-identically, so provider prompt caching keeps working across a long build session, sends the request to your endpoint, parses the tool calls, executes them through the same tool registry the hosted agent uses, feeds the results back, and repeats until the model stops.</p>
+<p>The chat interface, the message types and the tool implementations are reused rather than forked, so the two agents behave the same way. Only the transport changes.</p>
+<p>A project snapshot rides its own synthetic trailing user message instead of being folded into the last one, which keeps the transcript strictly append-only and therefore cache-friendly.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-agent-routing">
+<h3 class="article-heading">Any endpoint, any model, per chat</h3>
+<p><code>ByokModelRouter.js</code> resolves the endpoint, the model and the reasoning effort for each turn. Providers are declared once in Preferences — endpoint URL, model list, per-model temperature, max tokens and context window — and each chat can override the provider, the model and the effort from the dropdowns in the chat header.</p>
+<p>Two routing profiles, a "default strong" and a "default fast" pair, are stored per provider and migrated when the settings shape changes.</p>
+<p><code>ByokCapabilities.js</code> probes what an endpoint actually supports — tools, vision, reasoning effort — instead of assuming, and <code>ByokBenchmark.js</code> runs a built-in four-task benchmark against a provider, so you can compare models before committing to one.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-agent-keys">
+<h3 class="article-heading">The key is encrypted at rest</h3>
+<p>API keys are never stored in plain text. The renderer hands them to the Electron main process in <code>ByokSafeStorage.js</code>, which encrypts them with the operating system key store — DPAPI on Windows, Keychain on macOS, libsecret on Linux — and hands back only ciphertext.</p>
+<p><code>ByokKeyStorage.js</code> keeps one encrypted slot per provider, so switching providers never clobbers a key, and removing a provider does not wipe the shared legacy slot.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-events" aria-labelledby="agdevelop-events-heading">
+<h2 class="section-heading" id="agdevelop-events-heading">The agent writes real events</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-events-parser">
+<h3 class="article-heading">EventScript, parsed and written for real</h3>
+<p><code>ByokEventScriptParser.js</code> implements the full EventScript grammar — conditions, actions, <code>if</code> and <code>else</code>, <code>while</code>, <code>repeat</code>, <code>for-each</code>, groups, local variables, <code>await</code>, and string-aware top-level splitting — and <code>ByokLocalEventWriter.js</code> turns the parsed batch into real <code>gd.EventsList</code> objects.</p>
+<p>The write is all-or-nothing: the whole batch is validated against a real event list before anything is modified, so a rejected batch leaves the project untouched and returns a positioned, model-fixable error plus a targeted retry hint.</p>
+<p>Upstream's newer JavaScript code events (<code>js """…"""</code>) are supported, and a set of canonical examples is shipped in <code>Byok/docs/eventscript-examples.json</code> and round-tripped through the real writer by the specs.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-events-tools">
+<h3 class="article-heading">Seventy-five tools, twenty-eight of them inline</h3>
+<p><code>ByokToolSchema.js</code> exposes 75 dispatchable tools, of which 28 are advertised inline on every turn. The rest are found through the <code>search_tools</code> meta-tool, which keeps the billed tool list small without hiding capability.</p>
+<p><code>ByokExtraTools.js</code> intercepts the tools that only make sense against GDevelop's backend and implements them locally instead. The tool surface covers scenes, objects, instances, variables, behaviors, effects, sprites, extensions, external events and external layouts, resources, the asset store, the debugger, and the fork's own asset and build tools.</p>
+<p>Because upstream shipped its own extension tools with the same names but a different argument shape, the fork's variants live in a separate <code>_BYOK</code> namespace — <code>create_extension_BYOK</code> and friends — so a name can never reach the wrong implementation.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-seeing" aria-labelledby="agdevelop-seeing-heading">
+<h2 class="section-heading" id="agdevelop-seeing-heading">It can see your game</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-seeing-preview">
+<h3 class="article-heading">Screenshots and the live debugger</h3>
+<p><code>ByokPreviewSession.js</code> captures the open preview window as a base64 PNG and replays it to the provider as an image part, so the agent can check what it just changed instead of guessing.</p>
+<p>Images are stored in the BYOK image store and replayed monotonically, so an image never reappears earlier in the transcript, which would break provider-side caching.</p>
+<p><code>ByokDebuggerTools.js</code> talks to the preview session's targeted debugger channel: <code>read_runtime_details</code> to inspect variables, scenes and instances as the game runs, <code>control_runtime</code> to pause, resume and step, and <code>profile_runtime</code> to wait for pushed profiler output. The dumps are capped with an honest truncation report rather than silently truncated, and the tools honour the scene name and the variable paths they advertise.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-long" aria-labelledby="agdevelop-long-heading">
+<h2 class="section-heading" id="agdevelop-long-heading">Long conversations hold up</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-long-history">
+<h3 class="article-heading">Chat history that survives a restart</h3>
+<p><code>ByokChatPersistence.js</code> and <code>ByokChatStore.js</code> save each BYOK chat as a Markdown transcript with image sidecars, through Electron IPC files or IndexedDB depending on the platform.</p>
+<p>Writes are atomic — a unique temp file and a rename, with cleanup on failure — a quarantine path keeps a corrupt chat from taking the store down, and a 200 MB quota bounds the folder. A versioned <code>index.json</code> means the steady-state save path and the rail's actions read zero chat content, only the metadata, and a reconcile pass adopts legacy or unseen files and drops stale entries.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-long-guards">
+<h3 class="article-heading">Compaction, loop guards and a watchdog</h3>
+<p><code>ByokCompactor.js</code> compacts the transcript when it approaches the model's context limit, preserving a designated block and dropping in a documented order, with a round-based fallback boundary so a single mega-turn build chat — one user message, fifty-plus tool rounds — can still be compacted.</p>
+<p><code>ByokLoopGuards.js</code> detects an alternating cycle and rolls back an unexecuted batch instead of letting the agent repeat itself, and the stall watchdog turns a silent hang into a visible notice row in the chat.</p>
+<p>The error codes are distinct — <code>byok-context-full</code>, <code>byok-repeated-tool-call-loop</code>, <code>byok-too-many-tool-rounds</code>, <code>byok-empty-answer</code> — and they are mapped to the right recovery text in <code>AiRequestErrorRow.js</code>.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-mcp" aria-labelledby="agdevelop-mcp-heading">
+<h2 class="section-heading" id="agdevelop-mcp-heading">An MCP endpoint for the agents you already use</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-mcp-server">
+<h3 class="article-heading">A loopback server inside the editor</h3>
+<p><code>electron-app/app/ByokMcpServer.js</code> runs a loopback HTTP endpoint inside the Electron main process: a bearer token, an ephemeral port, a discovery file in the user-data folder, focused-window routing, second-instance refusal and a 150-second forward timeout.</p>
+<p>The renderer side lives in <code>newIDE/app/src/AiGeneration/Byok/Mcp/</code> and holds the protocol core pinned to MCP revision <code>2026-07-28</code>, the tool mapping and the read-only or read-write access gate, and a serialized tool host with an activity ring.</p>
+<p><code>newIDE/app/scripts/gdevelop-mcp-stdio.js</code> is the zero-dependency stdio adapter, so a zero-config MCP client can find the endpoint on its own.</p>
+<p>Skills are exposed as MCP prompts, notes and docs as <code>gdevelop://</code> resources, and a project mutation lock serializes the chat's tool batches against MCP calls, so the two cannot edit the project at the same time.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-knowledge" aria-labelledby="agdevelop-knowledge-heading">
+<h2 class="section-heading" id="agdevelop-knowledge-heading">The documentation, on your disk</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-knowledge-rag">
+<h3 class="article-heading">Retrieval over the whole wiki</h3>
+<p><code>newIDE/app/src/AiGeneration/Byok/Rag/</code> builds a local corpus — the whole <code>gdevelop5</code> wiki, minified by the committed generator, 601 of 601 pages and 2.2 MB, plus the engine reference — into about 4,000 chunks, 4,024 in the shipped bundle, held in a deterministic in-process index with base64 vectors, and searches it hybrid-wise, lexical and semantic together, through the <code>search_knowledge</code> tool.</p>
+<p>The embedder is lazy-loaded from <code>@huggingface/transformers</code>, so nothing is downloaded until you opt in. The ranking is source-weighted, so curated tiers outrank raw wiki prose, and the corpus is checked by a 30-query evaluation set. A prebuilt index can be downloaded and verified by sha256, and Qdrant is available as an optional backend.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-knowledge-code">
+<h3 class="article-heading">Game code on disk</h3>
+<p><code>Byok/GameCode/</code> lets the agent write ordinary JavaScript files into <code>&lt;project&gt;/&lt;GameName&gt;Code/</code>.</p>
+<p>The rules are pure and pinned by specs: the files may never leave that folder, they load in a defined order, they publish into a folder-derived namespace such as <code>GameCode.character.spawn</code>, and because the exporter copies resources flat, the hot reload computes the exact exported name instead of guessing it. The agent can also read, list and update those files through tools.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-knowledge-prompt">
+<h3 class="article-heading">Prompt, skills and attachments</h3>
+<p><code>ByokPrompts.js</code> composes the system prompt — currently version <code>byok-v18</code> — from a retrieval map, a machine-checked task catalog, the EventScript syntax block and the knowledge sections. <code>Byok/Knowledge/</code> holds the generated sections and <code>Byok/Skills/</code> the built-in skills, and user-written skills are read from <code>&lt;userData&gt;/byok-skills</code> by <code>electron-app/app/ByokUserSkills.js</code>.</p>
+<p>The prompt budget is measured by a spec on every change — currently about 12.7k tokens for <code>byok-v18</code>, roughly 6.6k of prompt plus 6.1k of tool schemas, against a 15k hard cap — and the specs fail if a section grows past its share.</p>
+<p><code>ByokAttachments.js</code> adds the "+" button to the chat: text files are sniffed by extension and by a NUL-byte check, capped at 100 KB and injected as a fenced block; images go through the BYOK image store and are replayed as <code>image_url</code> parts. Chips show what is attached, the menu is gated by what the provider supports, and the whole path is compaction-aware.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-extras" aria-labelledby="agdevelop-extras-heading">
+<h2 class="section-heading" id="agdevelop-extras-heading">What the fork adds on top</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-extras-assets">
+<h3 class="article-heading">Tagged assets, with a virtual tree</h3>
+<p><code>newIDE/app/src/Fork/AssetPipeline/</code> adds tags to the project resources. They ride the existing resource metadata, so there is no second source of truth, and they come with a many-to-many virtual tree and an "Untagged" bucket, an Assets view hosted in the resources panel, a tag editor in the properties panel, auto-registration of files dropped into the project folder, name-based aliases with Monaco completions in the code editor, and hot reload — a changed asset refreshes both the editor and the running preview.</p>
+<p>The agent works with the same model, through <code>list_assets</code> and <code>set_asset_tags</code>.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-extras-compression">
+<h3 class="article-heading">Smaller builds, and the originals left alone</h3>
+<p><code>newIDE/app/src/Fork/AssetBuild/</code> plans an optimization pass — extension-driven, per kind, in place for the same format, with explicit reasoned skips — and <code>electron-app/app/ForkAssetOptimizer.js</code> applies it with <code>sharp</code> and <code>ffmpeg-static</code>, to the export copy only, never to the project's originals.</p>
+<p>The applier writes to a temp file and renames, so a failure leaves the file exactly as it was exported, and a before-and-after report shows what was saved. The agent can read that report and change the settings through <code>report_asset_optimization</code> and <code>set_asset_optimization_settings</code>, without ever touching the project's serialized state.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-extras-guardrails">
+<h3 class="article-heading">Guardrails for the event sheet</h3>
+<p><code>newIDE/app/src/Fork/Guardrails/</code> is a pure rule engine with four rules — stable ids, ancestor-stack recursion, disabled-subtree silencing, never mutating — that flags common event-sheet mistakes, for example an event that fires once inside a loop whose guard is re-checked every iteration.</p>
+<p>The badges render inline in the event sheet, the rules can be muted individually or globally, and the filters are applied at render time, so toggling a rule never rebuilds the tree. The agent can run the same checks over a scene through the read-only <code>scan_scene_events</code> tool.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-extras-sprites">
+<h3 class="article-heading">Sprite sheets, external events, and a real asset store</h3>
+<p><code>newIDE/app/src/Fork/SpriteSheet/</code> plans an exact-tiling slice, rows times columns with margin slack, and refuses before any write when the grid does not divide evenly. The frames land in the project's assets folder through the same import path the agent uses, and a failure rolls the registrations back. <code>electron-app/app/ForkSpriteSheet.js</code> does the confined slicing with <code>sharp</code>, the sprite editor gains an "Import sprite sheet" button, and the import dialog shows a live canvas preview of the slices. The agent can trigger it too, through the approval-gated <code>import_sprite_sheet</code> tool.</p>
+<p>When the agent writes to an external layout or an external events sheet, the open editor for that item now refreshes: the notifications fan out through the main frame to the external editor containers, so the change is visible immediately instead of on the next manual reload.</p>
+<p><code>ByokCatalogTools.js</code> gives the agent <code>get_game_starter_summary</code>, the real public examples catalog instead of the model's memory, plus <code>search_object_asset_store</code> and <code>search_resource_store</code> over the auth-free public catalogs with a self-contained scorer, and a real install path: "add an enemy" fetches the asset, resolves its required extensions and registers it in the project.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-build" aria-labelledby="agdevelop-build-heading">
+<h2 class="section-heading" id="agdevelop-build-heading">Building the app</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-build-one">
+<h3 class="article-heading">One command, or one double click</h3>
+<p>Node.js 20 or newer with npm is the only requirement; CI builds on Node 20. A C++ toolchain is not needed, because the prebuilt <code>libGD</code> WASM is downloaded rather than compiled.</p>
+<p>Double-click <code>Build GDevelop App.cmd</code> at the root of the repository, or run <code>node newIDE/scripts/build-desktop-app.js</code>. The installer and a portable zip are left in <code>newIDE/electron-app/dist</code>.</p>
+<p>The useful flags are <code>--dev</code> for a development build, <code>--web</code> for the web app only with no desktop packaging, <code>--skip-app-build</code> to package the IDE that is already built, <code>--skip-install</code> never to run <code>npm install</code>, <code>--portable</code> to build without code signing, <code>--dry-run</code> to print the commands without running them, and <code>--open-folder</code>. The script gives its Node processes <code>--max-old-space-size=12288</code>, because the production build of the IDE does not fit in Node's default heap.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-build-checks">
+<h3 class="article-heading">The checks</h3>
+<p>From <code>newIDE/app</code>: <code>npm test -- --watchAll=false</code> for the Jest suite, <code>npm run lint</code> for ESLint with zero warnings allowed, <code>npm run flow</code> for the Flow type check, and <code>npm run check-format</code> for Prettier.</p>
+<p>From <code>newIDE/electron-app</code>: <code>npm run check-format</code>, because the Electron main process has no test runner of its own.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agdevelop-status" aria-labelledby="agdevelop-status-heading">
+<h2 class="section-heading" id="agdevelop-status-heading">Where it lives</h2>
+<article class="content-article" data-admin="content:content.css" id="agdevelop-status-repo">
+<h3 class="article-heading">The repository</h3>
+<p>The fork is published at <a href="https://github.com/annoyinggoods/GDevelop" rel="noopener">github.com/annoyinggoods/GDevelop</a>. Clone it, read the README and build it with the command above; upstream GDevelop stays at <a href="https://github.com/4ian/GDevelop" rel="noopener">github.com/4ian/GDevelop</a>, and the merges flow in that direction.</p>
+<p>The Core library, the native and HTML5 game engines, the IDE and all the extensions are under the MIT licence, the same as upstream.</p>
+<p>If something in the fork breaks, the <a href="/contact/report-bug/">bug report form</a> is the way to say so, and the <a href="/contact/request-feature/">feature request form</a> is the way to ask for what is missing.</p>
 </article>
 </section>

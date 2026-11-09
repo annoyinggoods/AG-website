@@ -208,12 +208,15 @@ async function runSequence(hero: HTMLElement): Promise<void> {
   });
 
   setHeroState("weave");
-  if (webPlain) {
-    webPlain.style.opacity = "1";
-    revealPlain(webPlain, 0);
-  }
   const webTopY = webRect.top + webH * 0.05;
   const path = buildPath(topRight, leftEdgeX, leftSurfaceY, webTopY, WEAVE_LEGS);
+  const weaveStartX = path[0] ? path[0][0] : topRight[0];
+  if (webPlain) {
+    webPlain.style.opacity = "1";
+    // The clip starts where the spider starts, so the web is revealed by the
+    // walk alone. A clip of zero would show the whole web for one frame.
+    revealPlain(webPlain, weaveStartX - webRect.left);
+  }
   await walkPath(hero, path, WEAVE_MS, (x, y, rot, step) => {
     const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
     placeSprite(walkImg!, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));

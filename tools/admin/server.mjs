@@ -240,6 +240,50 @@ function slugOf(pagePath) {
   return trimmed.length === 0 ? "index" : trimmed.replace(/\//g, "-");
 }
 
+// Every page whose text lives in a content fragment, taken from the menu tree.
+function readPageFragments() {
+  const fragments = [];
+  for (const entry of readTree()) {
+    fragments.push({
+      slug: slugOf(entry.path),
+      path: entry.path,
+      title: entry.title
+    });
+  }
+  fragments.push({
+    slug: "404",
+    path: "/404.html",
+    title: "Page Not Found"
+  });
+  return fragments;
+}
+
+// The fragment of one page, or nothing when it is not on disk.
+function readPageFragment(slug) {
+  const target = resolveInside(CONTENT_DIR, slug + ".html");
+  if (!target || !fs.existsSync(target)) {
+    return null;
+  }
+  return { slug: slug, html: readText(target) };
+}
+
+// Write the fragment of one page and rebuild the site, exactly like an entry.
+function savePageFragment(draft) {
+  const target = resolveInside(CONTENT_DIR, draft.slug + ".html");
+  if (!target) {
+    fail("The page would land outside the project folder.");
+  }
+  writeText(target, draft.html);
+  logChange([relativeToRoot(target)]);
+  const buildStartedAt = startBuild();
+  return {
+    ok: true,
+    message: "The page " + draft.slug + " is written and the site is rebuilding.",
+    changed: true,
+    buildStartedAt: buildStartedAt
+  };
+}
+
 async function handleApi(request, response, url) {
   const route = url.pathname;
   if (route === "/api/health") {
@@ -266,6 +310,21 @@ async function handleApi(request, response, url) {
   }
   if (route === "/api/tree") {
     sendJson(response, 200, { entries: readTree() });
+    return true;
+  }
+  if (route === "/api/page-fragments") {
+    sendJson(response, 200, { fragments: readPageFragments() });
+    return true;
+  }
+  if (route === "/api/page-fragment") {
+    const slug = url.searchParams.get("slug") || "";
+    sendJson(response, 200, { fragment: readPageFragment(slug) });
+    return true;
+  }
+  if (route === "/api/page-fragment/save") {
+    const body = await readBody(request);
+    refuseWhenStale();
+    sendJson(response, 200, savePageFragment(body || {}));
     return true;
   }
   if (route === "/api/registry") {

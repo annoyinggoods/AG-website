@@ -1,0 +1,64 @@
+<section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
+<h2 class="section-heading" id="download-heading">Download</h2>
+<article class="content-article" data-admin="content:content.css" id="download-get">
+<h3 class="article-heading">Get AGnosis {{agnosis_version}}</h3>
+<p>The <strong>installer</strong> is the easy road: it asks where to put AGnosis, shows the README during the install, adds a Start-Menu shortcut, and offers to register the login autostart and start the daemon — the global hotkey works as soon as the daemon is up, and its uninstaller reverses all of it.</p>
+<p>The <strong>portable archive</strong> is the no-install road: one self-contained binary with the font embedded inside it, so there is nothing to install next to it and no runtime assets to carry around. Unzip it anywhere and run <code>agnosis.exe</code>; without the daemon it is still the full parade, with the editor on <code>F2</code>, balloon folders, and the exporters — only the global hotkey needs the daemon behind it.</p>
+<p><a href="/downloads/agnosis-{{agnosis_version}}/agnosis-setup.exe" download>Download the Windows installer ({{agnosis_setup_size}})</a> — AGnosis {{agnosis_version}} for Windows 10/11, 64-bit.</p>
+<p><a href="/downloads/agnosis-{{agnosis_version}}/{{agnosis_file}}" download>Download the Windows archive ({{agnosis_size}})</a> — the same version, portable.</p>
+<div class="table-scroll"><table class="download-table">
+<thead>
+<tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="/downloads/agnosis-{{agnosis_version}}/agnosis-setup.exe" download>AGnosis installer</a></th><td>Windows 64-bit</td><td>{{agnosis_setup_size}}</td><td><code>SHA256:{{agnosis_setup_sha256}}</code></td></tr>
+<tr><th scope="row"><a href="/downloads/agnosis-{{agnosis_version}}/{{agnosis_file}}" download>AGnosis portable archive</a></th><td>Windows 64-bit</td><td>{{agnosis_size}}</td><td><code>SHA256:{{agnosis_sha256}}</code></td></tr>
+<tr><th scope="row">AGnosis app bundle</th><td>macOS universal</td><td>Planned</td><td>—</td></tr>
+<tr><th scope="row">AGnosis Debian package</th><td>Linux 64-bit</td><td>Planned</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>The archive holds two files: the binary and the <a href="/products/agnosis/license/">Open Source License with Ethical Restrictions</a> text. The macOS disk image and the Debian package come out of the same release pipeline as the Windows builds, and they appear here as soon as those builds are cut.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-run" aria-labelledby="download-run-heading">
+<h2 class="section-heading" id="download-run-heading">Run it</h2>
+<article class="content-article" data-admin="content:content.css" id="download-run-steps">
+<h3 class="article-heading">From the installer to the parade</h3>
+<p>1. Run <code>agnosis-setup.exe</code>, pick an install folder, and let it register the autostart and start the daemon on the finish page.</p>
+<p>2. Press <code>A + G + Shift + Space</code> to summon the parade and minimize the browsers, and press <code>ESC</code> or the same chord again to send it home.</p>
+<p>3. <code>F1</code> opens the full README in the app, and <code>F2</code> opens the drawing editor straight from the parade.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-run-steps-portable">
+<h3 class="article-heading">From the archive to the parade</h3>
+<p>1. Unpack the archive — in PowerShell: <code>Expand-Archive -Path {{agnosis_file}}</code>. You get an <code>agnosis</code> folder with the binary and the licence in it.</p>
+<p>2. Run <code>.\agnosis.exe</code>. The parade takes over the screen straight away; a note on the input line reminds you when the daemon is not running, because the hotkey is the daemon's.</p>
+<p>3. For the hotkey without installing, <code>.\agnosis.exe start</code> runs the hotkey listener in the background, <code>.\agnosis.exe stop</code> stops it, and <code>.\agnosis.exe install</code> makes it start with Windows.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-run-commands">
+<h3 class="article-heading">The commands</h3>
+<ul>
+<li><code>agnosis.exe</code> — the parade, immediately.</li>
+<li><code>agnosis.exe start</code> and <code>agnosis.exe stop</code> — the background hotkey listener.</li>
+<li><code>agnosis.exe install</code> and <code>agnosis.exe uninstall</code> — the hotkey starts with Windows, or stops doing so.</li>
+<li><code>agnosis.exe add &lt;image&gt;</code> — turns a picture into a balloon that marches with the parade.</li>
+<li><code>agnosis.exe export loop.html</code> — exports the parade as a self-contained web page; <code>.gif</code> writes an animated GIF, any other extension writes an art package.</li>
+<li><code>agnosis.exe selftest --frames 2</code> — renders the parade headless and writes the frames as pictures, which is the honest way to check a build.</li>
+</ul>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="download-notes" aria-labelledby="download-notes-heading">
+<h2 class="section-heading" id="download-notes-heading">Before you double-click</h2>
+<article class="content-article" data-admin="content:content.css" id="download-notes-windows">
+<h3 class="article-heading">Good to know</h3>
+<ul>
+<li><strong>No console window.</strong> The binary is a GUI program, so nothing flashes on the screen when you run it.</li>
+<li><strong>Nothing is closed.</strong> Browsers are minimized, never closed, so no tab and no half-filled form is ever lost.</li>
+<li><strong>Nothing leaves the machine.</strong> There is no account, no cloud, no telemetry and no update check. The parade fetches nothing from anywhere.</li>
+<li><strong>Your settings live in a plain file.</strong> <code>config.toml</code> sits beside the balloons folder, and the parade reads it while it runs.</li>
+</ul>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-notes-source">
+<h3 class="article-heading">Where the source is</h3>
+<p>AGnosis is a Rust workspace under the <a href="/products/agnosis/license/">Annoying Goods Open Source License with Ethical Restrictions</a>. The simulation sits in a pure platform-free core and a second front end runs the same code in a browser tab, so the web parade cannot drift from the native one. The <a href="/products/agnosis/">product page</a> tells more about the parade itself, and the <a href="/contact/report-bug/">bug form</a> lands on the workbench if the ducks misbehave.</p>
+</article>
+</section>

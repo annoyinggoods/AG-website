@@ -1,19 +1,20 @@
-import { prefersReducedMotion, readLocalString, writeLocalString } from "./utils-dom.js";
+import { prefersReducedMotion, readLocalString, removeLocalString, writeLocalString } from "./utils-dom.js";
 const THEME_STORAGE_KEY = "ag-theme";
-const THEME_STORAGE_VERSION = 2;
+const THEME_STORAGE_VERSION = 3;
 const THEME_CROSSFADE_MS = 340;
 const HERO_FORWARD = "hero-web-layer-forward";
 const HERO_RETURN = "hero-web-layer-return";
 let systemQuery = null;
 let systemListener = null;
+let activeMode = "system";
 export function initTheme() {
     const root = document.documentElement;
-    const saved = readTheme();
-    if (saved) {
-        applyTheme(root, saved, false);
+    activeMode = readMode();
+    if (activeMode === "system") {
+        forgetStoredMode();
     }
-    else {
-        applyTheme(root, systemTheme(), false);
+    applyTheme(root, resolveMode(activeMode), false);
+    if (activeMode === "system") {
         watchSystemTheme(root);
     }
     syncThemeControls(root);
@@ -23,10 +24,16 @@ export function initTheme() {
 export function currentTheme(root = document.documentElement) {
     return root.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
-function readTheme() {
+export function currentMode() {
+    return activeMode;
+}
+// The site follows the system setting until the visitor picks a theme. A
+// record written by an older version of the site is not a choice any more,
+// so it is dropped and the system takes over again.
+function readMode() {
     const raw = readLocalString(THEME_STORAGE_KEY);
     if (!raw) {
-        return null;
+        return "system";
     }
     let parsed = null;
     try {
@@ -34,32 +41,30 @@ function readTheme() {
     }
     catch (err) {
         void err;
-        return readLegacyTheme(raw);
-    }
-    if (typeof parsed === "string") {
-        return readLegacyTheme(parsed);
+        return "system";
     }
     if (parsed && typeof parsed === "object") {
         const record = parsed;
-        if (record.version !== undefined && record.version !== THEME_STORAGE_VERSION) {
-            return null;
-        }
-        if (record.theme === "light" || record.theme === "dark") {
-            return record.theme;
+        if (record.version === THEME_STORAGE_VERSION) {
+            if (record.theme === "light" || record.theme === "dark" || record.theme === "system") {
+                return record.theme;
+            }
         }
     }
-    return null;
+    return "system";
 }
-function readLegacyTheme(raw) {
-    const trimmed = raw.trim().replace(/^"|"$/g, "");
-    if (trimmed === "light" || trimmed === "dark") {
-        return trimmed;
-    }
-    return null;
-}
-function saveTheme(theme) {
-    const record = { theme: theme, version: THEME_STORAGE_VERSION };
+function saveMode(mode) {
+    const record = { theme: mode, version: THEME_STORAGE_VERSION };
     writeLocalString(THEME_STORAGE_KEY, JSON.stringify(record));
+}
+function forgetStoredMode() {
+    removeLocalString(THEME_STORAGE_KEY);
+}
+function resolveMode(mode) {
+    if (mode === "system") {
+        return systemTheme();
+    }
+    return mode;
 }
 function systemTheme() {
     if (typeof window.matchMedia !== "function") {
@@ -76,7 +81,7 @@ function watchSystemTheme(root) {
     const query = window.matchMedia("(prefers-color-scheme: light)");
     systemQuery = query;
     systemListener = function () {
-        if (readTheme()) {
+        if (activeMode !== "system") {
             stopSystemWatch();
             return;
         }
@@ -131,16 +136,20 @@ function syncMetaTheme(theme) {
     });
 }
 function syncThemeControls(root) {
-    syncPillButtons(currentTheme(root));
+    syncPillButtons(activeMode);
+    const group = document.querySelector(".menu-theme-pill");
+    if (group instanceof HTMLElement) {
+        group.setAttribute("data-theme-effective", currentTheme(root));
+    }
 }
-function syncPillButtons(theme) {
+function syncPillButtons(mode) {
     const pills = document.querySelectorAll("[data-theme-choice]");
     pills.forEach(function (node) {
         if (!(node instanceof HTMLButtonElement)) {
             return;
         }
         const choice = node.getAttribute("data-theme-choice") || "";
-        node.setAttribute("aria-pressed", choice === theme ? "true" : "false");
+        node.setAttribute("aria-pressed", choice === mode ? "true" : "false");
     });
 }
 function wirePill(root) {
@@ -159,24 +168,23 @@ function wirePill(root) {
         }
         const choice = node.getAttribute("data-theme-choice");
         node.addEventListener("click", function () {
-            if (currentTheme(root) !== choice) {
-                applyTheme(root, choice, true);
-                saveTheme(choice);
-                stopSystemWatch();
-            }
+            chooseMode(root, choice);
         });
         node.addEventListener("pointerenter", preloadOnce);
         node.addEventListener("focus", preloadOnce);
     });
 }
-function flipTheme(root, persist) {
-    const current = currentTheme(root);
-    const next = current === "dark" ? "light" : "dark";
-    if (persist) {
-        saveTheme(next);
+function chooseMode(root, mode) {
+    activeMode = mode;
+    if (mode === "system") {
+        forgetStoredMode();
+        watchSystemTheme(root);
+    }
+    else {
+        saveMode(mode);
         stopSystemWatch();
     }
-    applyTheme(root, next, true);
+    applyTheme(root, resolveMode(mode), true);
 }
 function swapThemeAssets(root, theme) {
     void root;
@@ -232,12 +240,18 @@ function wireThemeMessaging(root) {
         if (event.key !== THEME_STORAGE_KEY) {
             return;
         }
-        const next = readTheme();
-        if (!next || next === currentTheme(root)) {
+        const mode = readMode();
+        if (mode === activeMode) {
             return;
         }
-        stopSystemWatch();
-        applyTheme(root, next, false);
+        activeMode = mode;
+        if (mode === "system") {
+            watchSystemTheme(root);
+        }
+        else {
+            stopSystemWatch();
+        }
+        applyTheme(root, resolveMode(mode), false);
     });
 }
 function announceTheme(theme) {

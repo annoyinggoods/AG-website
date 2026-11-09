@@ -19,6 +19,7 @@
 <nav class="panel-tabs" role="tablist" aria-label="Panel views" data-panel-tabs>
 <button type="button" class="panel-tab" role="tab" id="panel-tab-inspector" data-panel-tab="inspector" aria-selected="true" aria-controls="panel-view-inspector" tabindex="0">Visual inspector</button>
 <button type="button" class="panel-tab" role="tab" id="panel-tab-editor" data-panel-tab="editor" aria-selected="false" aria-controls="panel-view-editor" tabindex="-1">Content editor</button>
+<button type="button" class="panel-tab" role="tab" id="panel-tab-page-text" data-panel-tab="page-text" aria-selected="false" aria-controls="panel-view-page-text" tabindex="-1">Page text</button>
 <button type="button" class="panel-tab" role="tab" id="panel-tab-deploy" data-panel-tab="deploy" aria-selected="false" aria-controls="panel-view-deploy" tabindex="-1">Deploy panel</button>
 <button type="button" class="panel-tab" role="tab" id="panel-tab-help" data-panel-tab="help" aria-selected="false" aria-controls="panel-view-help" tabindex="-1">How to use</button>
 </nav>
@@ -33,14 +34,13 @@
 <div class="inspector-layout">
 <div class="inspector-frame">
 <div class="inspector-toolbar">
-<label class="panel-field">
-<span>Page</span>
-<select data-inspector-page>
-<option value="/">Home</option>
-</select>
-</label>
-<button type="button" class="panel-button" data-inspector-reload>Reload preview</button>
-<span class="inspector-hint">Click any element in the preview.</span>
+  <label class="panel-field">
+    <span>Page</span>
+    <select data-inspector-page></select>
+  </label>
+  <button type="button" class="panel-button" data-inspector-reload>Reload preview</button>
+  <button type="button" class="panel-button panel-button-primary" data-inspector-skip-intro hidden>Skip intro</button>
+  <span class="inspector-hint">Click any element in the preview.</span>
 </div>
 <iframe class="inspector-preview" data-inspector-preview title="Preview of the built site" src="/"></iframe>
 </div>
@@ -146,6 +146,45 @@
 <h3 class="panel-subheading">Markdown to copy by hand</h3>
 <p class="editor-hint">This is the file the panel would write, so it can be saved by hand without the helper.</p>
 <pre class="inspector-snippet" data-editor-export-text tabindex="0"></pre>
+</div>
+</div>
+</div>
+</section>
+
+<section class="panel-view" id="panel-view-page-text" data-panel-view="page-text" role="tabpanel" aria-labelledby="panel-tab-page-text" tabindex="0" hidden>
+<h2 class="panel-heading">Page text</h2>
+<div class="editor-layout">
+<div class="editor-list">
+<label class="panel-field">
+<span>Page</span>
+<select data-page-text-page></select>
+</label>
+<p class="editor-hint" data-page-text-hint>Pick a page to open its content fragment.</p>
+</div>
+<div class="editor-form" data-page-text-form hidden>
+<label class="panel-field">
+<span>Source file</span>
+<code class="editor-hint" data-page-text-path></code>
+</label>
+<label class="panel-field">
+<span>Fragment HTML</span>
+<textarea rows="20" data-page-text-html></textarea>
+</label>
+<aside class="editor-guide">
+<h3 class="panel-subheading">Guide</h3>
+<p>The fragment is the HTML the build turns into a page. Keep the tags and the ids intact; only change the words between them.</p>
+<p>The panel writes the file straight into <code>tools/build/content/</code> and rebuilds the site, so the change shows on the page at once.</p>
+</aside>
+<div class="editor-actions">
+<button type="button" class="panel-button panel-button-primary" data-page-text-publish>Write the fragment and rebuild</button>
+<button type="button" class="panel-button" data-page-text-cancel>Close</button>
+<button type="button" class="panel-button" data-page-text-export>Export the fragment</button>
+</div>
+<p class="editor-note" data-page-text-note></p>
+<div class="editor-export">
+<h3 class="panel-subheading">Fragment to copy by hand</h3>
+<p class="editor-hint">This is the file the panel would write, so it can be saved by hand without the helper.</p>
+<pre class="inspector-snippet" data-page-text-export-text tabindex="0"></pre>
 </div>
 </div>
 </div>
@@ -258,6 +297,7 @@
 <li>Press <strong>Fix server permissions</strong> afterwards. It sets the folders to 755 and the files to 644. A page that renders unstyled is almost always this problem.</li>
 </ol>
 <p>Every publish keeps a snapshot of the release in <code>dist/snapshots/</code>, so a bad publish can be undone by publishing the snapshot folder again.</p>
+<p>The gate leaves the panel's own tests out of the run, because the panel helper rebuilds the site while it runs and that would make the release unstable. The site checks are all in.</p>
 <p>The test suite needs a free port. Port 8000 is the default, and another program on this machine may already hold it, so the helper picks a free port on its own. The port it used is named in the server reply.</p>
 </section>
 

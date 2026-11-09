@@ -28,6 +28,9 @@ body[data-layout="playground"] .stage > .main-box {
 }
 body[data-layout="playground"] .main-box {
   background: var(--bg-dark);
+  /* The box wears the dark palette in both themes, so the copy it inherits
+     has to wear it too. */
+  color: var(--ink);
   min-width: min(45rem, 100%);
   min-height: 45rem;
 }

@@ -1,6 +1,6 @@
 <section class="content-section" data-admin="content:content.css" id="features" aria-labelledby="features-heading">
 <h2 class="section-heading" id="features-heading">Features</h2>
-<p>AGIT's features span fiction, non-fiction, research, role-play, and more. Pick an area to explore.</p>
+<p>AGIT is one studio with several temperaments. The same engine wears a different hat depending on what you are writing: a novel, an essay, a research pile, an evening of role-play. Pick an area to explore, or scroll through the screens first.</p>
 <div class="chip-row">
 <a class="chip" href="/products/agit/features/fiction/">Fiction</a>
 <a class="chip" href="/products/agit/features/non-fiction/">Non-Fiction</a>
@@ -11,26 +11,63 @@
 </section>
 <section class="content-section" data-admin="content:content.css" id="screens" aria-labelledby="screens-heading">
 <h2 class="section-heading" id="screens-heading">Screens</h2>
-<article class="content-article" data-admin="content:content.css">
+<article class="content-article" data-admin="content:content.css" id="screens-carousel">
 <h3 class="article-heading">The same workspace, four ways</h3>
-<p>Chat holds the conversation, the editor holds the prose, the outline holds the structure, and the boards hold the mess in between. The carousel below runs without JavaScript as a plain scrolling row.</p>
+<p>Chat holds the conversation, the editor holds the prose, the outline holds the structure, and the boards hold the mess in between. The carousel runs without JavaScript too, as a plain scrolling row.</p>
 <div class="media-row" data-carousel-label="AGIT workspace screens">
 <figure>
-<img src="/assets/agit/chat.webp" alt="The AGIT chat panel showing a conversation thread" width="384" height="992" loading="lazy">
+<img src="/assets/agit/chat.webp" alt="The AGIT chat panel showing a conversation thread" width="384" height="992" loading="lazy" decoding="async">
 <figcaption>Chat, where the conversation lives.</figcaption>
 </figure>
 <figure>
-<img src="/assets/agit/editor.webp" alt="The AGIT editor panel showing a draft in progress" width="1680" height="1050" loading="lazy">
+<img src="/assets/agit/editor.webp" alt="The AGIT editor panel showing a draft in progress" width="1680" height="1050" loading="lazy" decoding="async">
 <figcaption>Editor, where the prose sits.</figcaption>
 </figure>
 <figure>
-<img src="/assets/agit/outline.webp" alt="The AGIT outline panel showing a chapter and scene tree" width="1680" height="1050" loading="lazy">
+<img src="/assets/agit/outline.webp" alt="The AGIT outline panel showing a chapter and scene tree" width="1680" height="1050" loading="lazy" decoding="async">
 <figcaption>Outline, where the structure holds.</figcaption>
 </figure>
 <figure>
-<img src="/assets/agit/boards.webp" alt="The AGIT boards panel showing loose notes on cards" width="1680" height="1050" loading="lazy">
+<img src="/assets/agit/boards.webp" alt="The AGIT boards panel showing loose notes on cards" width="1680" height="1050" loading="lazy" decoding="async">
 <figcaption>Boards, where the mess waits.</figcaption>
 </figure>
 </div>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="features-areas" aria-labelledby="features-areas-heading">
+<h2 class="section-heading" id="features-areas-heading">The five areas, in one paragraph each</h2>
+<article class="content-article" data-admin="content:content.css" id="features-area-fiction">
+<h3 class="article-heading">Fiction — the compendium does the remembering</h3>
+<p>Characters, locations, items and plot points live in a compendium that AGIT can populate from the scenes you have already written. Draft scene by scene, ask for variations on a chapter, and keep a whole series consistent without keeping all of it in your head. <a href="/products/agit/features/fiction/">Fiction, in depth.</a></p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="features-area-non-fiction">
+<h3 class="article-heading">Non-fiction — structure first, applause later</h3>
+<p>Essays, guides, business plans, whitepapers and theses start as outlines and grow into drafts without losing the argument. Templates cover the usual shapes; the boards hold clippings; the chat can be asked to poke holes in the structure before a reviewer does it for you. <a href="/products/agit/features/non-fiction/">Non-fiction, in depth.</a></p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="features-area-research">
+<h3 class="article-heading">Research — a local index over your sources</h3>
+<p>Import documents and scans, index them on your own machine, search them instantly, compute over them and chart the results. Four workflows — import and index, compute and chart, MCP and external tools, automation — each get their own page. <a href="/products/agit/features/research/">Research, in depth.</a></p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="features-area-role-play">
+<h3 class="article-heading">Role-play — rehearsal for the page, or just for fun</h3>
+<p>Give characters voice profiles, set the scene, and interview them before they misbehave in chapter nine. The same machinery runs the after-hours campaign, in a separate mode so play never leaks into the manuscript. <a href="/products/agit/features/role-play/">Role-play, in depth.</a></p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="features-area-external-tools">
+<h3 class="article-heading">External tools — your keys, your models, your formats</h3>
+<p>Cloud AI through your own API keys, local AI through Ollama or an imported GGUF, research helpers through MCP, exports to DOCX, EPUB, PDF, HTML, Markdown and plain text, an audiobook exporter with local voices, and sync through your own cloud accounts. <a href="/products/agit/features/external-tools/">External tools, in depth.</a></p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="features-under-the-hood" aria-labelledby="features-under-the-hood-heading">
+<h2 class="section-heading" id="features-under-the-hood-heading">Under the hood, in one breath</h2>
+<article class="content-article" data-admin="content:content.css" id="features-under-the-hood-list">
+<h3 class="article-heading">The short technical inventory</h3>
+<ul>
+<li>A local database holds the project; a local vector index makes the project searchable by meaning, not just by keyword.</li>
+<li>The AI layer speaks to OpenAI-compatible endpoints, Anthropic, OpenRouter, DeepSeek, custom self-hosted endpoints, Ollama and imported GGUF models — and different tasks can use different models.</li>
+<li>The automation layer runs Python tools on your machine, with output landing in a dedicated canvas instead of your manuscript.</li>
+<li>Imports cover DOCX, PDF, EPUB, RTF, Markdown and plain text, with OCR for scans and images.</li>
+<li>Exports cover the same list plus audiobooks, so the work leaves in whatever shape the world asks for.</li>
+</ul>
+<p>Each of those bullets is a page's worth of detail. The <a href="/products/agit/features/research/">research section</a> is where most of it lives.</p>
 </article>
 </section>

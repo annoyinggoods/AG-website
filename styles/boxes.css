@@ -20,6 +20,14 @@
   padding: 1.5rem 1.75rem;
   margin: var(--gap-box);
 }
+/* The game page gives the board the width the panel padding would have
+   taken. On a narrow phone that padding is a quarter of the screen, and the
+   board is the reason the page exists. */
+@media (max-width: 30rem) {
+  .main-box:has(#draghts-app) {
+    padding-inline: 0.75rem;
+  }
+}
 .site-footer {
   padding: 1rem 1.5rem;
   text-align: center;

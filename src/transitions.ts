@@ -1,4 +1,4 @@
-import { isSameSiteUrl, prefersReducedMotion, writeSessionString, readSessionString } from "./utils-dom.js";
+import { isSameSiteUrl, isDownloadHref, prefersReducedMotion, writeSessionString, readSessionString } from "./utils-dom.js";
 const INCOMING_KEY = "ag-transition-incoming";
 const MARKER_KEY = "ag-menu-marker";
 const SHAKE_MS = 200;
@@ -90,6 +90,9 @@ function shouldIntercept(link: HTMLAnchorElement, href: string, event: MouseEven
     return false;
   }
   if (link.hasAttribute("download")) {
+    return false;
+  }
+  if (isDownloadHref(href)) {
     return false;
   }
   return true;

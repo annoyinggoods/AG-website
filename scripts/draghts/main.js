@@ -1,5 +1,5 @@
 import { BoardUI } from "./ui/board.js";
-import { applyMove, createGame, deserializeState, endTurn, legalMoves, } from "./engine/game.js";
+import { applyMove, createGame, deserializeState, endTurn, legalMoves, startTurn, } from "./engine/game.js";
 import { chooseMove } from "./engine/ai/computer.js";
 import { applyPunishment, pickVictim } from "./engine/punishment.js";
 import { baseRules } from "./engine/rules.js";
@@ -163,7 +163,7 @@ function startGameFromConfig(session) {
     const whiteFirst = Math.random() < 0.5;
     const turn = whiteFirst ? "white" : "purple";
     const base = createGame(session.rules);
-    const state = { ...base, turn };
+    const state = startTurn({ ...base, turn });
     const colour = session.isComputerGame
         ? (Math.random() < 0.5 ? "white" : "purple")
         : null;

@@ -1,0 +1,33 @@
+{
+  "version": 1,
+  "tree": [
+    {
+      "id": "home",
+      "label": "Home",
+      "route": "/",
+      "href": "/",
+      "children": []
+    },
+    {
+      "id": "page",
+      "label": "Products",
+      "route": "/products/",
+      "href": "/products/",
+      "children": []
+    },
+    {
+      "id": "page-2",
+      "label": "Blog",
+      "route": "/blog/",
+      "href": "/blog/",
+      "children": []
+    },
+    {
+      "id": "page-3",
+      "label": "Contact",
+      "route": "/contact/",
+      "href": "/contact/",
+      "children": []
+    }
+  ]
+}

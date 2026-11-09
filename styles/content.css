@@ -73,6 +73,36 @@ p {
   gap: 0.5rem;
   margin-block: 0.75rem;
 }
+.page-download-cta {
+  margin-block: 0.25rem 1.25rem;
+}
+.page-download-cta .button-chip {
+  background: var(--dl-chip);
+  color: var(--dl-chip-ink);
+  font-weight: 700;
+}
+.page-download-cta .button-chip:hover {
+  background: var(--dl-chip-hover);
+}
+.license-text h4 {
+  margin-block: 1.4rem 0.4rem;
+  font-size: 1.05rem;
+}
+.license-text hr {
+  border: 0;
+  border-top: var(--hairline-w) solid var(--hairline);
+  margin-block: 1.25rem;
+}
+.license-text ul {
+  margin-block: 0.5rem;
+  padding-inline-start: 1.3rem;
+}
+.license-text li {
+  margin-block: 0.3rem;
+}
+.license-text li > ul {
+  margin-block: 0.25rem;
+}
 /* One shared recipe for every small round action: chips, back links, carousel
    arrows, the demo sample, the cookie exit and the search clear. Components
    declare only what makes them different. */
@@ -301,4 +331,24 @@ figcaption {
   background: var(--menu-group);
   padding: 0.6rem 0.9rem;
   margin-block: 0.6rem;
+}
+
+/* The product mark: the app icon with its caption beside it. Small enough to
+   read as a mark on a taskbar, not as a screenshot of the application. */
+.app-mark {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-box);
+  margin-block: 0 1.25rem;
+}
+.app-mark img {
+  width: 4.5rem;
+  height: auto;
+  flex: 0 0 auto;
+}
+.app-mark figcaption {
+  font-family: var(--font-tiny);
+  font-size: 0.95rem;
+  color: var(--ink-muted);
+  margin: 0;
 }

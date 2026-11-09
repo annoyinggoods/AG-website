@@ -71,6 +71,14 @@ function isSameSiteUrl(href) {
     }
     return url.origin === window.location.origin;
 }
+const DOWNLOAD_EXTENSIONS = [".exe", ".msi", ".zip", ".7z", ".rar", ".dmg", ".pkg", ".apk", ".tar", ".gz", ".tgz", ".whl", ".iso"];
+function isDownloadHref(href) {
+    const path = href.split("#")[0]?.split("?")[0] || "";
+    const lower = path.toLowerCase();
+    return DOWNLOAD_EXTENSIONS.some(function (ext) {
+        return lower.endsWith(ext);
+    });
+}
 function prefersReducedMotion() {
     if (typeof window.matchMedia !== "function") {
         return false;
@@ -166,6 +174,16 @@ function writeLocalString(key, value) {
         warnStorageOnce(key, err);
         memoryStorage.set(key, value);
     }
+}
+function removeLocalString(key) {
+    try {
+        window.localStorage.removeItem(key);
+        return;
+    }
+    catch (err) {
+        warnStorageOnce(key, err);
+    }
+    memoryStorage.delete(key);
 }
 function readLocalJson(key) {
     const raw = readLocalString(key);
@@ -497,7 +515,6 @@ function markBranchLevels() {
 // menu-tree.js
 
 
-const MENU_TREE_STORAGE_KEY = "ag-menu-expanded";
 const EXPAND_MS = 250;
 function initMenuTree() {
     initMenuData();
@@ -506,6 +523,7 @@ function initMenuTree() {
         return;
     }
     upgradeDetailsToButtons(nav);
+    closeAllGroups(nav);
     expandActiveBranch(nav);
 }
 function upgradeDetailsToButtons(nav) {
@@ -577,11 +595,9 @@ function upgradeDetailsToButtons(nav) {
                 childList.hidden = false;
                 styleGroup(childList, true);
             }
-            persistExpandedBranches(nav);
         });
         item.setAttribute("data-menu-upgraded", "true");
     });
-    restoreExpandedBranches(nav);
 }
 function restoreArrow(link) {
     const arrow = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -623,7 +639,6 @@ function expandActiveBranch(nav) {
         return;
     }
     let cursor = active.closest("li.menu-item");
-    cursor = cursor ? cursor.parentElement?.closest("li.menu-item") || null : null;
     while (cursor) {
         const toggle = cursor.querySelector(".menu-toggle");
         const group = cursor.querySelector(":scope > [data-menu-group]");
@@ -671,51 +686,20 @@ function openParentGroups(group) {
         cursor = cursor.parentElement;
     }
 }
-function restoreExpandedBranches(nav) {
-    const raw = readSessionString(MENU_TREE_STORAGE_KEY);
-    if (!raw) {
-        return;
-    }
-    let saved = [];
-    try {
-        saved = JSON.parse(raw);
-    }
-    catch (err) {
-        void err;
-        return;
-    }
-    if (!Array.isArray(saved)) {
-        return;
-    }
+function closeAllGroups(nav) {
     const toggles = nav.querySelectorAll(".menu-toggle");
     toggles.forEach(function (toggle) {
-        const key = toggle.dataset.menuPath || "";
-        if (!key) {
-            return;
-        }
-        if (saved.indexOf(key) >= 0) {
-            toggle.setAttribute("aria-expanded", "true");
-            const item = toggle.closest("li.menu-item");
-            const group = item ? item.querySelector(":scope > [data-menu-group]") : null;
-            if (group instanceof HTMLElement) {
-                group.hidden = false;
-                styleGroup(group, false);
-            }
+        if (toggle instanceof HTMLElement) {
+            toggle.setAttribute("aria-expanded", "false");
         }
     });
-}
-function persistExpandedBranches(nav) {
-    const toggles = nav.querySelectorAll(".menu-toggle");
-    const open = [];
-    toggles.forEach(function (toggle) {
-        if (toggle.getAttribute("aria-expanded") === "true") {
-            const key = toggle.dataset.menuPath || "";
-            if (key) {
-                open.push(key);
-            }
+    const groups = nav.querySelectorAll("[data-menu-group]");
+    groups.forEach(function (group) {
+        if (group instanceof HTMLElement) {
+            group.hidden = true;
+            group.style.maxHeight = "0";
         }
     });
-    writeSessionString(MENU_TREE_STORAGE_KEY, JSON.stringify(open));
 }
 
 // utils-fuzzy.js
@@ -1752,6 +1736,9 @@ function shouldIntercept(link, href, event) {
     if (link.hasAttribute("download")) {
         return false;
     }
+    if (isDownloadHref(href)) {
+        return false;
+    }
     return true;
 }
 function recordMarkerRect(link) {
@@ -2624,20 +2611,21 @@ function wireSettingsLink(banner) {
 // theme.js
 
 const THEME_STORAGE_KEY = "ag-theme";
-const THEME_STORAGE_VERSION = 2;
+const THEME_STORAGE_VERSION = 3;
 const THEME_CROSSFADE_MS = 340;
 const HERO_FORWARD = "hero-web-layer-forward";
 const HERO_RETURN = "hero-web-layer-return";
 let systemQuery = null;
 let systemListener = null;
+let activeMode = "system";
 function initTheme() {
     const root = document.documentElement;
-    const saved = readTheme();
-    if (saved) {
-        applyTheme(root, saved, false);
+    activeMode = readMode();
+    if (activeMode === "system") {
+        forgetStoredMode();
     }
-    else {
-        applyTheme(root, systemTheme(), false);
+    applyTheme(root, resolveMode(activeMode), false);
+    if (activeMode === "system") {
         watchSystemTheme(root);
     }
     syncThemeControls(root);
@@ -2647,10 +2635,16 @@ function initTheme() {
 function currentTheme(root = document.documentElement) {
     return root.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
-function readTheme() {
+function currentMode() {
+    return activeMode;
+}
+// The site follows the system setting until the visitor picks a theme. A
+// record written by an older version of the site is not a choice any more,
+// so it is dropped and the system takes over again.
+function readMode() {
     const raw = readLocalString(THEME_STORAGE_KEY);
     if (!raw) {
-        return null;
+        return "system";
     }
     let parsed = null;
     try {
@@ -2658,32 +2652,30 @@ function readTheme() {
     }
     catch (err) {
         void err;
-        return readLegacyTheme(raw);
-    }
-    if (typeof parsed === "string") {
-        return readLegacyTheme(parsed);
+        return "system";
     }
     if (parsed && typeof parsed === "object") {
         const record = parsed;
-        if (record.version !== undefined && record.version !== THEME_STORAGE_VERSION) {
-            return null;
-        }
-        if (record.theme === "light" || record.theme === "dark") {
-            return record.theme;
+        if (record.version === THEME_STORAGE_VERSION) {
+            if (record.theme === "light" || record.theme === "dark" || record.theme === "system") {
+                return record.theme;
+            }
         }
     }
-    return null;
+    return "system";
 }
-function readLegacyTheme(raw) {
-    const trimmed = raw.trim().replace(/^"|"$/g, "");
-    if (trimmed === "light" || trimmed === "dark") {
-        return trimmed;
-    }
-    return null;
-}
-function saveTheme(theme) {
-    const record = { theme: theme, version: THEME_STORAGE_VERSION };
+function saveMode(mode) {
+    const record = { theme: mode, version: THEME_STORAGE_VERSION };
     writeLocalString(THEME_STORAGE_KEY, JSON.stringify(record));
+}
+function forgetStoredMode() {
+    removeLocalString(THEME_STORAGE_KEY);
+}
+function resolveMode(mode) {
+    if (mode === "system") {
+        return systemTheme();
+    }
+    return mode;
 }
 function systemTheme() {
     if (typeof window.matchMedia !== "function") {
@@ -2700,7 +2692,7 @@ function watchSystemTheme(root) {
     const query = window.matchMedia("(prefers-color-scheme: light)");
     systemQuery = query;
     systemListener = function () {
-        if (readTheme()) {
+        if (activeMode !== "system") {
             stopSystemWatch();
             return;
         }
@@ -2755,16 +2747,20 @@ function syncMetaTheme(theme) {
     });
 }
 function syncThemeControls(root) {
-    syncPillButtons(currentTheme(root));
+    syncPillButtons(activeMode);
+    const group = document.querySelector(".menu-theme-pill");
+    if (group instanceof HTMLElement) {
+        group.setAttribute("data-theme-effective", currentTheme(root));
+    }
 }
-function syncPillButtons(theme) {
+function syncPillButtons(mode) {
     const pills = document.querySelectorAll("[data-theme-choice]");
     pills.forEach(function (node) {
         if (!(node instanceof HTMLButtonElement)) {
             return;
         }
         const choice = node.getAttribute("data-theme-choice") || "";
-        node.setAttribute("aria-pressed", choice === theme ? "true" : "false");
+        node.setAttribute("aria-pressed", choice === mode ? "true" : "false");
     });
 }
 function wirePill(root) {
@@ -2783,24 +2779,23 @@ function wirePill(root) {
         }
         const choice = node.getAttribute("data-theme-choice");
         node.addEventListener("click", function () {
-            if (currentTheme(root) !== choice) {
-                applyTheme(root, choice, true);
-                saveTheme(choice);
-                stopSystemWatch();
-            }
+            chooseMode(root, choice);
         });
         node.addEventListener("pointerenter", preloadOnce);
         node.addEventListener("focus", preloadOnce);
     });
 }
-function flipTheme(root, persist) {
-    const current = currentTheme(root);
-    const next = current === "dark" ? "light" : "dark";
-    if (persist) {
-        saveTheme(next);
+function chooseMode(root, mode) {
+    activeMode = mode;
+    if (mode === "system") {
+        forgetStoredMode();
+        watchSystemTheme(root);
+    }
+    else {
+        saveMode(mode);
         stopSystemWatch();
     }
-    applyTheme(root, next, true);
+    applyTheme(root, resolveMode(mode), true);
 }
 function swapThemeAssets(root, theme) {
     void root;
@@ -2856,12 +2851,18 @@ function wireThemeMessaging(root) {
         if (event.key !== THEME_STORAGE_KEY) {
             return;
         }
-        const next = readTheme();
-        if (!next || next === currentTheme(root)) {
+        const mode = readMode();
+        if (mode === activeMode) {
             return;
         }
-        stopSystemWatch();
-        applyTheme(root, next, false);
+        activeMode = mode;
+        if (mode === "system") {
+            watchSystemTheme(root);
+        }
+        else {
+            stopSystemWatch();
+        }
+        applyTheme(root, resolveMode(mode), false);
     });
 }
 function announceTheme(theme) {
@@ -2988,7 +2989,7 @@ function messageFor(field) {
     return "Please check this field and try again.";
 }
 function openMailtoFallback(form, status) {
-    const fallback = form.getAttribute("action") || "mailto:spider@annoyinggoods.com";
+    const fallback = form.getAttribute("action") || "mailto:annoying.goods@gmail.com";
     if (!fallback.toLowerCase().startsWith("mailto:")) {
         announce(status, "The form endpoint is not configured yet. Please use the mailto fallback.");
         return;
@@ -3324,7 +3325,7 @@ async function runBallChoreo() {
     target.style.setProperty("--x", String(start[0]) + "px");
     target.style.setProperty("--y", String(start[1]) + "px");
     await delay(120);
-    const stages = [title, main, rest];
+    const stages = finaleStages(title, main, rest);
     let current = start;
     for (let i = 0; i < stages.length; i += 1) {
         const stage = stages[i];
@@ -3477,6 +3478,26 @@ function mainSpot() {
         }
     }
     return [window.innerWidth / 2, 160];
+}
+// On a phone the main box starts right under the title box, so a landing on
+// the main box drops the ball onto the page title instead of onto a panel.
+// Every landing there stays on top of the title box, and the middle one
+// moves along its edge so the ball still travels.
+function finaleStages(title, main, rest) {
+    if (!isMobileLayout()) {
+        return [title, main, rest];
+    }
+    return [title, titleSideSpot(title), rest];
+}
+function titleSideSpot(title) {
+    const box = document.querySelector(".title-box");
+    if (box instanceof HTMLElement) {
+        const rect = box.getBoundingClientRect();
+        if (rect.width > 0) {
+            return [rect.left + ballRadius() + 6, title[1]];
+        }
+    }
+    return title;
 }
 function heroTopRightSpot() {
     const hero = document.querySelector("[data-hero-strip]");
@@ -3681,12 +3702,15 @@ async function runSequence(hero) {
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));
     });
     setHeroState("weave");
-    if (webPlain) {
-        webPlain.style.opacity = "1";
-        revealPlain(webPlain, 0);
-    }
     const webTopY = webRect.top + webH * 0.05;
     const path = buildPath(topRight, leftEdgeX, leftSurfaceY, webTopY, WEAVE_LEGS);
+    const weaveStartX = path[0] ? path[0][0] : topRight[0];
+    if (webPlain) {
+        webPlain.style.opacity = "1";
+        // The clip starts where the spider starts, so the web is revealed by the
+        // walk alone. A clip of zero would show the whole web for one frame.
+        revealPlain(webPlain, weaveStartX - webRect.left);
+    }
     await walkPath(hero, path, WEAVE_MS, (x, y, rot, step) => {
         const bob = step % 2 === 0 ? -WALK_BOB : WALK_BOB;
         placeSprite(walkImg, hero, x, y + bob, rot + (step % 2 === 0 ? -4 : 4));

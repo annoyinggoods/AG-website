@@ -254,8 +254,36 @@ function ruleNames(numbers) {
 return { baseRules: baseRules, rulesWith: rulesWith, kingMode: kingMode, validateRules: validateRules };
 })();
 
+// engine/moveset.js
+const m_engine_moveset_js = (function () {
+function moveKey(move) {
+    return [
+        move.from.row,
+        move.from.column,
+        move.to.row,
+        move.to.column,
+        move.kind,
+    ].join(",");
+}
+function uniqueMoves(moves) {
+    const seen = new Set();
+    const unique = [];
+    for (const move of moves) {
+        const key = moveKey(move);
+        if (seen.has(key)) {
+            continue;
+        }
+        seen.add(key);
+        unique.push(move);
+    }
+    return unique;
+}
+
+return { moveKey: moveKey, uniqueMoves: uniqueMoves };
+})();
+
 // engine/captures.js
-const m_engine_captures_js = (function (DIAGONALS = m_engine_board_js.DIAGONALS, diagonalSteps = m_engine_board_js.diagonalSteps, forwardStep = m_engine_board_js.forwardStep, inBounds = m_engine_board_js.inBounds, pieceAt = m_engine_board_js.pieceAt, squaresWithPieces = m_engine_board_js.squaresWithPieces, walkRay = m_engine_board_js.walkRay, kingModeFor = m_engine_kingmode_js.kingModeFor) {
+const m_engine_captures_js = (function (DIAGONALS = m_engine_board_js.DIAGONALS, diagonalSteps = m_engine_board_js.diagonalSteps, forwardStep = m_engine_board_js.forwardStep, inBounds = m_engine_board_js.inBounds, pieceAt = m_engine_board_js.pieceAt, squaresWithPieces = m_engine_board_js.squaresWithPieces, walkRay = m_engine_board_js.walkRay, kingModeFor = m_engine_kingmode_js.kingModeFor, uniqueMoves = m_engine_moveset_js.uniqueMoves) {
 function captureMovesFor(board, from, piece, context) {
     if (context.buffedPieceIds.includes(piece.id)) {
         return flyingKingCaptures(board, from, piece);
@@ -264,13 +292,21 @@ function captureMovesFor(board, from, piece, context) {
         return pawnCaptures(board, from, piece, context);
     }
     if (kingModeFor(context.rules) === "flying") {
-        return flyingKingCaptures(board, from, piece);
+        const jumps = flyingKingCaptures(board, from, piece);
+        if (!context.rules.forcedFullSlide) {
+            return jumps;
+        }
+        return [...jumps, ...kingReplacementCaptures(board, from, piece)];
     }
     return englishKingCaptures(board, from, piece);
 }
 function pawnCaptures(board, from, piece, context) {
     if (context.frenzyTurn) {
-        return frenzyPawnCaptures(board, from, piece);
+        const hops = frenzyPawnCaptures(board, from, piece);
+        if (!context.rules.forcedFullSlide) {
+            return hops;
+        }
+        return uniqueMoves([...hops, ...replacementCaptures(board, from, piece)]);
     }
     if (context.rules.forcedFullSlide) {
         return replacementCaptures(board, from, piece);
@@ -301,6 +337,21 @@ function frenzyPawnCaptures(board, from, piece) {
 function replacementCaptures(board, from, piece) {
     const moves = [];
     for (const [rowStep, columnStep] of diagonalSteps([forwardStep(piece.player)])) {
+        const walk = walkRay(board, from, rowStep, columnStep);
+        if (walk.blocker === null) {
+            continue;
+        }
+        const blocker = pieceAt(board, walk.blocker);
+        if (blocker === null || blocker.player === piece.player) {
+            continue;
+        }
+        moves.push(captureMove({ from: { ...from }, victim: { ...walk.blocker }, landing: { ...walk.blocker } }));
+    }
+    return moves;
+}
+function kingReplacementCaptures(board, from, piece) {
+    const moves = [];
+    for (const [rowStep, columnStep] of DIAGONALS) {
         const walk = walkRay(board, from, rowStep, columnStep);
         if (walk.blocker === null) {
             continue;
@@ -375,7 +426,7 @@ function oneStepCaptures(board, from, piece, steps) {
     return moves;
 }
 
-return { captureMovesFor: captureMovesFor, pawnCaptures: pawnCaptures, pawnCaptureDirections: pawnCaptureDirections, captureAvailableFor: captureAvailableFor, frenzyPawnCaptures: frenzyPawnCaptures, replacementCaptures: replacementCaptures, englishKingCaptures: englishKingCaptures, flyingKingCaptures: flyingKingCaptures, jumpCapture: jumpCapture, captureMove: captureMove };
+return { captureMovesFor: captureMovesFor, pawnCaptures: pawnCaptures, pawnCaptureDirections: pawnCaptureDirections, captureAvailableFor: captureAvailableFor, frenzyPawnCaptures: frenzyPawnCaptures, replacementCaptures: replacementCaptures, kingReplacementCaptures: kingReplacementCaptures, englishKingCaptures: englishKingCaptures, flyingKingCaptures: flyingKingCaptures, jumpCapture: jumpCapture, captureMove: captureMove };
 })();
 
 // engine/context.js
@@ -401,7 +452,7 @@ return { moveContextFor: moveContextFor };
 })();
 
 // engine/moves.js
-const m_engine_moves_js = (function (DIAGONALS = m_engine_board_js.DIAGONALS, diagonalSteps = m_engine_board_js.diagonalSteps, forwardStep = m_engine_board_js.forwardStep, inBounds = m_engine_board_js.inBounds, pieceAt = m_engine_board_js.pieceAt, walkRay = m_engine_board_js.walkRay, kingModeFor = m_engine_kingmode_js.kingModeFor) {
+const m_engine_moves_js = (function (DIAGONALS = m_engine_board_js.DIAGONALS, diagonalSteps = m_engine_board_js.diagonalSteps, forwardStep = m_engine_board_js.forwardStep, inBounds = m_engine_board_js.inBounds, pieceAt = m_engine_board_js.pieceAt, walkRay = m_engine_board_js.walkRay, kingModeFor = m_engine_kingmode_js.kingModeFor, uniqueMoves = m_engine_moveset_js.uniqueMoves) {
 function quietMovesFor(board, from, piece, context) {
     if (context.buffedPieceIds.includes(piece.id)) {
         return flyingKingQuietMoves(board, from);
@@ -416,7 +467,11 @@ function quietMovesFor(board, from, piece, context) {
 }
 function pawnQuietMoves(board, from, piece, context) {
     if (context.frenzyTurn) {
-        return frenzyPawnQuietMoves(board, from);
+        const hops = frenzyPawnQuietMoves(board, from);
+        if (!context.rules.forcedFullSlide) {
+            return hops;
+        }
+        return uniqueMoves([...hops, ...slidePawnQuietMoves(board, from, piece)]);
     }
     if (context.rules.forcedFullSlide) {
         return slidePawnQuietMoves(board, from, piece);
@@ -622,11 +677,15 @@ function expireQueenBuffs(empowerment, mover, moveCounter) {
 function armQueenBuff(state, owner, pieceId) {
     const armedTurn = state.moveCounter;
     const others = state.empowerment.activeBuffs.filter((buff) => buff.pieceId !== pieceId);
-    const activeBuffs = [...others, { pieceId, armedTurn, owner }];
+    const activeBuffs = [...others, { pieceId, armedTurn, owner, moved: false }];
+    return { ...state, empowerment: { ...state.empowerment, activeBuffs } };
+}
+function markBuffMoved(state, pieceId) {
+    const activeBuffs = state.empowerment.activeBuffs.map((buff) => buff.pieceId === pieceId ? { ...buff, moved: true } : buff);
     return { ...state, empowerment: { ...state.empowerment, activeBuffs } };
 }
 
-return { resolveKillBonuses: resolveKillBonuses, expireQueenBuffs: expireQueenBuffs };
+return { resolveKillBonuses: resolveKillBonuses, expireQueenBuffs: expireQueenBuffs, markBuffMoved: markBuffMoved };
 })();
 
 // engine/scoring.js
@@ -698,7 +757,7 @@ function victimPoints(state, victim) {
     return earned;
 }
 function carriesQueenBuff(state, victim) {
-    return state.empowerment.activeBuffs.some((buff) => buff.pieceId === victim.id);
+    return state.empowerment.activeBuffs.some((buff) => buff.pieceId === victim.id && !buff.moved);
 }
 function diesInOpenFrenzy(state, victim) {
     return victim.kind === "pawn" && state.empowerment.frenzyOpenPlayers.includes(victim.player);
@@ -829,7 +888,7 @@ return { startTurn: startTurn, punishmentFires: punishmentFires, endOfTurn: endO
 })();
 
 // engine/game.js
-const m_engine_game_js = (function (cloneBoard = m_engine_board_js.cloneBoard, clonePiece = m_engine_board_js.clonePiece, initialBoard = m_engine_board_js.initialBoard, pieceAt = m_engine_board_js.pieceAt, placePiece = m_engine_board_js.placePiece, clearSquare = m_engine_board_js.clearSquare, sameSquare = m_engine_board_js.sameSquare, wipeoutWinner = m_engine_board_js.wipeoutWinner, baseRules = m_engine_rules_js.baseRules, captureMovesFor = m_engine_captures_js.captureMovesFor, movesForPlayer = m_engine_legalmoves_js.movesForPlayer, endByWipeout = m_engine_turn_js.endByWipeout, endOfTurn = m_engine_turn_js.endOfTurn, startTurn = m_engine_turn_js.startTurn, moveContextFor = m_engine_context_js.moveContextFor, cloneFrenzy = m_engine_frenzy_js.cloneFrenzy, emptyFrenzy = m_engine_frenzy_js.emptyFrenzy, emptyRoundTurns = m_engine_scoring_js.emptyRoundTurns, emptyScores = m_engine_scoring_js.emptyScores, onePieceCondition = m_engine_scoring_js.onePieceCondition, scoreRemoval = m_engine_scoring_js.scoreRemoval, endByBlockage = m_engine_turn_js.endByBlockage, endByTwentyRounds = m_engine_turn_js.endByTwentyRounds) {
+const m_engine_game_js = (function (cloneBoard = m_engine_board_js.cloneBoard, clonePiece = m_engine_board_js.clonePiece, initialBoard = m_engine_board_js.initialBoard, pieceAt = m_engine_board_js.pieceAt, placePiece = m_engine_board_js.placePiece, clearSquare = m_engine_board_js.clearSquare, sameSquare = m_engine_board_js.sameSquare, wipeoutWinner = m_engine_board_js.wipeoutWinner, baseRules = m_engine_rules_js.baseRules, captureMovesFor = m_engine_captures_js.captureMovesFor, movesForPlayer = m_engine_legalmoves_js.movesForPlayer, endByWipeout = m_engine_turn_js.endByWipeout, endOfTurn = m_engine_turn_js.endOfTurn, startTurn = m_engine_turn_js.startTurn, markBuffMoved = m_engine_bonuses_js.markBuffMoved, moveContextFor = m_engine_context_js.moveContextFor, cloneFrenzy = m_engine_frenzy_js.cloneFrenzy, emptyFrenzy = m_engine_frenzy_js.emptyFrenzy, emptyRoundTurns = m_engine_scoring_js.emptyRoundTurns, emptyScores = m_engine_scoring_js.emptyScores, onePieceCondition = m_engine_scoring_js.onePieceCondition, scoreRemoval = m_engine_scoring_js.scoreRemoval, endByBlockage = m_engine_turn_js.endByBlockage, endByTwentyRounds = m_engine_turn_js.endByTwentyRounds) {
 
 function createGame(rules = baseRules()) {
     return createGameFromBoard(initialBoard(), rules, "white");
@@ -911,12 +970,13 @@ function applyMove(state, move) {
     }
     const startedTurn = state.pendingChain === null;
     const advanced = recordMove({ ...scored, moverStartedAsPawn: startedTurn ? piece.kind === "pawn" : scored.moverStartedAsPawn }, piece.id, chosen.kills.length);
+    const buffed = markBuffMoved(advanced, piece.id);
     const landing = {
         piece: placed,
         square: chosen.to,
         killed: chosen.kills.length > 0,
     };
-    return finishTurn(advanced, piece.player, landing, events);
+    return finishTurn(buffed, piece.player, landing, events);
 }
 function endTurn(state) {
     if (state.status === "ended") {
@@ -1062,7 +1122,7 @@ function clonePendingPunishment(pending) {
     return { victimPlayer: pending.victimPlayer };
 }
 
-return { createGame: createGame, createGameFromBoard: createGameFromBoard, legalMoves: legalMoves, hasLegalMove: hasLegalMove, applyMove: applyMove, endTurn: endTurn, cloneState: cloneState, serializeState: serializeState, deserializeState: deserializeState, endByWipeout: endByWipeout, endByBlockage: endByBlockage, endByTwentyRounds: endByTwentyRounds };
+return { createGame: createGame, createGameFromBoard: createGameFromBoard, legalMoves: legalMoves, hasLegalMove: hasLegalMove, applyMove: applyMove, endTurn: endTurn, cloneState: cloneState, serializeState: serializeState, deserializeState: deserializeState, endByWipeout: endByWipeout, endByBlockage: endByBlockage, endByTwentyRounds: endByTwentyRounds, startTurn: startTurn };
 })();
 
 // engine/punishment.js
@@ -1481,6 +1541,7 @@ class BoardUI {
     }
     init() {
         this.clearPulse();
+        syncSelection(this, this.stateData.state, this.stateData.state);
         this.render();
         this.updateBanner();
         this.updatePickerBanner();
@@ -1638,19 +1699,38 @@ function offenderOf(state) {
     return state.pendingPunishment.victimPlayer;
 }
 function syncSelection(board, prev, curr) {
-    if (curr.pendingPunishment !== null && prev.pendingPunishment === null) {
-        board.clearSelectionFields();
-        board.clearPulse();
+    if (curr.pendingPunishment !== null) {
+        if (prev.pendingPunishment === null) {
+            board.clearSelectionFields();
+            board.clearPulse();
+        }
         board.stateData.pickerActive = true;
     }
-    else if (curr.pendingPunishment === null && prev.pendingPunishment !== null) {
+    else {
         board.stateData.pickerActive = false;
+    }
+    if (curr.pendingChain !== null) {
+        selectChainPiece(board, curr);
+    }
+    else if (prev.pendingChain !== null) {
+        board.clearSelectionFields();
+        board.clearPulse();
     }
     if (curr.status === "ended") {
         board.clearSelectionFields();
         board.clearPulse();
         board.stateData.pickerActive = false;
     }
+}
+function selectChainPiece(board, curr) {
+    const chain = curr.pendingChain;
+    if (chain === null) {
+        return;
+    }
+    board.stateData.selectedSquare = { ...chain.square };
+    board.stateData.selectedPieceId = chain.pieceId;
+    board.stateData.legalDestinations = legalMoves(curr).map((m) => ({ ...m.to }));
+    board.ensurePulse();
 }
 function renderInto(board) {
     const ui = board.stateData;
@@ -1826,6 +1906,9 @@ function onPickerClick(board, square) {
 function onChainClick(board, square) {
     const chain = board.stateData.state.pendingChain;
     if (!chain) {
+        return;
+    }
+    if (chain.square.row === square.row && chain.square.column === square.column) {
         return;
     }
     const moves = legalMoves(board.stateData.state);
@@ -2146,7 +2229,7 @@ return { chooseMove: chooseMove };
 })();
 
 // ui/start-screen.js
-const m_ui_start_screen_js = (function (createGame = m_engine_game_js.createGame, validateRules = m_engine_rules_js.validateRules, rulesWith = m_engine_rules_js.rulesWith, baseRules = m_engine_rules_js.baseRules, addToast = m_ui_toasts_js.addToast) {
+const m_ui_start_screen_js = (function (createGame = m_engine_game_js.createGame, startTurn = m_engine_game_js.startTurn, validateRules = m_engine_rules_js.validateRules, rulesWith = m_engine_rules_js.rulesWith, baseRules = m_engine_rules_js.baseRules, addToast = m_ui_toasts_js.addToast) {
 
 
 
@@ -2377,7 +2460,7 @@ class StartScreen {
         const whiteFirst = Math.random() < 0.5;
         const initialTurn = (whiteFirst ? "white" : "purple");
         const result = createGame(correctedRules);
-        const gameState = { ...result, turn: initialTurn };
+        const gameState = startTurn({ ...result, turn: initialTurn });
         const whitePlayer = isComputer ? "Human" : "White";
         const purplePlayer = isComputer ? "Computer" : "Purple";
         const computerColour = isComputer ? "purple" : null;
@@ -2509,10 +2592,10 @@ class HUD {
         const streakWhite = this.container.querySelector("#streak-white");
         const streakPurple = this.container.querySelector("#streak-purple");
         if (streakWhite) {
-            streakWhite.textContent = streakLabel(state.frenzy.white.streak, state.frenzy.white.armed, state.frenzyTurn);
+            streakWhite.textContent = streakLabel(state.frenzy.white.streak, state.frenzy.white.armed, state.frenzyTurn && state.turn === "white");
         }
         if (streakPurple) {
-            streakPurple.textContent = streakLabel(state.frenzy.purple.streak, state.frenzy.purple.armed, state.frenzyTurn);
+            streakPurple.textContent = streakLabel(state.frenzy.purple.streak, state.frenzy.purple.armed, state.frenzyTurn && state.turn === "purple");
         }
         this.updateTurnBanner(`${state.turn.toUpperCase()} to move`);
         const countdownRow = this.container.querySelector("#countdown-row");
@@ -2754,7 +2837,7 @@ return { GAME_NAME: GAME_NAME, GAME_VERSION: GAME_VERSION };
 })();
 
 // main.js
-const m_main_js = (function (BoardUI = m_ui_board_js.BoardUI, applyMove = m_engine_game_js.applyMove, createGame = m_engine_game_js.createGame, deserializeState = m_engine_game_js.deserializeState, endTurn = m_engine_game_js.endTurn, legalMoves = m_engine_game_js.legalMoves, chooseMove = m_engine_ai_computer_js.chooseMove, applyPunishment = m_engine_punishment_js.applyPunishment, pickVictim = m_engine_punishment_js.pickVictim, baseRules = m_engine_rules_js.baseRules, StartScreen = m_ui_start_screen_js.StartScreen, HUD = m_ui_hud_js.HUD, EndScreen = m_ui_end_screen_js.EndScreen, Dashboard = m_ui_dashboard_js.Dashboard, appendDashboard = m_ui_localStorage_js.appendDashboard, ensureGestureUnlock = m_ui_sounds_js.ensureGestureUnlock, getSoundPlayer = m_ui_sounds_js.getSoundPlayer, playSound = m_ui_sounds_js.playSound, startFrenzyLoop = m_ui_sounds_js.startFrenzyLoop, stopFrenzyLoopSound = m_ui_sounds_js.stopFrenzyLoopSound, GAME_NAME = m_version_js.GAME_NAME, GAME_VERSION = m_version_js.GAME_VERSION) {
+const m_main_js = (function (BoardUI = m_ui_board_js.BoardUI, applyMove = m_engine_game_js.applyMove, createGame = m_engine_game_js.createGame, deserializeState = m_engine_game_js.deserializeState, endTurn = m_engine_game_js.endTurn, legalMoves = m_engine_game_js.legalMoves, startTurn = m_engine_game_js.startTurn, chooseMove = m_engine_ai_computer_js.chooseMove, applyPunishment = m_engine_punishment_js.applyPunishment, pickVictim = m_engine_punishment_js.pickVictim, baseRules = m_engine_rules_js.baseRules, StartScreen = m_ui_start_screen_js.StartScreen, HUD = m_ui_hud_js.HUD, EndScreen = m_ui_end_screen_js.EndScreen, Dashboard = m_ui_dashboard_js.Dashboard, appendDashboard = m_ui_localStorage_js.appendDashboard, ensureGestureUnlock = m_ui_sounds_js.ensureGestureUnlock, getSoundPlayer = m_ui_sounds_js.getSoundPlayer, playSound = m_ui_sounds_js.playSound, startFrenzyLoop = m_ui_sounds_js.startFrenzyLoop, stopFrenzyLoopSound = m_ui_sounds_js.stopFrenzyLoopSound, GAME_NAME = m_version_js.GAME_NAME, GAME_VERSION = m_version_js.GAME_VERSION) {
 const MOUNT_SELECTOR = "#draghts-app";
 function main() {
     const hook = document.querySelector("[data-draghts]");
@@ -2908,7 +2991,7 @@ function startGameFromConfig(session) {
     const whiteFirst = Math.random() < 0.5;
     const turn = whiteFirst ? "white" : "purple";
     const base = createGame(session.rules);
-    const state = { ...base, turn };
+    const state = startTurn({ ...base, turn });
     const colour = session.isComputerGame
         ? (Math.random() < 0.5 ? "white" : "purple")
         : null;

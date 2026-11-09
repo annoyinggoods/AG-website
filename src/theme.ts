@@ -1,12 +1,13 @@
-import { prefersReducedMotion, readLocalString, writeLocalString } from "./utils-dom.js";
+import { prefersReducedMotion, readLocalString, removeLocalString, writeLocalString } from "./utils-dom.js";
 const THEME_STORAGE_KEY = "ag-theme";
-const THEME_STORAGE_VERSION = 2;
+const THEME_STORAGE_VERSION = 3;
 const THEME_CROSSFADE_MS = 340;
 const HERO_FORWARD = "hero-web-layer-forward";
 const HERO_RETURN = "hero-web-layer-return";
 type ThemeChoice = "light" | "dark";
+type ThemeMode = ThemeChoice | "system";
 interface ThemeRecord {
-  theme: ThemeChoice;
+  theme: ThemeMode;
   version: number;
 }
 interface MediaQueryListLike {
@@ -19,13 +20,15 @@ interface MediaQueryListLike {
 type ThemeListener = () => void;
 let systemQuery: MediaQueryListLike | null = null;
 let systemListener: ThemeListener | null = null;
+let activeMode: ThemeMode = "system";
 export function initTheme(): void {
   const root = document.documentElement;
-  const saved = readTheme();
-  if (saved) {
-    applyTheme(root, saved, false);
-  } else {
-    applyTheme(root, systemTheme(), false);
+  activeMode = readMode();
+  if (activeMode === "system") {
+    forgetStoredMode();
+  }
+  applyTheme(root, resolveMode(activeMode), false);
+  if (activeMode === "system") {
     watchSystemTheme(root);
   }
   syncThemeControls(root);
@@ -35,42 +38,46 @@ export function initTheme(): void {
 export function currentTheme(root: HTMLElement = document.documentElement): ThemeChoice {
   return root.getAttribute("data-theme") === "light" ? "light" : "dark";
 }
-function readTheme(): ThemeChoice | null {
+export function currentMode(): ThemeMode {
+  return activeMode;
+}
+// The site follows the system setting until the visitor picks a theme. A
+// record written by an older version of the site is not a choice any more,
+// so it is dropped and the system takes over again.
+function readMode(): ThemeMode {
   const raw = readLocalString(THEME_STORAGE_KEY);
   if (!raw) {
-    return null;
+    return "system";
   }
   let parsed: unknown = null;
   try {
     parsed = JSON.parse(raw) as unknown;
   } catch (err) {
     void err;
-    return readLegacyTheme(raw);
-  }
-  if (typeof parsed === "string") {
-    return readLegacyTheme(parsed);
+    return "system";
   }
   if (parsed && typeof parsed === "object") {
     const record = parsed as Partial<ThemeRecord>;
-    if (record.version !== undefined && record.version !== THEME_STORAGE_VERSION) {
-      return null;
-    }
-    if (record.theme === "light" || record.theme === "dark") {
-      return record.theme;
+    if (record.version === THEME_STORAGE_VERSION) {
+      if (record.theme === "light" || record.theme === "dark" || record.theme === "system") {
+        return record.theme;
+      }
     }
   }
-  return null;
+  return "system";
 }
-function readLegacyTheme(raw: string): ThemeChoice | null {
-  const trimmed = raw.trim().replace(/^"|"$/g, "");
-  if (trimmed === "light" || trimmed === "dark") {
-    return trimmed;
-  }
-  return null;
-}
-function saveTheme(theme: ThemeChoice): void {
-  const record: ThemeRecord = { theme: theme, version: THEME_STORAGE_VERSION };
+function saveMode(mode: ThemeMode): void {
+  const record: ThemeRecord = { theme: mode, version: THEME_STORAGE_VERSION };
   writeLocalString(THEME_STORAGE_KEY, JSON.stringify(record));
+}
+function forgetStoredMode(): void {
+  removeLocalString(THEME_STORAGE_KEY);
+}
+function resolveMode(mode: ThemeMode): ThemeChoice {
+  if (mode === "system") {
+    return systemTheme();
+  }
+  return mode;
 }
 function systemTheme(): ThemeChoice {
   if (typeof window.matchMedia !== "function") {
@@ -87,7 +94,7 @@ function watchSystemTheme(root: HTMLElement): void {
   const query = window.matchMedia("(prefers-color-scheme: light)") as unknown as MediaQueryListLike;
   systemQuery = query;
   systemListener = function (): void {
-    if (readTheme()) {
+    if (activeMode !== "system") {
       stopSystemWatch();
       return;
     }
@@ -140,16 +147,20 @@ function syncMetaTheme(theme: ThemeChoice): void {
   });
 }
 function syncThemeControls(root: HTMLElement): void {
-  syncPillButtons(currentTheme(root));
+  syncPillButtons(activeMode);
+  const group = document.querySelector(".menu-theme-pill");
+  if (group instanceof HTMLElement) {
+    group.setAttribute("data-theme-effective", currentTheme(root));
+  }
 }
-function syncPillButtons(theme: ThemeChoice): void {
+function syncPillButtons(mode: ThemeMode): void {
   const pills = document.querySelectorAll("[data-theme-choice]");
   pills.forEach(function (node: Element): void {
     if (!(node instanceof HTMLButtonElement)) {
       return;
     }
     const choice = node.getAttribute("data-theme-choice") || "";
-    node.setAttribute("aria-pressed", choice === theme ? "true" : "false");
+    node.setAttribute("aria-pressed", choice === mode ? "true" : "false");
   });
 }
 function wirePill(root: HTMLElement): void {
@@ -166,26 +177,24 @@ function wirePill(root: HTMLElement): void {
     if (!(node instanceof HTMLButtonElement)) {
       return;
     }
-    const choice = node.getAttribute("data-theme-choice") as ThemeChoice;
+    const choice = node.getAttribute("data-theme-choice") as ThemeMode;
     node.addEventListener("click", function (): void {
-      if (currentTheme(root) !== choice) {
-        applyTheme(root, choice, true);
-        saveTheme(choice);
-        stopSystemWatch();
-      }
+      chooseMode(root, choice);
     });
     node.addEventListener("pointerenter", preloadOnce);
     node.addEventListener("focus", preloadOnce);
   });
 }
-function flipTheme(root: HTMLElement, persist: boolean): void {
-  const current = currentTheme(root);
-  const next: ThemeChoice = current === "dark" ? "light" : "dark";
-  if (persist) {
-    saveTheme(next);
+function chooseMode(root: HTMLElement, mode: ThemeMode): void {
+  activeMode = mode;
+  if (mode === "system") {
+    forgetStoredMode();
+    watchSystemTheme(root);
+  } else {
+    saveMode(mode);
     stopSystemWatch();
   }
-  applyTheme(root, next, true);
+  applyTheme(root, resolveMode(mode), true);
 }
 function swapThemeAssets(root: HTMLElement, theme: ThemeChoice): void {
   void root;
@@ -241,12 +250,17 @@ function wireThemeMessaging(root: HTMLElement): void {
     if (event.key !== THEME_STORAGE_KEY) {
       return;
     }
-    const next = readTheme();
-    if (!next || next === currentTheme(root)) {
+    const mode = readMode();
+    if (mode === activeMode) {
       return;
     }
-    stopSystemWatch();
-    applyTheme(root, next, false);
+    activeMode = mode;
+    if (mode === "system") {
+      watchSystemTheme(root);
+    } else {
+      stopSystemWatch();
+    }
+    applyTheme(root, resolveMode(mode), false);
   });
 }
 function announceTheme(theme: ThemeChoice): void {

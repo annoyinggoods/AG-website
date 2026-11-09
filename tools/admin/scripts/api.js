@@ -96,6 +96,27 @@ export async function fetchTree() {
     const body = await readJson(response);
     return Array.isArray(body.entries) ? body.entries : [];
 }
+export async function fetchPageFragments() {
+    const response = await fetch(HELPER_ROOT + "/page-fragments", { method: "GET" });
+    const body = await readJson(response);
+    return Array.isArray(body.fragments) ? body.fragments : [];
+}
+export async function fetchPageFragment(slug) {
+    const response = await fetch(HELPER_ROOT + "/page-fragment?slug=" + encodeURIComponent(slug), { method: "GET" });
+    const body = await readJson(response);
+    if (!body || !body.fragment) {
+        return null;
+    }
+    return body.fragment;
+}
+export async function savePageFragment(draft) {
+    const response = await fetch(HELPER_ROOT + "/page-fragment/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(draft)
+    });
+    return (await readJson(response));
+}
 export async function fetchEntries(collection) {
     const response = await fetch(HELPER_ROOT + "/entries?collection=" + encodeURIComponent(collection), { method: "GET" });
     const body = await readJson(response);

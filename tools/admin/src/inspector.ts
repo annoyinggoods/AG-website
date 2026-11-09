@@ -2,7 +2,7 @@
 // It previews the built site in an iframe, and every element that carries a
 // data-admin attribute can be inspected and changed.
 
-import { fetchRegistry, readStyle, saveStyle } from "./api.js";
+import { fetchTree, fetchRegistry, readStyle, saveStyle } from "./api.js";
 import { clear, element, query, queryAll, required, setStatus } from "./dom.js";
 import { validateValue } from "./values.js";
 import type { StyleSaveRequest, StyleValues } from "./types.js";
@@ -383,6 +383,66 @@ function currentPage(): string {
   return select ? select.value : "/";
 }
 
+// The page selector of the inspector lists every page of the site, not just
+// the home page, so an element on any page can be inspected.
+async function fillPageSelect(): Promise<void> {
+  const select = required<HTMLSelectElement>("[data-inspector-page]");
+  clear(select);
+  let pages: { path: string; title: string }[] = [];
+  try {
+    pages = await fetchTree();
+  } catch (err) {
+    void err;
+  }
+  const seen = new Set<string>();
+  const ordered: Array<{ path: string; title: string }> = [];
+  const home = pages.find(function (page) { return page.path === "/"; });
+  if (home) {
+    ordered.push(home);
+    seen.add("/");
+  }
+  for (const page of pages) {
+    if (seen.has(page.path)) {
+      continue;
+    }
+    seen.add(page.path);
+    ordered.push(page);
+  }
+  for (const page of ordered) {
+    const option = element("option", "", page.title + " (" + page.path + ")");
+    option.value = page.path;
+    select.appendChild(option);
+  }
+  if (select.options.length === 0) {
+    const option = element("option", "", "Home");
+    option.value = "/";
+    select.appendChild(option);
+  }
+}
+
+// The skip-intro button is only useful on the home page, where the hero
+// weave plays on first load.
+function showSkipIntro(pagePath: string): void {
+  const btn = required<HTMLElement>("[data-inspector-skip-intro]");
+  btn.hidden = pagePath !== "/";
+}
+
+// Mark the intro as done inside the preview and reload it, so the home page
+// shows its post-animation state instead of the weave.
+function skipIntro(): void {
+  const frame = required<HTMLIFrameElement>("[data-inspector-preview]");
+  const win = frame.contentWindow;
+  if (!win) {
+    return;
+  }
+  try {
+    win.localStorage.setItem("ag-hero-intro", JSON.stringify({ version: 1, done: true }));
+  } catch (err) {
+    void err;
+  }
+  frame.src = currentPage();
+}
+
 // The element registry of the built site, so a category the panel does not
 // know is named instead of guessed.
 async function loadRegistry(): Promise<void> {
@@ -411,8 +471,28 @@ async function loadRegistry(): Promise<void> {
 
 export function startInspector(): void {
   const frame = required<HTMLIFrameElement>("[data-inspector-preview]");
+  const select = required<HTMLSelectElement>("[data-inspector-page]");
+  const skipBtn = required<HTMLElement>("[data-inspector-skip-intro]");
+  const reloadBtn = required<HTMLButtonElement>("[data-inspector-reload]");
+
+  function preview(pagePath: string): void {
+    selected = null;
+    const popup = required<HTMLElement>("[data-inspector-popup]");
+    popup.hidden = true;
+    showSkipIntro(pagePath);
+    frame.src = pagePath;
+  }
+
+  select.addEventListener("change", function () {
+    preview(select.value);
+  });
+  reloadBtn.addEventListener("click", function () {
+    preview(currentPage());
+  });
+  skipBtn.addEventListener("click", skipIntro);
   frame.addEventListener("load", onFrameLoad);
   onFrameLoad();
+  void fillPageSelect();
   const fields = required<HTMLElement>("[data-inspector-fields]");
   fields.addEventListener("input", onFieldInput);
   fields.addEventListener("change", onFieldInput);
@@ -427,9 +507,6 @@ export function startInspector(): void {
   required<HTMLButtonElement>("[data-inspector-export]").addEventListener("click", function () {
     exportChange();
     setStatus("The change is ready to copy into the file by hand.", "ok");
-  });
-  required<HTMLButtonElement>("[data-inspector-reload]").addEventListener("click", function () {
-    frame.src = currentPage();
   });
   void loadRegistry();
 }

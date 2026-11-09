@@ -52,7 +52,6 @@
   --title-min: 28rem;
   --grow-px: max(0px, (100vw - 1200px) / 5);
   --main-height: 60vh;
-  --menu-offset: 6rem;
   --dur-transition: 900ms;
   --dur-theme: 300ms;
   --dur-theme-icon: 200ms;
@@ -87,6 +86,7 @@
   --font-body: "Maven Pro Medium", system-ui, sans-serif;
   --font-tiny: "Maven Pro Regular", system-ui, sans-serif;
   --indent-step: 0.9rem;
+  --menu-caret-col: 1.75rem;
   --lens-size: 10vw;
   --lens-max: 1420px;
   --glow-size: 5vw;

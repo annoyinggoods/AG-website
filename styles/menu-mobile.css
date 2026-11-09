@@ -70,6 +70,18 @@
     bottom: 0;
     height: 100%;
   }
+  /* The drawer lies over the page, so its surface has to be opaque. The
+     translucent box tint would let the content underneath bleed through the
+     menu text and the dim state would grey the links out on top of it. */
+  .menu-box.is-detached,
+  .menu-box.is-detached.is-dimmed,
+  .menu-box.is-detached.is-dimmed:hover,
+  .menu-box.is-detached.is-dimmed:focus-within {
+    background: var(--panel);
+  }
+  .menu-box.is-detached.is-dimmed .menu-search {
+    background: var(--panel);
+  }
   .menu-box {
     position: fixed;
     inset-block: 0;

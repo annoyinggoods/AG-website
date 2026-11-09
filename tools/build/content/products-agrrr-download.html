@@ -1,0 +1,31 @@
+<section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
+<h2 class="section-heading" id="download-heading">Download AGrrr!</h2>
+<article class="content-article" data-admin="content:content.css" id="download-free">
+<h3 class="article-heading">Loud, and free — now at release-candidate</h3>
+<p>AGrrr! is free to use, and the Windows build you get here is 0.9.0: the release candidate for version 1 stable. Bugs can happen and development is ongoing, but the underlying code is solid and tested enough that no breaking bugs or compatibility issues with future releases are expected — a site you build on 0.9.0 is a site version 1 opens. The engine, the canvas, the block library, the responsive scaling engine and the deploy are in it and tested; what is still sharpening is style breadth and accessibility polish.</p>
+<p>The build is published to the downloads area, and the row below carries its link, size and SHA-256 checksum. The offline build that carries its whole runtime is planned for a later round.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-checksums">
+<h3 class="article-heading">Builds and checksums</h3>
+<div class="table-scroll"><table class="download-table">
+<thead>
+<tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
+</thead>
+<tbody>
+<tr><th scope="row"><a href="/downloads/0.9.0/AGRr!-Setup-0.9.0.exe" download>AGRr! Setup 0.9.0</a> (release candidate)</th><td>Windows 64-bit</td><td>44.9 MB (47,068,987 bytes)</td><td><code>e072f704a147178d69571ad741e386b189b23265d665653f1f930557eb473373</code></td></tr>
+<tr><th scope="row">AGrrr! offline installer</th><td>Windows 64-bit</td><td>Planned — carries its whole runtime for machines with no network</td><td>—</td></tr>
+</tbody>
+</table></div>
+<p>When the checksum lands, verify the download by hashing the file with SHA-256 and comparing the value above; any operating system can do it, and PowerShell's <code>Get-FileHash</code> does it in one line.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="download-notes">
+<h3 class="article-heading">Before you double-click</h3>
+<ul>
+<li><strong>SmartScreen may introduce itself.</strong> Direct downloads sometimes trigger a Windows SmartScreen notice for unsigned installers — choose "More info", then "Run anyway".</li>
+<li><strong>What it needs:</strong> a 64-bit Windows machine. No account, no online activation, nothing to subscribe to.</li>
+<li><strong>Where your projects go:</strong> in folders you choose on your own disk — page source as plain files, metadata in a local database beside them. Uninstalling the app never deletes them.</li>
+<li><strong>What it phones home:</strong> nothing. The core never makes a network call; the network is used only when you plug in an AI key of your own choosing, or when you deploy to the host you own.</li>
+</ul>
+<p>Never built a website before? The <a href="/products/agrrr/guide/">step-by-step guide</a> walks your first one from install to hosting. The <a href="/products/agrrr/features/">features page</a> shows the twelve features that matter most, the <a href="/products/agrrr/comparison/">comparison page</a> puts AGrrr! next to Lovable, the IONOS Website Builder, WIX and writing the code yourself, and the <a href="/products/agrrr/">product page</a> carries the whole filmed build of <a href="/products/agrrr/step-by-step/ag-website/">the AG website</a>. When something misbehaves, <a href="/contact/report-bug/">the bug form</a> lands it on the workbench — release candidates live on bug reports.</p>
+</article>
+</section>

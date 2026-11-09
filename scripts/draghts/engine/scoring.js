@@ -66,7 +66,7 @@ function victimPoints(state, victim) {
     return earned;
 }
 function carriesQueenBuff(state, victim) {
-    return state.empowerment.activeBuffs.some((buff) => buff.pieceId === victim.id);
+    return state.empowerment.activeBuffs.some((buff) => buff.pieceId === victim.id && !buff.moved);
 }
 function diesInOpenFrenzy(state, victim) {
     return victim.kind === "pawn" && state.empowerment.frenzyOpenPlayers.includes(victim.player);

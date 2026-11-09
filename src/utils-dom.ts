@@ -68,6 +68,15 @@ export function isSameSiteUrl(href: string): boolean {
   }
   return url.origin === window.location.origin;
 }
+const DOWNLOAD_EXTENSIONS = [".exe", ".msi", ".zip", ".7z", ".rar", ".dmg", ".pkg", ".apk", ".tar", ".gz", ".tgz", ".whl", ".iso"];
+
+export function isDownloadHref(href: string): boolean {
+  const path = href.split("#")[0]?.split("?")[0] || "";
+  const lower = path.toLowerCase();
+  return DOWNLOAD_EXTENSIONS.some(function (ext: string): boolean {
+    return lower.endsWith(ext);
+  });
+}
 export function prefersReducedMotion(): boolean {
   if (typeof window.matchMedia !== "function") {
     return false;
@@ -160,6 +169,15 @@ export function writeLocalString(key: string, value: string): void {
     warnStorageOnce(key, err);
     memoryStorage.set(key, value);
   }
+}
+export function removeLocalString(key: string): void {
+  try {
+    window.localStorage.removeItem(key);
+    return;
+  } catch (err) {
+    warnStorageOnce(key, err);
+  }
+  memoryStorage.delete(key);
 }
 export function readLocalJson<T>(key: string): T | null {
   const raw = readLocalString(key);

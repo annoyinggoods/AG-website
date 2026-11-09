@@ -149,7 +149,7 @@ export async function runBallChoreo(): Promise<void> {
   target.style.setProperty("--y", String(start[1]) + "px");
   await delay(120);
 
-  const stages: Array<[number, number]> = [title, main, rest];
+  const stages: Array<[number, number]> = finaleStages(title, main, rest);
   let current = start;
   for (let i = 0; i < stages.length; i += 1) {
     const stage = stages[i];
@@ -317,6 +317,28 @@ function mainSpot(): [number, number] {
     }
   }
   return [window.innerWidth / 2, 160];
+}
+
+// On a phone the main box starts right under the title box, so a landing on
+// the main box drops the ball onto the page title instead of onto a panel.
+// Every landing there stays on top of the title box, and the middle one
+// moves along its edge so the ball still travels.
+function finaleStages(title: [number, number], main: [number, number], rest: [number, number]): Array<[number, number]> {
+  if (!isMobileLayout()) {
+    return [title, main, rest];
+  }
+  return [title, titleSideSpot(title), rest];
+}
+
+function titleSideSpot(title: [number, number]): [number, number] {
+  const box = document.querySelector(".title-box");
+  if (box instanceof HTMLElement) {
+    const rect = box.getBoundingClientRect();
+    if (rect.width > 0) {
+      return [rect.left + ballRadius() + 6, title[1]];
+    }
+  }
+  return title;
 }
 
 function heroTopRightSpot(): [number, number] {

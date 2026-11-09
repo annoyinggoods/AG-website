@@ -13,11 +13,16 @@ declare(strict_types=1);
  *
  * No third-party service is involved. Submissions are validated here, rate
  * limited per IP address, checked for spam without a captcha, and then handed
- * to the studio mailbox. Failures are logged without personal data.
+ * to the studio mailboxes. Failures are logged without personal data.
  */
 
-const MAILBOX = 'bugs@annoyinggoods.com';
-const FEATURE_MAILBOX = 'features@annoyinggoods.com';
+// Both studio addresses receive every message, so a report is never lost
+// when one of them is not watched.
+const MAILBOXES = [
+    'annoying.goods@gmail.com',
+    'marek@annoyinggoods.com',
+];
+const REPLY_TO = 'marek@annoyinggoods.com';
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 3600;
 const MIN_SECONDS_ON_FORM = 3;
@@ -177,8 +182,6 @@ if ($email !== '' && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 $isFeature = isset($values['title']) || isset($values['usecase']);
-$recipient = $isFeature ? FEATURE_MAILBOX : MAILBOX;
-
 $lines = [];
 foreach ($values as $key => $value) {
     if ($key === 'website' || $key === 'form_started_at') {
@@ -194,13 +197,14 @@ $subject = $isFeature
 
 $headers = [];
 $headers[] = 'From: website@annoyinggoods.com';
-$headers[] = 'Reply-To: ' . ($email !== '' ? $email : 'website@annoyinggoods.com');
+$headers[] = 'Reply-To: ' . ($email !== '' ? $email : REPLY_TO);
 $headers[] = 'Content-Type: text/plain; charset=utf-8';
 $headers[] = 'X-Mailer: annoying-goods-endpoint';
 
+// The recipient is a list, so every studio mailbox gets the message.
 $sent = @mail(
-    $recipient,
-    $summary === '' ? 'Annoying Goods message' : $summary,
+    MAILBOXES,
+    $subject,
     $body,
     implode("\r\n", $headers)
 );

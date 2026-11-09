@@ -1,5 +1,6 @@
 import { DIAGONALS, diagonalSteps, forwardStep, inBounds, pieceAt, walkRay } from "./board.js";
 import { kingModeFor } from "./kingmode.js";
+import { uniqueMoves } from "./moveset.js";
 export function quietMovesFor(board, from, piece, context) {
     if (context.buffedPieceIds.includes(piece.id)) {
         return flyingKingQuietMoves(board, from);
@@ -14,7 +15,11 @@ export function quietMovesFor(board, from, piece, context) {
 }
 export function pawnQuietMoves(board, from, piece, context) {
     if (context.frenzyTurn) {
-        return frenzyPawnQuietMoves(board, from);
+        const hops = frenzyPawnQuietMoves(board, from);
+        if (!context.rules.forcedFullSlide) {
+            return hops;
+        }
+        return uniqueMoves([...hops, ...slidePawnQuietMoves(board, from, piece)]);
     }
     if (context.rules.forcedFullSlide) {
         return slidePawnQuietMoves(board, from, piece);

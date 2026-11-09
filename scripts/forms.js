@@ -83,7 +83,7 @@ function messageFor(field) {
     return "Please check this field and try again.";
 }
 function openMailtoFallback(form, status) {
-    const fallback = form.getAttribute("action") || "mailto:spider@annoyinggoods.com";
+    const fallback = form.getAttribute("action") || "mailto:annoying.goods@gmail.com";
     if (!fallback.toLowerCase().startsWith("mailto:")) {
         announce(status, "The form endpoint is not configured yet. Please use the mailto fallback.");
         return;

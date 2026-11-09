@@ -1,10 +1,14 @@
 /* Single responsibility: light/dark theme token overrides, privacy-paper palette. */
 /* Contrast ledger (foreground on panel/stage, WCAG 2.1 text minimums 7:1 body, 4.5:1 secondary):
    Dark: ink #ffffff 18.54, soft #d9d2ee 12.72, muted #a49cc4 7.18, faint #9a92b8 6.34, nav #b7afd4 8.91, nav-dim #8f88ad 5.56, accent #a78bfa 6.81, accent-strong #8b5cf6 4.38 (large/graphic only).
-   Dark surfaces: chip ink 16.50, chip-active ink 12.06, input ink 19.04, soft on stage #150e26 12.83, button ink #0e0817 on accent 7.24.
+   Dark surfaces: chip ink 16.50, chip-active ink 12.06, input ink 19.04, soft on stage #150e26 12.83, button ink #0e0817 on accent 7.24, download chip ink #1c0d02 on #fb923c 8.38, on hover #f97316 6.76.
    Light: ink #191233 17.09, soft #3a3159 11.40, muted #575073 7.18, faint #4f4770 8.14, nav #4d4668 8.40, nav-dim #6a6386 5.37, accent #6d28d9 6.80, accent-strong #5b21b6 8.60.
-   Light surfaces: chip ink 14.69, chip-active ink 11.91, input ink 16.22, soft on stage #ede6fa 9.81, white on accent 7.10, panel on strong 8.60. */
-:root[data-theme="dark"] {
+   Light surfaces: chip ink 14.69, chip-active ink 11.91, input ink 16.22, soft on stage #ede6fa 9.81, white on accent 7.10, panel on strong 8.60, white on download chip #c2410c 5.10, on hover #9a3412 7.31. */
+/* The playground main box is a solid dark box in both themes, so it wears the
+   dark palette in both themes. Without this the light theme left the dark ink
+   on the dark box, and the heading read at 1.10 to 1. */
+:root[data-theme="dark"],
+body[data-layout="playground"] .main-box {
   color-scheme: dark;
   --bg: #0e0817;
   --panel: #161023;
@@ -28,6 +32,9 @@
   --chip: #221a38;
   --chip-active: #3b2d63;
   --chip-ink: #ffffff;
+  --dl-chip: #fb923c;
+  --dl-chip-hover: #f97316;
+  --dl-chip-ink: #1c0d02;
   --input-bg: #120d1f;
   --input-ink: #ffffff;
   --pill: #1a132c;
@@ -62,6 +69,9 @@
   --chip: #ece6fa;
   --chip-active: #d9cdf5;
   --chip-ink: #191233;
+  --dl-chip: #c2410c;
+  --dl-chip-hover: #9a3412;
+  --dl-chip-ink: #ffffff;
   --input-bg: #f6f2ff;
   --input-ink: #191233;
   --pill: #fbf9ff;
@@ -96,6 +106,9 @@
   --chip: #221a38;
   --chip-active: #3b2d63;
   --chip-ink: #ffffff;
+  --dl-chip: #fb923c;
+  --dl-chip-hover: #f97316;
+  --dl-chip-ink: #1c0d02;
   --input-bg: #120d1f;
   --input-ink: #ffffff;
   --pill: #1a132c;
@@ -208,7 +221,7 @@ body {
   box-shadow: var(--shadow-float);
 }
 .theme-pill-segment {
-  flex: 1 1 50%;
+  flex: 1 1 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -218,7 +231,7 @@ body {
   background: transparent;
   color: var(--nav-ink);
   font-family: var(--font-tiny);
-  padding: 0.45rem 0.75rem;
+  padding: 0.45rem 0.5rem;
   min-height: 2.75rem;
   cursor: pointer;
 }
@@ -242,6 +255,12 @@ body {
   stroke: currentColor;
 }
 .theme-pill-segment[aria-pressed="true"] .theme-pill-icon {
+  opacity: 1;
+}
+/* While the site follows the system, the icon of the theme that is showing
+   stays lit, so the visitor sees which theme the system asked for. */
+.menu-theme-pill[data-theme-effective="dark"] [data-theme-choice="dark"] .theme-pill-icon,
+.menu-theme-pill[data-theme-effective="light"] [data-theme-choice="light"] .theme-pill-icon {
   opacity: 1;
 }
 .theme-pill-hint {

@@ -7,7 +7,7 @@
       "home",
       "studio"
     ],
-    "excerpt": "A Spider-Themed Writing Studio Stories caught in a web Annoying Goods is a small writing studio with a horror-comedy heart. We build strange tools for writers, researchers, and role-players. Everythin…"
+    "excerpt": "What we make AGrrr! A desktop website builder with teeth: place ready-made blocks on a live canvas, edit your words, and export ordinary website files you can host yourself. AI is optional, not the st…"
   },
   {
     "title": "About",
@@ -17,7 +17,7 @@
       "studio",
       "about"
     ],
-    "excerpt": "About the Studio About Annoying Goods A spider-themed writing studio with a horror-comedy heart. Read our philosophy, principles, and what-and-why behind local-first writing tools. See what we build"
+    "excerpt": "About the Studio About Annoying Goods A spider-themed studio with a horror-comedy heart. Read our philosophy, principles, and what-and-why behind local-first writing tools. See what we build"
   },
   {
     "title": "Philosophy",
@@ -37,7 +37,7 @@
       "rules",
       "principles"
     ],
-    "excerpt": "Principles Simple, verbose, human-readable Plain HTML, CSS, and TypeScript with no frameworks. Small focused files with one clear job each. Accessibility is not optional: semantic markup, keyboard pat…"
+    "excerpt": "Principles Simple, verbose, human-readable code. Plain HTML, CSS, and TypeScript with no frameworks for web and web-adjacent apps. No show-off complex code for other coding languages. Small focused fi…"
   },
   {
     "title": "What and Why",
@@ -64,9 +64,11 @@
     "parent": "/products/",
     "keywords": [
       "agit",
-      "writing"
+      "writing",
+      "novel",
+      "studio"
     ],
-    "excerpt": "The writing desk that remembers your story AGIT is our flagship writing environment for long projects: novels, series, scripts, essays, research. The draft, the notes, the story bible and the AI help…"
+    "excerpt": "AGIT 1.0.1 for Windows — free, and it stays free. The new icon arrives with the next update. The writing desk that remembers your story By chapter twelve, every writer learns the same lesson: the stor…"
   },
   {
     "title": "Features",
@@ -75,7 +77,7 @@
     "keywords": [
       "features"
     ],
-    "excerpt": "Features AGIT's features span fiction, non-fiction, research, role-play, and more. Pick an area to explore. Fiction Non-Fiction Research Role-Play External Tools Screens The same workspace, four ways…"
+    "excerpt": "Features AGIT is one studio with several temperaments. The same engine wears a different hat depending on what you are writing: a novel, an essay, a research pile, an evening of role-play. Pick an are…"
   },
   {
     "title": "Fiction",
@@ -85,7 +87,7 @@
       "fiction",
       "novel"
     ],
-    "excerpt": "Fiction AGIT helps novelists and short story writers track plots, characters, and drafts in one web. Every scene keeps its own thread, so nothing gets lost in the nest."
+    "excerpt": "Fiction, for the long haul A novel is a promise made in chapter one and kept in chapter thirty. AGIT's fiction mode exists so you stop paying the remembering tax: the compendium holds the characters,…"
   },
   {
     "title": "Non-Fiction",
@@ -95,7 +97,7 @@
       "non-fiction",
       "essay"
     ],
-    "excerpt": "Non-Fiction Essays, guides, and documentation stay structured with outlines, boards, and an editor. AGIT editor view with a structured document"
+    "excerpt": "Non-fiction that keeps its spine Non-fiction does not fail for lack of words — it fails for lack of structure. The argument drifts, the sources scatter, and the draft becomes a swamp with a conclusion…"
   },
   {
     "title": "Research",
@@ -104,7 +106,7 @@
     "keywords": [
       "research"
     ],
-    "excerpt": "Research Collect sources, index them locally, and chart what matters."
+    "excerpt": "Research with a local index Research is where most writing software stops and AGIT keeps going. Every project can carry its own library: documents and scans imported, indexed on your own machine, sear…"
   },
   {
     "title": "Import and Index",
@@ -112,9 +114,12 @@
     "parent": "/products/agit/features/research/",
     "keywords": [
       "import",
-      "index"
+      "index",
+      "ocr",
+      "search",
+      "rag"
     ],
-    "excerpt": "Import and Index Bring in documents and notes, then search them instantly with a local index. AGIT outline view showing imported and indexed documents"
+    "excerpt": "Import and Index Every project carries a library. Drop your sources in — reports, papers, interviews, world notes, the previous book — and AGIT indexes them on your own machine so the whole pile becom…"
   },
   {
     "title": "Compute and Chart",
@@ -125,7 +130,7 @@
       "chart",
       "demo"
     ],
-    "excerpt": "Compute and Chart Run local computations over research data and turn the results into charts. Sample output without JavaScript: 120 words, 8 sentences, top terms spider, web, silk. Sample text statist…"
+    "excerpt": "Compute and Chart Sources are not just for reading — sometimes they are for counting. Word frequencies across a whole manuscript, sentence lengths by chapter, how often each character actually appears…"
   },
   {
     "title": "MCP and External Tools",
@@ -135,7 +140,7 @@
       "mcp",
       "tools"
     ],
-    "excerpt": "MCP and External Tools Connect model context protocol tools and external helpers without sending private work away. AGIT boards view with connected research tools"
+    "excerpt": "MCP and External Tools Sometimes the right helper lives outside the app. The Model Context Protocol (MCP) is an open standard — a shared plug socket, originally opened by Anthropic and now spoken by m…"
   },
   {
     "title": "Automation",
@@ -145,7 +150,7 @@
       "automation",
       "recipes"
     ],
-    "excerpt": "Automation Automate repetitive chores like renaming, tagging, and exporting drafts."
+    "excerpt": "Automation: the chores, scripted Every long project accumulates chores that have nothing to do with writing: chapters renamed to match the new numbering, draft exports refreshed after each session, ch…"
   },
   {
     "title": "Role-Play",
@@ -154,7 +159,7 @@
     "keywords": [
       "role-play"
     ],
-    "excerpt": "Role-Play Interview your own characters before they misbehave in chapter nine."
+    "excerpt": "Role-play, in two flavours Role-play is the same machinery as the chat, aimed differently. Aim it at your book and it becomes a rehearsal room: interview the antagonist, argue with your own protagonis…"
   },
   {
     "title": "Roleplay for Writing",
@@ -164,7 +169,7 @@
       "roleplay",
       "writing"
     ],
-    "excerpt": "Roleplay for Writing Use role-play sessions to test dialogue, motives, and world rules. AGIT chat view with a role-play writing session"
+    "excerpt": "Roleplay for writing The hardest scenes to write are the ones where you are not sure the character would really say it. Rehearsal solves that: put the character in the room, ask the hostile question,…"
   },
   {
     "title": "Roleplay for Fun",
@@ -174,7 +179,7 @@
       "roleplay",
       "fun"
     ],
-    "excerpt": "Roleplay for Fun Let the spider play dungeon master when the manuscript needs a break."
+    "excerpt": "Roleplay for fun Sometimes the writing brain needs the evening off, and the play brain wants the wheel. The fun side of role-play is the same engine with no manuscript attached: set a scene, pick who…"
   },
   {
     "title": "External Tools",
@@ -182,9 +187,14 @@
     "parent": "/products/agit/features/",
     "keywords": [
       "external",
-      "tools"
+      "tools",
+      "api",
+      "ollama",
+      "export",
+      "audiobook",
+      "sync"
     ],
-    "excerpt": "External Tools AGIT plugs into the tools you already trust, keeping your files in plain formats."
+    "excerpt": "External tools: your keys, your models, your formats AGIT is opinionated about one thing and neutral about everything else: your work stays yours. So the doors to the outside world all open from your…"
   },
   {
     "title": "Comparison",
@@ -192,9 +202,15 @@
     "parent": "/products/agit/",
     "keywords": [
       "comparison",
-      "editions"
+      "scrivener",
+      "novelcrafter",
+      "sudowrite",
+      "storystruct",
+      "writingway",
+      "competitors",
+      "alternative"
     ],
-    "excerpt": "Comparison Why AGIT instead of the usual suspects Local first, so your drafts never become someone else's training data. Plain files, so you can leave any time and take the whole web with you. No subs…"
+    "excerpt": "AGIT next to the field Comparisons are usually written by the winner, so here is our attempt at the honest version. We looked closely at five tools people actually use for long-form writing — Scrivene…"
   },
   {
     "title": "Download",
@@ -202,9 +218,24 @@
     "parent": "/products/agit/",
     "keywords": [
       "download",
-      "installer"
+      "installer",
+      "windows",
+      "free"
     ],
-    "excerpt": "Download Get AGIT Desktop builds for writers who like their spiders close. One download page covers every build until a split is requested. Download the installer (535 MB) — AGIT 1.0.1 for Windows 10/…"
+    "excerpt": "The new AGIT icon arrives with the next update; the installer below is the build you can use today. Download AGIT Free, and free to share AGIT is free to use and free to pass to your writing group, un…"
+  },
+  {
+    "title": "License",
+    "path": "/products/agit/license/",
+    "parent": "/products/agit/",
+    "keywords": [
+      "agit",
+      "license",
+      "licence",
+      "free use",
+      "source"
+    ],
+    "excerpt": "License AGIT is free to use, and the source stays with AG AGIT, the writing studio, is free to use under the AG Free Use Licence, which covers every version below 2.0. In plain terms: AGIT costs nothi…"
   },
   {
     "title": "Privacy Policy",
@@ -243,7 +274,103 @@
       "agrrr",
       "drafts"
     ],
-    "excerpt": "Raw drafts with teeth AGrrr! is the studio's tool for the first messy pass of a web page. You throw raw material at a live canvas, and it growls back real HTML, CSS and JavaScript. No account, no uplo…"
+    "excerpt": "What is this? Building a website can be a pain. It can be AGRrr evating. It can really make you go “GRrrr!” AGrrr! is a desktop website builder for people who want to decide how a page looks without h…"
+  },
+  {
+    "title": "Features",
+    "path": "/products/agrrr/features/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "features",
+      "tour",
+      "library",
+      "theming"
+    ],
+    "excerpt": "The twelve that matter Twelve features do the work. Each one below opens with a single plain sentence for anybody who just wants a website, and then says the more technical truth underneath. Ten of th…"
+  },
+  {
+    "title": "Comparison",
+    "path": "/products/agrrr/comparison/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "comparison",
+      "lovable",
+      "ionos",
+      "wix",
+      "website builder",
+      "competitors",
+      "alternative"
+    ],
+    "excerpt": "AGrrr! next to the field Comparisons are usually written by the winner, so here is our attempt at the honest version. The field this time is four other ways to get a website: Lovable , the IONOS Websi…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/agrrr/download/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "download",
+      "installer",
+      "windows",
+      "free"
+    ],
+    "excerpt": "Download AGrrr! Loud, and free — now at release-candidate AGrrr! is free to use, and the Windows build you get here is 0.9.0: the release candidate for version 1 stable. Bugs can happen and developmen…"
+  },
+  {
+    "title": "License",
+    "path": "/products/agrrr/license/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "license",
+      "licence",
+      "closed source",
+      "ethics"
+    ],
+    "excerpt": "License AGrrr! is closed source, free, and ethical AGrrr! is distributed under the Closed Source License with Ethical Restrictions, version 2.0 — the studio's Hippocratic-based licence for a compiled…"
+  },
+  {
+    "title": "App Guide",
+    "path": "/products/agrrr/guide/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "guide",
+      "tutorial",
+      "beginner",
+      "first website",
+      "step by step"
+    ],
+    "excerpt": "Start here: your first website, click by click This guide assumes you have never built a website and want every click spelled out. Nothing here needs code, an account, or money. You need a Windows com…"
+  },
+  {
+    "title": "Step by step",
+    "path": "/products/agrrr/step-by-step/",
+    "parent": "/products/agrrr/",
+    "keywords": [
+      "agrrr",
+      "step by step",
+      "walkthrough",
+      "film",
+      "build session",
+      "showcase"
+    ],
+    "excerpt": "The AG website, built step by step This is the filmed build of the AG website — our home page, composed in AGrrr! from a blank profile. Every step below carries two things: a plain-words walkthrough w…"
+  },
+  {
+    "title": "Finished build",
+    "path": "/products/agrrr/step-by-step/ag-website/",
+    "parent": "/products/agrrr/step-by-step/",
+    "keywords": [
+      "ag website",
+      "finished build",
+      "built with agrrr",
+      "home page",
+      "showcase"
+    ],
+    "excerpt": "Home /* Generated from the element tree. This file is rewritten on every compile. */ *, *::before, *::after { box-sizing: border-box; } body { margin: 0; } a { color: inherit; font: inherit; } @font-f…"
   },
   {
     "title": "AGnosis",
@@ -253,7 +380,31 @@
       "agnosis",
       "memory"
     ],
-    "excerpt": "A hotkey, a parade, and nobody's business The studio's joke that ships: press one hotkey and every open browser minimizes while a fullscreen parade of ASCII ducks claims the screen. All products The l…"
+    "excerpt": "The mark of the studio's least serious product. The parade draws its own duck, in the characters below. What is this? Someone walks in while your browser is open? AGnosis gives you a quick, silly curt…"
+  },
+  {
+    "title": "Download",
+    "path": "/products/agnosis/download/",
+    "parent": "/products/agnosis/",
+    "keywords": [
+      "download",
+      "archive",
+      "ducks"
+    ],
+    "excerpt": "Download Get AGnosis {{agnosis_version}} The installer is the easy road: it asks where to put AGnosis, shows the README during the install, adds a Start-Menu shortcut, and offers to register the login…"
+  },
+  {
+    "title": "License",
+    "path": "/products/agnosis/license/",
+    "parent": "/products/agnosis/",
+    "keywords": [
+      "agnosis",
+      "license",
+      "licence",
+      "open source",
+      "ethics"
+    ],
+    "excerpt": "License AGnosis is open source, with ethics attached AGnosis is free and open-source software under the Open Source License with Ethical Restrictions, version 2.0 — a Hippocratic-based licence. In pla…"
   },
   {
     "title": "AGDevelop",
@@ -263,7 +414,7 @@
       "agdevelop",
       "workbench"
     ],
-    "excerpt": "AGDevelop The studio workbench AGDevelop is planned as the internal toolkit the studio uses to build the other tools: the build that assembles these pages, the menu tree that feeds the navigation, and…"
+    "excerpt": "GDevelop, with your own key AGDevelop is the studio's fork of GDevelop , the full-featured open-source game engine. The fork's one substantial addition is a complete bring-your-own-key implementation…"
   },
   {
     "title": "yAGna",
@@ -291,6 +442,19 @@
     "excerpt": "Download Get yAGna 0.9.0 yAGna ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and…"
   },
   {
+    "title": "License",
+    "path": "/products/yagna/license/",
+    "parent": "/products/yagna/",
+    "keywords": [
+      "yagna",
+      "license",
+      "licence",
+      "open source",
+      "ethics"
+    ],
+    "excerpt": "License yAGna is open source, with ethics attached yAGna is free and open-source software under the Open Source License with Ethical Restrictions, version 2.0 — a Hippocratic-based licence in which th…"
+  },
+  {
     "title": "AGony",
     "path": "/products/agony/",
     "parent": "/products/",
@@ -311,7 +475,7 @@
       "features",
       "tour"
     ],
-    "excerpt": "Features Five things carry the AGony desktop, and each has its own page with a recording of the real thing in motion. The recordings were captured through a real terminal on a real machine — what you…"
+    "excerpt": "Features Five things carry the AGony desktop, and each has its own page. The screenshots were taken from a real terminal on a real machine — what you see is the actual desktop, not an artist's impress…"
   },
   {
     "title": "Command Bar",
@@ -404,8 +568,9 @@
     "keywords": [
       "agony",
       "license",
-      "apache",
-      "credits"
+      "licence",
+      "credits",
+      "ethics"
     ],
     "excerpt": "License AGony is open source, with ethics attached AGony, the desktop environment that lives in a terminal, is free and open-source software under the Annoying Goods Open Source License with Ethical R…"
   },
@@ -444,6 +609,19 @@
     "excerpt": "Download Get nAG {{nag_version}} nAG ships as one small archive with the whole game in it. No installer, no runtime, no setup — unzip it and open index.html in any browser. It works offline, and it ne…"
   },
   {
+    "title": "License",
+    "path": "/products/nAG/license/",
+    "parent": "/products/nAG/",
+    "keywords": [
+      "nag",
+      "license",
+      "licence",
+      "open source",
+      "ethics"
+    ],
+    "excerpt": "License nAG is open source, with ethics attached nAG is free and open-source software under the Open Source License with Ethical Restrictions, version 2.0 — a Hippocratic-based licence. In plain terms…"
+  },
+  {
     "title": "drAGhts",
     "path": "/products/drAGhts/",
     "parent": "/products/",
@@ -464,6 +642,19 @@
       "archive"
     ],
     "excerpt": "Download Get drAGhts {{draghts_version}} drAGhts ships as one small archive with the whole game in it. No installer, no runtime, no setup — unzip it and open index.html in any browser. It works offlin…"
+  },
+  {
+    "title": "License",
+    "path": "/products/drAGhts/license/",
+    "parent": "/products/drAGhts/",
+    "keywords": [
+      "draghts",
+      "license",
+      "licence",
+      "open source",
+      "ethics"
+    ],
+    "excerpt": "License drAGhts is open source, with ethics attached drAGhts is free and open-source software under the Open Source License with Ethical Restrictions, version 2.0 — a Hippocratic-based licence. In pla…"
   },
   {
     "title": "Playground",
@@ -488,42 +679,6 @@
       "draghts"
     ],
     "excerpt": "drAGhts Chaotic checkers with eight toggleable house rules. Play a friend hot-seat or face the computer, right here on this page. End Turn Playground Product page Download"
-  },
-  {
-    "title": "Game Two",
-    "path": "/playground/two/",
-    "parent": "/playground/",
-    "keywords": [
-      "playground",
-      "game",
-      "wasm",
-      "slot-two"
-    ],
-    "excerpt": "Slot Two This slot is reserved for the second small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with no…"
-  },
-  {
-    "title": "Game Three",
-    "path": "/playground/three/",
-    "parent": "/playground/",
-    "keywords": [
-      "playground",
-      "game",
-      "wasm",
-      "slot-three"
-    ],
-    "excerpt": "Slot Three This slot is reserved for the third small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with n…"
-  },
-  {
-    "title": "Game Four",
-    "path": "/playground/four/",
-    "parent": "/playground/",
-    "keywords": [
-      "playground",
-      "game",
-      "wasm",
-      "slot-four"
-    ],
-    "excerpt": "Slot Four This slot is reserved for the fourth small game or tiny WebAssembly experiment. The black stage box below is its home: a solid, fully opaque surface at least 720 pixels wide and tall, with n…"
   },
   {
     "title": "nAG",
@@ -733,7 +888,7 @@
     "keywords": [
       "contact"
     ],
-    "excerpt": "Contact Two ways to reach us Every message is read by a person at the studio. Pick the door that fits your problem and the spider will pick it up. Report a bug Something broke, threw an error, or beha…"
+    "excerpt": "Contact Ways to reach us Every message is read by a person at the studio. Pick the door that fits your problem and the spider will pick it up. Report a bug Something broke, threw an error, or behaved…"
   },
   {
     "title": "Report Bug",
@@ -766,6 +921,18 @@
       "blog"
     ],
     "excerpt": "The test suite is a folder of spec files that open a real browser and drive the real page. There is no test framework, no mock library, and no virtual DOM, and the reason is the same reason the site h…"
+  },
+  {
+    "title": "New layout",
+    "path": "/blog/new-layout/",
+    "parent": "/blog/",
+    "keywords": [
+      "website",
+      "github",
+      "AGRr!",
+      "blog"
+    ],
+    "excerpt": "AG-web-2.0 The original website was written by hand with what AG thought to be clever design and... well, design might have been clever but it was not usable on any screen under 4k or using 16:9 propo…"
   },
   {
     "title": "What the performance budget actually buys",

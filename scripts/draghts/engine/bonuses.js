@@ -20,7 +20,11 @@ export function expireQueenBuffs(empowerment, mover, moveCounter) {
 function armQueenBuff(state, owner, pieceId) {
     const armedTurn = state.moveCounter;
     const others = state.empowerment.activeBuffs.filter((buff) => buff.pieceId !== pieceId);
-    const activeBuffs = [...others, { pieceId, armedTurn, owner }];
+    const activeBuffs = [...others, { pieceId, armedTurn, owner, moved: false }];
+    return { ...state, empowerment: { ...state.empowerment, activeBuffs } };
+}
+export function markBuffMoved(state, pieceId) {
+    const activeBuffs = state.empowerment.activeBuffs.map((buff) => buff.pieceId === pieceId ? { ...buff, moved: true } : buff);
     return { ...state, empowerment: { ...state.empowerment, activeBuffs } };
 }
 //# sourceMappingURL=bonuses.js.map

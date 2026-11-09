@@ -1,5 +1,6 @@
 import { DIAGONALS, diagonalSteps, forwardStep, inBounds, pieceAt, squaresWithPieces, walkRay } from "./board.js";
 import { kingModeFor } from "./kingmode.js";
+import { uniqueMoves } from "./moveset.js";
 export function captureMovesFor(board, from, piece, context) {
     if (context.buffedPieceIds.includes(piece.id)) {
         return flyingKingCaptures(board, from, piece);
@@ -8,13 +9,21 @@ export function captureMovesFor(board, from, piece, context) {
         return pawnCaptures(board, from, piece, context);
     }
     if (kingModeFor(context.rules) === "flying") {
-        return flyingKingCaptures(board, from, piece);
+        const jumps = flyingKingCaptures(board, from, piece);
+        if (!context.rules.forcedFullSlide) {
+            return jumps;
+        }
+        return [...jumps, ...kingReplacementCaptures(board, from, piece)];
     }
     return englishKingCaptures(board, from, piece);
 }
 export function pawnCaptures(board, from, piece, context) {
     if (context.frenzyTurn) {
-        return frenzyPawnCaptures(board, from, piece);
+        const hops = frenzyPawnCaptures(board, from, piece);
+        if (!context.rules.forcedFullSlide) {
+            return hops;
+        }
+        return uniqueMoves([...hops, ...replacementCaptures(board, from, piece)]);
     }
     if (context.rules.forcedFullSlide) {
         return replacementCaptures(board, from, piece);
@@ -45,6 +54,21 @@ export function frenzyPawnCaptures(board, from, piece) {
 export function replacementCaptures(board, from, piece) {
     const moves = [];
     for (const [rowStep, columnStep] of diagonalSteps([forwardStep(piece.player)])) {
+        const walk = walkRay(board, from, rowStep, columnStep);
+        if (walk.blocker === null) {
+            continue;
+        }
+        const blocker = pieceAt(board, walk.blocker);
+        if (blocker === null || blocker.player === piece.player) {
+            continue;
+        }
+        moves.push(captureMove({ from: { ...from }, victim: { ...walk.blocker }, landing: { ...walk.blocker } }));
+    }
+    return moves;
+}
+export function kingReplacementCaptures(board, from, piece) {
+    const moves = [];
+    for (const [rowStep, columnStep] of DIAGONALS) {
         const walk = walkRay(board, from, rowStep, columnStep);
         if (walk.blocker === null) {
             continue;

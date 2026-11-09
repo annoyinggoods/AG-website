@@ -77,7 +77,14 @@ function standaloneCss() {
     // The tokens live on the game container on the site. On its own page
     // the whole document is the game, so they move to the root.
     .replace(/#draghts-app \{/, ":root {")
+    // The rules that style the container itself keep the container as their
+    // selector, because the standalone page keeps that id on its main
+    // element. They are parked under a marker first, so that the scope
+    // stripping below cannot eat the selector and leave a rule with no
+    // selector at all.
+    .replace(/#draghts-app \{/g, "@@draghts-app@@ {")
     .replace(/#draghts-app /g, "")
+    .replace(/@@draghts-app@@ \{/g, "#draghts-app {")
     .replace(/body:has\(#draghts-app\)/, "html");
 
   const pageRules = `

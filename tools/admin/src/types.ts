@@ -7,6 +7,19 @@ export interface TreeEntry {
   parent: string | null;
 }
 
+// A page of the site whose text lives in a content fragment.
+export interface PageFragment {
+  slug: string;
+  path: string;
+  title: string;
+}
+
+// The fragment the panel reads back and writes into.
+export interface PageFragmentDraft {
+  slug: string;
+  html: string;
+}
+
 export interface EntrySummary {
   slug: string;
   title: string;

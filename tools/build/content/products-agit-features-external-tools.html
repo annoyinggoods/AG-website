@@ -1,4 +1,46 @@
-<article class="content-article" data-admin="content:content.css" id="external-tools">
-<h2 class="article-heading">External Tools</h2>
-<p>AGIT plugs into the tools you already trust, keeping your files in plain formats.</p>
+<article class="content-article feature-row" data-admin="content:content.css" id="external-tools">
+<div class="feature-text">
+<h2 class="article-heading">External tools: your keys, your models, your formats</h2>
+<p>AGIT is opinionated about one thing and neutral about everything else: your work stays yours. So the doors to the outside world all open from your side — the AI runs on your API keys or your local models, the sync runs through your own cloud accounts, and the files that leave the app do it in formats every other program can read.</p>
+<p>This page is the map of those doors. Nothing here is required: the studio writes, plans, indexes and exports happily with all of them closed.</p>
+</div>
+<div class="feature-media">
+<figure>
+<img src="/assets/agit/editor.webp" alt="AGIT's editor with the project tree and chat panel, all running locally" width="1680" height="1050" loading="lazy" decoding="async">
+<figcaption>The whole desk runs locally; the outside world connects on your invitation.</figcaption>
+</figure>
+</div>
 </article>
+<section class="content-section" data-admin="content:content.css" id="external-tools-ai" aria-labelledby="external-tools-ai-heading">
+<h2 class="section-heading" id="external-tools-ai-heading">AI providers: bring your own brain</h2>
+<article class="content-article" data-admin="content:content.css" id="external-tools-ai-cloud">
+<h3 class="article-heading">The cloud options</h3>
+<p>AGIT speaks to the big providers through keys you own: OpenAI, Anthropic, OpenRouter, DeepSeek, Google, and any OpenAI-compatible endpoint — which covers the self-hosted gateways, the discount providers and the one your university runs. Keys live encrypted in the app's settings. The bill goes to your account, and the usage tracker shows what each task spent before it becomes a surprise.</p>
+<p>Different jobs can use different models: the strongest one for drafting, a cheap one for summaries and housekeeping, a specialist for the critique pass. You set that per task, not once for the whole app.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="external-tools-ai-local">
+<h3 class="article-heading">The local options</h3>
+<p>Prefer the AI to stay in the building? Run models through Ollama, or import a GGUF model file directly — AGIT registers it, offers it in the pickers, and can index your project with it too. A local model makes the entire loop offline: writing, recall, chat, all of it on a plane, on a train, in a cabin that sells "unplugged" as a feature.</p>
+<p>Cloud models stay switched off until you configure them, and stay off per-task — the app never silently upgrades "offline" to "someone else's datacentre".</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="external-tools-formats" aria-labelledby="external-tools-formats-heading">
+<h2 class="section-heading" id="external-tools-formats-heading">Formats: in and out</h2>
+<article class="content-article" data-admin="content:content.css" id="external-tools-formats-list">
+<h3 class="article-heading">The doors files use</h3>
+<ul>
+<li><strong>In:</strong> DOCX, PDF, EPUB, RTF, Markdown and plain text — with OCR for scans and images, so paper does not get a veto.</li>
+<li><strong>Out:</strong> DOCX for editors, EPUB for storefronts, PDF for committees, HTML and Markdown for the web, TXT for everything else.</li>
+<li><strong>Out loud:</strong> an audiobook exporter turns a draft into spoken audio with local voices, for the commute-revision cycle.</li>
+</ul>
+<p>Exports are plain files in plain formats. No proprietary container, no "export" that turns out to mean a database dump, no hostage-taking. Leaving is a right, not an escape hatch.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="external-tools-sync" aria-labelledby="external-tools-sync-heading">
+<h2 class="section-heading" id="external-tools-sync-heading">Sync and the rest of the sockets</h2>
+<article class="content-article" data-admin="content:content.css" id="external-tools-sync-body">
+<h3 class="article-heading">Your cloud, your terms</h3>
+<p>Backups go where <em>you</em> keep things: Dropbox, Google Drive or OneDrive, through your own accounts, encrypted before anything leaves the machine. AGIT never inserts itself as a middleman for your files, which also means there is no "our servers had an outage" chapter in your writing story.</p>
+<p>The remaining sockets — MCP servers, external helpers, the Python canvas — are described over in the <a href="/products/agit/features/research/">research section</a>, along with the rules that keep them on a leash: you approve what connects, output lands visibly, and nothing grants itself permissions.</p>
+</article>
+</section>

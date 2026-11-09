@@ -1,12 +1,42 @@
-<article class="content-article feature-row" id="mcp-tools">
+<article class="content-article feature-row" data-admin="content:content.css" id="mcp-tools">
 <div class="feature-text">
 <h2 class="article-heading">MCP and External Tools</h2>
-<p>Connect model context protocol tools and external helpers without sending private work away.</p>
+<p>Sometimes the right helper lives outside the app. The Model Context Protocol (MCP) is an open standard — a shared plug socket, originally opened by Anthropic and now spoken by many tools — that lets AGIT hand small, clearly-scoped jobs to outside programs and get answers back.</p>
+<p>The design rule is the one the whole studio runs on: you decide what connects. Tools are approved in Settings, they see the project you point them at, and nothing grants itself new permissions while you are not looking.</p>
 </div>
 <div class="feature-media">
 <figure>
-<img src="assets/agit/boards.webp" alt="AGIT boards view with connected research tools" width="1680" height="1050" loading="lazy">
-<figcaption>AGIT boards view with connected research tools</figcaption>
+<img src="/assets/agit/boards.webp" alt="AGIT's boards panel with a tool output canvas beside story canvases" width="1680" height="1050" loading="lazy" decoding="async">
+<figcaption>External helpers answer onto their own canvas, beside the story's work.</figcaption>
 </figure>
 </div>
 </article>
+<section class="content-section" data-admin="content:content.css" id="mcp-tools-what" aria-labelledby="mcp-tools-what-heading">
+<h2 class="section-heading" id="mcp-tools-what-heading">What MCP is, without the acronyms</h2>
+<article class="content-article" data-admin="content:content.css" id="mcp-tools-what-body">
+<h3 class="article-heading">A plug socket for helpers</h3>
+<p>An MCP server is a small program that offers specific abilities: "search this folder", "read this git history", "look this up in the dictionary service I run". AGIT — and increasingly the rest of the AI world — knows how to talk to anything that offers that socket. You add a server, AGIT lists what it offers, and the AI can call on those abilities when a job matches.</p>
+<p>Practical examples researchers actually use: pointing a file-server at your sources folder so the AI can locate the right document itself; a git server over your manuscript's repository for "what changed since the version my editor saw"; your own translation or lookup service for the specialist terms in your field.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="mcp-tools-boundary" aria-labelledby="mcp-tools-boundary-heading">
+<h2 class="section-heading" id="mcp-tools-boundary-heading">The boundary, stated plainly</h2>
+<article class="content-article" data-admin="content:content.css" id="mcp-tools-boundary-body">
+<h3 class="article-heading">Consent lives with you, not with the model</h3>
+<ul>
+<li><strong>Tools are switched on by you</strong>, in Settings, one server at a time. The AI cannot enable a tool for itself.</li>
+<li><strong>Tool output lands in a dedicated canvas</strong>, visibly — not silently folded into your draft.</li>
+<li><strong>Project scoping holds:</strong> a helper works inside the project you pointed it at. A tool call cannot wander into another project's files by asking nicely.</li>
+<li><strong>Unplugged is the default.</strong> If you never configure a server, AGIT never talks to one. The writing features are complete without any of this.</li>
+</ul>
+<p>The same philosophy covers the other doors: <a href="/products/agit/features/external-tools/">AI providers use your keys</a>, sync uses your own cloud storage, and telemetry starts switched off. AGIT treats "it might phone someone" as a feature you turn on, not a default you turn off.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="mcp-tools-when" aria-labelledby="mcp-tools-when-heading">
+<h2 class="section-heading" id="mcp-tools-when-heading">When you actually need this</h2>
+<article class="content-article" data-admin="content:content.css" id="mcp-tools-when-body">
+<h3 class="article-heading">Honestly? Later, maybe</h3>
+<p>MCP is plumbing, and plumbing is for the day you need it. Most writers never open this panel, and that is fine — it exists for the researcher with a custom index, the worldbuilder with a home-grown wiki, the team that keeps their lore in a git repository. When that day comes, the socket is already on the wall.</p>
+<p>If what you want is automation rather than connection — the same chore every chapter, done by a script — that is the <a href="/products/agit/features/research/automation/">automation page</a>.</p>
+</article>
+</section>

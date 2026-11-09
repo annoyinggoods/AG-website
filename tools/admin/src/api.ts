@@ -11,6 +11,8 @@ import type {
   EntrySummary,
   ExcerptReport,
   HealthReport,
+  PageFragment,
+  PageFragmentDraft,
   RegistryReport,
   SnapshotReport,
   StyleSaveRequest,
@@ -126,6 +128,33 @@ export async function fetchTree(): Promise<TreeEntry[]> {
   const response = await fetch(HELPER_ROOT + "/tree", { method: "GET" });
   const body = await readJson(response);
   return Array.isArray(body.entries) ? (body.entries as TreeEntry[]) : [];
+}
+
+export async function fetchPageFragments(): Promise<PageFragment[]> {
+  const response = await fetch(HELPER_ROOT + "/page-fragments", { method: "GET" });
+  const body = await readJson(response);
+  return Array.isArray(body.fragments) ? (body.fragments as PageFragment[]) : [];
+}
+
+export async function fetchPageFragment(slug: string): Promise<PageFragmentDraft | null> {
+  const response = await fetch(
+    HELPER_ROOT + "/page-fragment?slug=" + encodeURIComponent(slug),
+    { method: "GET" }
+  );
+  const body = await readJson(response);
+  if (!body || !body.fragment) {
+    return null;
+  }
+  return body.fragment as PageFragmentDraft;
+}
+
+export async function savePageFragment(draft: PageFragmentDraft): Promise<ChangeReport> {
+  const response = await fetch(HELPER_ROOT + "/page-fragment/save", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(draft)
+  });
+  return (await readJson(response)) as ChangeReport;
 }
 
 export async function fetchEntries(collection: string): Promise<EntrySummary[]> {

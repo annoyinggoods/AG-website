@@ -1,16 +1,27 @@
-<section class="content-section" data-admin="content:content.css" id="agrrr-drafts" aria-labelledby="agrrr-drafts-heading">
-<h2 class="section-heading" id="agrrr-drafts-heading">Raw drafts with teeth</h2>
-<p>AGrrr! is the studio's tool for the first messy pass of a web page. You throw raw material at a live canvas, and it growls back real HTML, CSS and JavaScript. No account, no upload, no subscription, and no polite little wizard holding your hand.</p>
-<article class="content-article" data-admin="content:content.css" id="agrrr-drafts-itch">
-<h3 class="article-heading">The itch it scratches</h3>
-<p>You have a domain, you have hosting, and you have words that deserve a page to live on. The usual tools split into two camps: design tools that make you design in the abstract, and prompt-box generators that decide the whole page for you and hope you like it.</p>
-<p>AGrrr! refuses both camps. You place things on the page, and the app writes the code. You keep every layout decision, and you never have to learn a framework to make one.</p>
-</article>
-<article class="content-article" data-admin="content:content.css" id="agrrr-drafts-teeth">
-<h3 class="article-heading">Teeth, not a mockup</h3>
-<p>The canvas is a live render, not a sketch. An unstyled box on it is a genuinely empty box, exactly as it will be in a browser, so what you judge is what you ship.</p>
-<p>Every placement compiles into production-ready HTML, CSS and JavaScript, and the compile is deterministic: the same composition produces the same bytes, every single time. What leaves the app is a working site, never a picture of one.</p>
-</article>
+<section class="content-section" data-admin="content:content.css" id="agrrr-what" aria-labelledby="agrrr-what-heading">
+<h2 class="section-heading" id="agrrr-what-heading">What is this?</h2>
+<p>Building a website can be a pain. It can be <strong>AGRrr</strong>evating. It can really make you go</p>
+<h3 class="article-heading">“GRrrr!”</h3>
+<p>AGrrr! is a desktop website builder for people who want to decide how a page looks without hand-writing every line of code. Arrange prepared blocks on a live canvas, edit your content, and export ordinary website files you can host yourself. AI is optional, not the starting point.</p>
+<p>You need to growl no more- we've got you!</p>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agrrr-nontechnical" aria-labelledby="agrrr-nontechnical-heading">
+<h2 class="section-heading" id="agrrr-nontechnical-heading">For the Non-Technical Reader</h2>
+<p>A website is made from files that a browser reads to display pages. A website builder helps you create those files without writing all of the code yourself. In AGrrr!, you place ready-made blocks—such as headers, image rows, buttons, and forms—on a live page, arrange them, and add your own words. The canvas is a real render, not just a sketch.</p>
+<p>When you are happy with the result, AGrrr! exports HTML, CSS, and JavaScript files. Put them on hosting you already have, or deploy them to your host through the app. Projects stay on your computer while you work; no account or AI is required. The block library has more than 1,200 prepared items. If you connect AI, you bring your own provider key, and suggestions wait for your approval.</p>
+<p>AGrrr! is for people who want hands-on control without becoming front-end developers. It is not a prompt-only generator or a full developer IDE. The current Windows build is early, with style breadth and accessibility polish still being improved.</p>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agrrr-technical-mid" aria-labelledby="agrrr-technical-mid-heading">
+<h2 class="section-heading" id="agrrr-technical-mid-heading">A Bit More Technical</h2>
+<p>AGrrr! composes multi-page websites from validated HTML, CSS, and JavaScript blocks on a live-rendering canvas. Its 18-token theme system applies consistent styling across pages. Layouts use viewport units, and the responsive engine proposes behavior for smaller screens; export waits for outstanding decisions to be resolved.</p>
+<p>Compilation produces plain website files plus deployment support files. Supported forms and other server-side features can use generated PHP handlers for ordinary shared hosting, with SQLite locally during authoring. Projects are local. Optional AI uses a user-configured provider, with diff-based suggestions accepted or rejected by the user. Deployment goes to hosting the user owns over FTP or SFTP.</p>
+<p>This is RC (Release Candidate) for version 1 stable. Bugs can happen and development is ongoing, but underlying code is solid and tested enough that no breaking bugs and compatibility issues with future releases are expected.</p>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agrrr-technical-full" aria-labelledby="agrrr-technical-full-heading">
+<h2 class="section-heading" id="agrrr-technical-full-heading">Fully Technical</h2>
+<p>AGrrr! is a Windows desktop visual web composer. Projects consist of page compositions and local metadata. The live canvas renders real web layout while the user places and edits blocks. The searchable library contains 1,200+ pre-validated HTML/CSS/JavaScript records; user-authored content can be saved as library entries. Themes use an 18-token schema with dark/light sets and custom properties. Canvas instrumentation supports viewport measurements; responsive scaling proposals are evaluated element by element and unresolved proposals block export.</p>
+<p>The compiler emits deterministic plain HTML, CSS, and JavaScript, plus <code>.htaccess</code>, <code>robots.txt</code>, 404 page, and handover README. Multi-page navigation is derived from project pages. Supported server-side handlers compile to PHP for shared hosting, with SQLite for local authoring. Consent-banner compile gates defer non-essential scripts until consent.</p>
+<p>AI is optional and uses user-owned keys for supported providers or a local OpenAI-compatible endpoint. Keys remain in the application backend. Reviews produce diffs that require per-change acceptance; AI does not generate the site from scratch or modify work without confirmation. Projects remain local; network access is for configured model calls or explicit deployment to user-owned hosting. AGrrr! is in an early Windows release; style breadth and accessibility polish remain in progress.</p>
 </section>
 <section class="content-section" data-admin="content:content.css" id="agrrr-loop" aria-labelledby="agrrr-loop-heading">
 <h2 class="section-heading" id="agrrr-loop-heading">The loop, tooth to tail</h2>
@@ -19,8 +30,8 @@
 <h3 class="article-heading">One pass, six bites</h3>
 <ol>
 <li>Open a blank page and drag elements onto the canvas. Nest them, resize them, move them. The live render keeps you honest.</li>
-<li>Raid the library: 1,132 pre-written, pre-validated blocks — heroes, forms, timelines, menus, effects — searched offline and dropped in with your own words in the parameters.</li>
-<li>Set the look once with theme tokens, and every page inherits it. Clone a page, spin off subpages, and the site stays consistent without you policing it.</li>
+<li>Raid the library: more than 1,200 pre-written, pre-validated blocks — heroes, forms, timelines, menus, effects — searched offline and dropped in with your own words in the parameters.</li>
+<li>Set the look once with the 18-token theme system, and every page inherits it. Clone a page, spin off subpages, and the site stays consistent without you policing it.</li>
 <li>Look at the code whenever you want. A real code editor sits beside the canvas, and the boundary between what you own and what the canvas owns is explicit, not guessed.</li>
 <li>Go small-screen. The scaling engine proposes how each element should behave on a phone or tablet, you answer each proposal, and the app refuses to export while a decision is still open.</li>
 <li>Export or deploy. Take single files or the whole site, with the delivery files a shared host needs — sitemap, robots, a 404 page — and upload straight to your hosting over FTP or SFTP. The deployed site is the same bytes as the exported one.</li>
@@ -30,6 +41,20 @@
 <h3 class="article-heading">What you throw in, what you get back</h3>
 <p>Throw in typed text, library blocks, or code you paste by hand. Highlight anything you write in the editor and it can be saved into your own library as a first-class block, passing the same validation gate as everything else. Point it at a page you admire and it lifts that page's design tokens into a theme for you.</p>
 <p>You get back real code, plain warnings when something cannot survive the compile, and a handover README that says exactly what the app cannot know about your host — no pretending the receipt is the work.</p>
+</article>
+</section>
+<section class="content-section" data-admin="content:content.css" id="agrrr-showcase" aria-labelledby="agrrr-showcase-heading">
+<h2 class="section-heading" id="agrrr-showcase-heading">Built with AGrrr!: the AG website, on film</h2>
+<div class="chip-row"><a class="button-chip" href="/products/agrrr/step-by-step/">See the whole build, step by step</a></div>
+<p>The AG website — this site's own home page, now living at <a href="/products/agrrr/step-by-step/ag-website/">/products/agrrr/step-by-step/ag-website/</a> as the finished build — was composed in AGrrr! from a blank profile, and the session was filmed step by step. The first two steps are below with their technical captions; <a href="/products/agrrr/step-by-step/">the whole sixteen-step session</a> lives on its own page, where every shot now carries a plain-words walkthrough for first-time builders beside the technical record.</p>
+<article class="content-article" data-admin="content:content.css" id="agrrr-showcase-intro">
+<h3 class="article-heading">A blank slate, the site's own art</h3>
+<p>The session starts from a fresh scratch profile: an empty shell, a first page named Home, and nothing else. The site's real art — the wallpapers, the hero pictures, the AG disc in its glossy circle that is the studio's one logo, the product pictures — is imported through the asset seam, and the page dresses in the site's own 18-token theme. No bridge, no hand-written page underneath: the composition is the owner's blank-slate ruling, placed through the panel and compiled like any other AGrrr! project. New to the tool? The <a href="/products/agrrr/guide/">step-by-step guide</a> walks the same road at walking pace.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agrrr-showcase-gallery">
+<h3 class="article-heading">The session opens: pages and dress code</h3>
+<figure><img src="/assets/showcase/agrrr-01-fresh-welcome.webp" alt="The AGrrr! shell on first run: the welcome screen, the canvas at 100 percent and the project tree with Home, Products, Blog and Contact" width="1600" height="832" loading="lazy" decoding="async"><figcaption>01 — <code>01-fresh-welcome.png</code> — A fresh scratch profile boots the shell and greets the first run with the welcome; the window is brought to the owner's maximised reference viewport over CDP before anything is filmed, the canvas zoom reads 100 percent, the first page is named Home at the route "/" — the site's index — and the three empty pages the reference's tree branches name are created beside it: Products at /products/, Blog at /blog/ and Contact at /contact/, so the gutter's bound tree lists the four branches that exist, the reference's remaining branches (About, Playground, Labs, Words, Support) being pages this build does not have.</figcaption></figure>
+<figure><img src="/assets/showcase/agrrr-02-tokens-and-art.webp" alt="The site's wallpapers, hero pictures and product pictures imported through the asset seam, with the theme panel holding the 18-token vocabulary" width="1600" height="832" loading="lazy" decoding="async"><figcaption>02 — <code>02-tokens-and-art.png</code> — The site's real art — the two wallpapers, the two hero pictures, the AG disc in its glossy circle that is the studio's one logo, and the two product pictures the home page shows — is imported through the asset seam first, then the theme panel takes the site's 18-token vocabulary at the rebuild's own values, Dark added first and default, every value retinted to the light set and Light added carrying it, and the page root is dressed the way the rebuild dresses it with the whole THEME_VARS map authored through the panel's Custom properties — no bridge, because the panel is the surface the map needs.</figcaption></figure>
 </article>
 </section>
 <section class="content-section" data-admin="content:content.css" id="agrrr-growl" aria-labelledby="agrrr-growl-heading">
@@ -48,60 +73,32 @@
 <p>Version history is append-only. Name a version and it is permanent, the newest versions survive any amount of thrashing, and the first snapshot of every session is never discarded. The messy first pass stays reachable until you have tamed it.</p>
 </article>
 </section>
-<section class="content-section" data-admin="content:content.css" id="agrrr-local" aria-labelledby="agrrr-local-heading">
-<h2 class="section-heading" id="agrrr-local-heading">Your work stays yours</h2>
-<p>The studio's core promise, held by every tool we build: your work runs on your own machine and asks nothing of anybody else. AGrrr! keeps it loudly.</p>
-<article class="content-article" data-admin="content:content.css" id="agrrr-local-machine">
-<h3 class="article-heading">Plain files on your own disk</h3>
-<p>AGrrr! is a desktop app for Windows, built as a small native binary that uses your system's own web view instead of shipping a browser inside the installer. Projects live on your disk — page source as plain files, metadata in a local database beside them. Nothing is uploaded, nothing is synced, and no account exists to create.</p>
-<p>The core never makes a network call. The network is used exactly twice, both on your orders: when you point the app at a model you chose, and when you deploy to the hosting you own.</p>
-</article>
-<article class="content-article" data-admin="content:content.css" id="agrrr-local-backend">
-<h3 class="article-heading">It even writes the server side</h3>
-<p>A contact form on a static page is a lie waiting to be discovered, so AGrrr! generates the handler too: PHP that runs on ordinary shared hosting, with forms backed by a database on your host and by SQLite while you work locally. A drag-and-drop consent banner ships with a compile-time gate, so non-essential scripts genuinely wait for the visitor's yes.</p>
-</article>
-<article class="content-article" data-admin="content:content.css" id="agrrr-local-licence">
-<h3 class="article-heading">Free, with rules</h3>
-<p>When it ships, AGrrr! is closed source and free to use, distributed under the Hippocratic License rules. The library of snippets it draws from was cleaned the hard way — every provenance question chased down and recorded — because code you build a site from should be code somebody can account for.</p>
-</article>
-</section>
-<section class="content-section" data-admin="content:content.css" id="agrrr-family" aria-labelledby="agrrr-family-heading">
-<h2 class="section-heading" id="agrrr-family-heading">The loud little sibling</h2>
-<p>AGIT spins the story; AGrrr! spins the web around it. The two are siblings, not rivals, and they share one rule: your work stays on your machine.</p>
-<article class="content-article" data-admin="content:content.css" id="agrrr-family-table">
-<h3 class="article-heading">AGIT and AGrrr! side by side</h3>
-<table>
-<caption>What each sibling is for</caption>
-<thead>
-<tr><th scope="col">Question</th><th scope="col">AGIT</th><th scope="col">AGrrr!</th></tr>
-</thead>
-<tbody>
-<tr><th scope="row">What it is</th><td>The full writing workspace</td><td>A page-builder with teeth</td></tr>
-<tr><th scope="row">Built for</th><td>Fiction, non-fiction, research, role-play</td><td>The messy first pass of a web page</td></tr>
-<tr><th scope="row">Hands you</th><td>Drafts, notes, worlds</td><td>Real HTML, CSS and JavaScript</td></tr>
-<tr><th scope="row">Mood</th><td>The patient big sibling</td><td>The loud one</td></tr>
-</tbody>
-</table>
-<p>Read about <a href="/products/agit/">AGIT</a> when the long work calls, and keep <a href="/products/agnosis/">AGnosis</a> in reach for the moment someone leans over your shoulder. When the draft is done and the world wants a doorway to it, that doorway is AGrrr!'s job.</p>
-</article>
+<section class="content-section" data-admin="content:content.css" id="agrrr-licence" aria-labelledby="agrrr-licence-heading">
+<h2 class="section-heading" id="agrrr-licence-heading">Free, with rules</h2>
+<p>AGrrr! is closed source. It is released under the Annoying Goods Closed Source License with Ethical Restrictions — the app is free to use, the code is not part of the deal. To read the full text visit the <a href="/products/agrrr/license/">licence page</a>. TL;DR: you're free to use the app, you can't see or modify the code, all you make with it is yours, all underlying code has been verified to the best of authors' capability to be either public domain, MIT or created by AG team and therefore can be freely used in both private and commercial websites built with AGRr!.</p>
 </section>
 <section class="content-section" data-admin="content:content.css" id="agrrr-audience" aria-labelledby="agrrr-audience-heading">
 <h2 class="section-heading" id="agrrr-audience-heading">Who it is for</h2>
 <article class="content-article" data-admin="content:content.css" id="agrrr-audience-fit">
 <h3 class="article-heading">You, probably, if this stung a little</h3>
-<p>You already have a domain and hosting, you want a presentable page, and you do not want to design in the abstract or be told what to build by a prompt box. You would rather place a block, see it render, and get on with your life.</p>
+<p>You already have a domain and hosting, you want a presentable page, and you do not want to design in the abstract or be told what to build by a prompt box. You would rather place a block, see it render, and get on with your life. If you have never built anything at all, start with the <a href="/products/agrrr/guide/">step-by-step guide</a> instead of this page — it assumes nothing.</p>
 <p>It is not a developer IDE, and it is not a generator that takes your sentence and runs. If you want either of those, the world is already full of them.</p>
 </article>
 </section>
 <section class="content-section" data-admin="content:content.css" id="agrrr-status" aria-labelledby="agrrr-status-heading">
 <h2 class="section-heading" id="agrrr-status-heading">Where it stands</h2>
 <article class="content-article" data-admin="content:content.css" id="agrrr-status-forge">
-<h3 class="article-heading">In the forge, and far along in it</h3>
-<p>AGrrr! is not released yet, and this page will not pretend otherwise. The engine, the canvas, the snippet library, the code editor, the optional model layer, theming, multi-page, import, the responsive scaling engine and the PHP backend with deployment are built and tested — hundreds of automated tests across the app and its backend hold the pieces together.</p>
-<p>What remains is the last stretch: style breadth, accessibility polish, and the installers. Windows comes first, with a small online installer and an offline one that carries its whole runtime for machines with no network at all.</p>
+<h3 class="article-heading">The release candidate for version 1</h3>
+<p>The Windows build you can <a href="/products/agrrr/download/">download</a> today is 0.9.0 — the release candidate for version 1 stable. Bugs can happen and development is ongoing, but the underlying code is solid and tested enough that no breaking bugs or compatibility issues with future releases are expected: a site you build on 0.9.0 is a site version 1 opens.</p>
+<p>The engine, the canvas, the snippet library, the code editor, the optional model layer, theming, multi-page, import, the responsive scaling engine and the PHP backend with deployment are built and tested — thousands of automated tests across the app and its backend hold the pieces together, and the full surface sweep runs green against the packaged build. What remains is the last stretch: style breadth and accessibility polish.</p>
 <p>Want a say in what the growl sounds like? Send a <a href="/contact/request-feature/">feature request</a> — requests are read before the tool ships, and the loudest ones get answers. Watch the <a href="/labs/">Labs page</a> for build news as it moves.</p>
 </article>
 <div class="chip-row">
+<a class="chip" href="/products/agrrr/guide/">App Guide</a>
+<a class="chip" href="/products/agrrr/features/">AGrrr! features</a>
+<a class="chip" href="/products/agrrr/comparison/">AGrrr! compared</a>
+<a class="chip" href="/products/agrrr/download/">Download AGrrr!</a>
+<a class="chip" href="/products/agrrr/step-by-step/ag-website/">The finished build</a>
 <a class="chip" href="/products/agit/">AGIT</a>
 <a class="chip" href="/products/agnosis/">AGnosis</a>
 <a class="chip" href="/labs/">Labs</a>

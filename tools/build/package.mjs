@@ -11,7 +11,15 @@ const ROOT = path.resolve(SCRIPT_DIR, "..", "..");
 const outArgument = readOutArgument();
 const DIST_DIR = outArgument ? path.resolve(ROOT, outArgument) : path.join(ROOT, "dist");
 
-const PAGE_DIRS = ["about", "blog", "contact", "labs", "products", "support", "words"];
+// The top-level page directories are read from the menu tree rather than listed
+// by hand: the list was hardcoded once, a new top-level page joined the tree,
+// and its pages answered 404 on the packaged release while the live build was
+// fine. The tree is the single source for nav, search and the sitemap; it is
+// the single source for packaging too.
+const MENU_TREE = JSON.parse(fs.readFileSync(path.join(ROOT, "tools", "menu.tree.json"), "utf8"));
+const PAGE_DIRS = MENU_TREE.pages
+    .map((node) => node.path === "/" ? null : node.path.replace(/^\/+/, "").replace(/\/+$/, ""))
+    .filter((dirName) => dirName !== null && dirName.length > 0);
 const ROOT_FILES = ["index.html", "404.html", "robots.txt", "sitemap.xml", "search-index.json", ".htaccess", "release.json"];
 const ASSET_DIRS = ["assets", "styles", "scripts"];
 const API_DIR = "api";

@@ -1,0 +1,21 @@
+/* Single responsibility: the AGnosis page — the ASCII duck the parade draws.
+   The art needs a monospace grid, because the duck is a grid of characters
+   and a proportional font would pull it apart. The mark of the product uses
+   the app-mark component of the content stylesheet. */
+
+/* The duck itself, in the characters the parade draws it in. */
+.ascii-duck {
+  margin: 0;
+  padding: 1rem;
+  overflow-x: auto;
+  border-radius: var(--radius-box);
+  background: #0c0c10;
+  color: #ffdc50;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, "DejaVu Sans Mono", "Liberation Mono", monospace;
+  font-size: 0.6rem;
+  line-height: 1.05;
+  letter-spacing: 0.04em;
+  text-align: left;
+  white-space: pre;
+  tab-size: 2;
+}

@@ -5,6 +5,7 @@ import { helperIsRunning } from "./api.js";
 import { query, queryAll, setStatus } from "./dom.js";
 import { readBuildState, showBuildState } from "./build-state.js";
 import { startEditor } from "./editor.js";
+import { startPageText } from "./page-text.js";
 import { startDeploy } from "./deploy.js";
 import { startInspector } from "./inspector.js";
 import { allowDisconnect, startServerControl } from "./server-control.js";
@@ -88,6 +89,7 @@ async function start(): Promise<void> {
   startTabs();
   showView("inspector");
   startInspector();
+  startPageText();
   startDeploy();
   startServerControl();
   await startEditor();
