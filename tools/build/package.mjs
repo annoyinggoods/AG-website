@@ -195,16 +195,6 @@ if (fs.existsSync(wasmPkgSource)) {
     skipped.push(path.join(WASM_DIR, WASM_PKG_DIR));
 }
 
-// The AGnosis playground's wasm: a staged static asset of its own folder,
-// copied the same way. The folder is only there when the sibling project's
-// bundle was staged, so a missing folder is a note, not a failure.
-const wasmAgnosisSource = path.join(ROOT, WASM_DIR, "agnosis");
-if (fs.existsSync(wasmAgnosisSource)) {
-    copyTree(wasmAgnosisSource, path.join(DIST_DIR, WASM_DIR, "agnosis"), EXCLUDED_WASM_NAMES);
-} else {
-    skipped.push(path.join(WASM_DIR, "agnosis"));
-}
-
 for (const fileName of ROOT_FILES) {
     copyRootFile(fileName);
 }

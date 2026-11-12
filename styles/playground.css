@@ -1,6 +1,5 @@
-/* Single responsibility: the playground layout — a horizontal top menu above a
-   small resting ball that sits on a full-width solid dark main box, and no
-   animations anywhere except inside the menu. */
+/* Single responsibility: the playground layout — hero and menu on the left, the
+   title box on the right above a solid dark main box, and no animations at all. */
 
 /* The playground stage drops the glass surface, because a solid dark box has
    no glass in it. The glass surface also carried the stacking order, so the
@@ -9,25 +8,12 @@
 body[data-layout="playground"] .stage {
   position: relative;
   z-index: var(--z-glass);
-  /* The game is the page: the box takes the whole page width with a 5% margin
-     on every side, stacked menu / band / box / footer. */
-  width: 90%;
-  max-width: none;
-  grid-template-areas: "menu" "hero" "main" "footer";
-  grid-template-columns: minmax(0, 1fr);
 }
 
-/* The band above the box is exactly the ball's height: the resting ball's
-   bottom edge lands on the main box's top edge and the band is its top
-   padding. The title box shares the band at the right end. */
-body[data-layout="playground"] .stage-header {
-  grid-template-columns: minmax(0, auto) minmax(0, 1fr);
-}
 body[data-layout="playground"] .stage-header > .hero-strip {
   grid-column: 1;
   grid-row: 1;
-  height: var(--ball-size);
-  align-self: end;
+  align-self: start;
 }
 body[data-layout="playground"] .stage-header > .title-box {
   grid-column: 2;
@@ -36,18 +22,7 @@ body[data-layout="playground"] .stage-header > .title-box {
   justify-self: end;
   margin-top: 0;
 }
-/* The ball is sized exactly like the jumping ball: a square --ball-size box
-   with the disc contained in it, anchored to the bottom so it rests on the
-   box below. */
-body[data-layout="playground"] .hero-strip .hero-fallback {
-  display: block;
-  width: var(--ball-size);
-  height: var(--ball-size);
-  max-height: none;
-  object-fit: contain;
-  object-position: left bottom;
-}
-
+body[data-layout="playground"] .stage > .menu-box,
 body[data-layout="playground"] .stage > .main-box {
   margin-top: 0;
 }
@@ -59,27 +34,27 @@ body[data-layout="playground"] .main-box {
   min-width: min(45rem, 100%);
   min-height: 45rem;
 }
-
-/* Every animation on the page stays dead except inside the top menu, whose
-   drawers unroll with a pop bounce. The :not() chain carves the menu subtree
-   out of the kill switch. */
-body[data-layout="playground"] :not(.menu-top):not(.menu-top *),
-body[data-layout="playground"] :not(.menu-top):not(.menu-top *)::before,
-body[data-layout="playground"] :not(.menu-top):not(.menu-top *)::after {
+body[data-layout="playground"] .hero-strip .hero-fallback {
+  max-height: 100%;
+  object-fit: contain;
+  object-position: left top;
+}
+body[data-layout="playground"] *,
+body[data-layout="playground"] *::before,
+body[data-layout="playground"] *::after {
   animation: none !important;
   transition: none !important;
 }
 @media (max-width: 56rem) {
-  body[data-layout="playground"] .stage {
-    grid-template-areas: "menu" "hero" "main" "footer";
-  }
   body[data-layout="playground"] .stage-header > .hero-strip {
     grid-column: 1 / -1;
     grid-row: 1;
   }
   body[data-layout="playground"] .stage-header > .title-box {
-    grid-column: 2;
-    grid-row: 1;
+    grid-column: 1 / -1;
+    grid-row: 2;
+    align-self: start;
+    justify-self: stretch;
   }
   body[data-layout="playground"] .main-box {
     min-width: 0;

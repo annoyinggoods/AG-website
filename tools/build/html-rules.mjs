@@ -14,23 +14,16 @@ const REQUIRED_HOOKS = [
   { label: "the skip link is the first link", pattern: /<a[^>]*class="skip-link"[^>]*href="#main-content"/ },
   { label: "the main box is marked", pattern: /<main[^>]*id="main-content"[^>]*data-main-box/ },
   { label: "the menu is marked", pattern: /<nav[^>]*data-menu\b/ },
-  { label: "the menu tree is marked", pattern: /data-menu(-top)?-tree/ },
+  { label: "the menu tree is marked", pattern: /data-menu-tree/ },
+  { label: "the menu search is marked", pattern: /data-menu-search\b/ },
+  { label: "the menu search results are marked", pattern: /data-menu-results/ },
+  { label: "the menu search status is marked", pattern: /data-menu-search-status/ },
   { label: "the cookie notice is marked", pattern: /data-cookie-banner/ },
   { label: "the lens is marked", pattern: /data-lens/ },
   { label: "the glow is marked", pattern: /data-glow/ },
   { label: "the lightbox is marked", pattern: /data-lightbox/ },
   { label: "the entry reader status is marked", pattern: /data-entry-status/ }
 ];
-
-// The sidebar-only hooks. The playground layout's top menu has no search box
-// by design, so the search markers are only required on the sidebar layout.
-const SIDEBAR_HOOKS = [
-  { label: "the menu search is marked", pattern: /data-menu-search\b/ },
-  { label: "the menu search results are marked", pattern: /data-menu-results/ },
-  { label: "the menu search status is marked", pattern: /data-menu-search-status/ }
-];
-
-const PLAYGROUND_BODY = /<body[^>]*data-layout="playground"/;
 
 function stripScriptsAndStyles(html) {
   return String(html)
@@ -111,9 +104,8 @@ export function validatePageHtml(html, pagePath) {
       break;
     }
   }
-  const hooks = PLAYGROUND_BODY.test(html) ? REQUIRED_HOOKS : REQUIRED_HOOKS.concat(SIDEBAR_HOOKS);
-  for (let i = 0; i < hooks.length; i += 1) {
-    const hook = hooks[i];
+  for (let i = 0; i < REQUIRED_HOOKS.length; i += 1) {
+    const hook = REQUIRED_HOOKS[i];
     if (!hook.pattern.test(html)) {
       errors.push("the page " + pagePath + " is missing " + hook.label);
     }

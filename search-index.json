@@ -7,7 +7,7 @@
       "home",
       "studio"
     ],
-    "excerpt": "Check out our products! AGrrr! A desktop website builder with teeth: place ready-made blocks on a live canvas, edit your words, and export ordinary website files you can host yourself. AI is optional,…"
+    "excerpt": "What we make AGrrr! A desktop website builder with teeth: place ready-made blocks on a live canvas, edit your words, and export ordinary website files you can host yourself. AI is optional, not the st…"
   },
   {
     "title": "About",
@@ -68,7 +68,7 @@
       "novel",
       "studio"
     ],
-    "excerpt": "AGIT 1.0.1 for Windows — free, and it stays free. This build ships the new icon and the branded installer wizard. The writing desk that remembers your story By chapter twelve, every writer learns the…"
+    "excerpt": "AGIT 1.0.1 for Windows — free, and it stays free. The new icon arrives with the next update. The writing desk that remembers your story By chapter twelve, every writer learns the same lesson: the stor…"
   },
   {
     "title": "Features",
@@ -222,7 +222,7 @@
       "windows",
       "free"
     ],
-    "excerpt": "The new AGIT icon ships in this build; the installer below is the build you can use today. Download AGIT Free, and free to share AGIT is free to use and free to pass to your writing group, under the A…"
+    "excerpt": "The new AGIT icon arrives with the next update; the installer below is the build you can use today. Download AGIT Free, and free to share AGIT is free to use and free to pass to your writing group, un…"
   },
   {
     "title": "License",
@@ -316,7 +316,7 @@
       "windows",
       "free"
     ],
-    "excerpt": "Download AGrrr! Loud, and free — now at release-candidate AGrrr! is free to use, and the Windows build you get here is {{agrrr_version}}: the release candidate for version 1 stable. Bugs can happen an…"
+    "excerpt": "Download AGrrr! Loud, and free — now at release-candidate AGrrr! is free to use, and the Windows build you get here is 0.9.0: the release candidate for version 1 stable. Bugs can happen and developmen…"
   },
   {
     "title": "License",
@@ -407,58 +407,6 @@
     "excerpt": "License AGnosis is open source, with ethics attached AGnosis is free and open-source software under the Open Source License with Ethical Restrictions, version 2.0 — a Hippocratic-based licence. In pla…"
   },
   {
-    "title": "Help",
-    "path": "/products/agnosis/help/",
-    "parent": "/products/agnosis/",
-    "keywords": [
-      "help",
-      "guide",
-      "how to",
-      "faq",
-      "readme"
-    ],
-    "excerpt": "AGnosis help AGnosis runs two ways, and each has its own short guide. Pick yours: the browser version runs right here on the site with nothing to install, and the desktop app puts a hotkey on your mac…"
-  },
-  {
-    "title": "In the browser",
-    "path": "/products/agnosis/help/inbrowser/",
-    "parent": "/products/agnosis/help/",
-    "keywords": [
-      "browser",
-      "playground",
-      "wasm",
-      "editor",
-      "how to"
-    ],
-    "excerpt": "AGnosis in the browser — the short guide This page is for the browser version of AGnosis — the parade and the duck editor that run on the playground page with nothing to install. If you want the deskt…"
-  },
-  {
-    "title": "On the desktop",
-    "path": "/products/agnosis/help/desktop/",
-    "parent": "/products/agnosis/help/",
-    "keywords": [
-      "windows",
-      "macos",
-      "linux",
-      "hotkey",
-      "install",
-      "faq"
-    ],
-    "excerpt": "AGnosis on the desktop — how to run it and use it This page is for the desktop app : the hotkey that minimizes your browsers and fills the screen with ducks. It covers Windows, macOS and Linux — insta…"
-  },
-  {
-    "title": "The read-me",
-    "path": "/products/agnosis/help/readme/",
-    "parent": "/products/agnosis/help/",
-    "keywords": [
-      "readme",
-      "commands",
-      "config",
-      "reference"
-    ],
-    "excerpt": "The AGnosis read-me The full README, exactly as the desktop app ships it — the same document its F1 help window shows. It covers every command, every configuration key, the balloon pipeline, the edito…"
-  },
-  {
     "title": "AGDevelop",
     "path": "/products/agdevelop/",
     "parent": "/products/",
@@ -491,7 +439,7 @@
       "archive",
       "mcp"
     ],
-    "excerpt": "Download Get yAGna {{yagna_version}} yAGna ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — u…"
+    "excerpt": "Download Get yAGna 0.9.0 yAGna ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and…"
   },
   {
     "title": "License",
@@ -611,7 +559,7 @@
       "archive",
       "checksum"
     ],
-    "excerpt": "Download Get AGony {{agony_version}} AGony ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — u…"
+    "excerpt": "Download Get AGony 0.9.0 AGony ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and…"
   },
   {
     "title": "License",
@@ -743,19 +691,6 @@
       "nag"
     ],
     "excerpt": "nAG A reverse-order memory game. Scout the shuffled board, then replay the whole order in one perfect run. Six levels, from four-by-four pairs up to a memorised twenty-five card order, and every mista…"
-  },
-  {
-    "title": "AGnosis",
-    "path": "/playground/agnosis/",
-    "parent": "/playground/",
-    "keywords": [
-      "playground",
-      "ducks",
-      "parade",
-      "agnosis",
-      "wasm"
-    ],
-    "excerpt": "AGnosis One hotkey on your desktop and every open browser minimizes behind a fullscreen ASCII duck parade. This is that same parade, right here on the page: the simulation core runs in your browser as…"
   },
   {
     "title": "Labs",

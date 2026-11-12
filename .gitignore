@@ -153,5 +153,3 @@ blob-report/
 # The staging folder for the downloadable game; rebuilt by the build
 /standalone
 /REVIEW/tests/screenshots
-/REVIEW/tests/screenshots
-/REVIEW/tests/screenshots

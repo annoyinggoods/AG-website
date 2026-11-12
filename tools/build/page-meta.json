@@ -219,11 +219,6 @@
     "description": "nAG is a reverse-order memory game: scout the shuffled board, then replay the whole order in one perfect run. Play it online or download it to play offline.",
     "layout": "playground"
   },
-  "/playground/agnosis/": {
-    "title": "Play the AGnosis parade — Annoying Goods",
-    "description": "The AGnosis duck parade in your browser: poke the ducks, bring your own art, and export the parade as a self-contained HTML page or a GIF, right on the page.",
-    "layout": "playground"
-  },
   "/products/nAG/": {
     "title": "nAG, the memory game that nags you — Annoying Goods",
     "description": "Get nAG, the reverse-order memory game: scout the board, then replay the whole order in one perfect run. A small archive that plays offline in any browser."
@@ -258,7 +253,7 @@
   },
   "/products/agony/download/": {
     "title": "AGony Download — Annoying Goods",
-    "description": "Download AGony {{agony_version}}: the Windows archive with its SHA-256 checksum, the two free prerequisites (the rmux engine and carapace), and honest platform notes."
+    "description": "Download AGony 0.9.0: the Windows archive with size and SHA-256 checksum, the two free prerequisites (the rmux engine and carapace), and honest platform notes."
   },
   "/products/agony/license/": {
     "title": "AGony License — Annoying Goods",
@@ -278,7 +273,7 @@
   },
   "/products/yagna/download/": {
     "title": "Download yAGna — Annoying Goods",
-    "description": "Download yAGna {{yagna_version}}: the Windows archive with its SHA-256 checksum, the two-line MCP config that gives your agent the catalog, and the honest sweep pace."
+    "description": "Download yAGna 0.9.0: the Windows archive with its SHA-256 checksum, the two-line MCP config that gives your agent the catalog, and the honest sweep pace."
   },
   "/products/agnosis/download/": {
     "title": "Download AGnosis — Annoying Goods",
@@ -307,21 +302,5 @@
   "/products/drAGhts/license/": {
     "title": "drAGhts License — Annoying Goods",
     "description": "drAGhts is open source under the Open Source License with Ethical Restrictions: use, change, share, keep the licence and the ethics with it. Full text inside."
-  },
-  "/products/agnosis/help/": {
-    "title": "AGnosis Help — Annoying Goods",
-    "description": "AGnosis help, both ways: the short guide for the browser parade on the playground page, the full desktop guide for the hotkey app, and the complete read-me."
-  },
-  "/products/agnosis/help/inbrowser/": {
-    "title": "AGnosis in the browser — how to use it — Annoying Goods",
-    "description": "The browser AGnosis, step by step: start the parade on the playground page, poke a duck, draw your own in the editor, and take the art with you as a download."
-  },
-  "/products/agnosis/help/desktop/": {
-    "title": "AGnosis on the desktop — how to use it — Annoying Goods",
-    "description": "Install the AGnosis desktop app on Windows, macOS and Linux, press the hotkey, learn every key, draw ducks and tune the parade. Privacy questions answered too."
-  },
-  "/products/agnosis/help/readme/": {
-    "title": "The AGnosis read-me — Annoying Goods",
-    "description": "The full AGnosis README — the document the desktop app's F1 window shows: every command, every config key, every editor mode, the exports and the caveats."
   }
 }

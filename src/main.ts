@@ -4,7 +4,6 @@ import { initMenuTree } from "./menu-tree.js";
 import { initMenuSearch } from "./menu-search.js";
 import { initMenuDim } from "./menu-dim.js";
 import { initMenuBubble } from "./menu-bubble.js";
-import { initPlaygroundMenu } from "./playground-menu.js";
 import { initTransitions } from "./transitions.js";
 import { initLens } from "./lens.js";
 import { initGlow } from "./glow.js";
@@ -34,7 +33,6 @@ const MODULES: Array<{ name: string; init: InitFn }> = [
   { name: "menu-search", init: initMenuSearch },
   { name: "menu-dim", init: initMenuDim },
   { name: "menu-bubble", init: initMenuBubble },
-  { name: "playground-menu", init: initPlaygroundMenu },
   { name: "transitions", init: initTransitions },
   { name: "lens", init: initLens },
   { name: "glow", init: initGlow },
