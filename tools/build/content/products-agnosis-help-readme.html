@@ -1,0 +1,442 @@
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-readme" aria-labelledby="agnosis-help-readme-heading">
+<h2 class="section-heading" id="agnosis-help-readme-heading">The AGnosis read-me</h2>
+<p>The full README, exactly as the desktop app ships it — the same document its <code>F1</code> help window shows. It covers every command, every configuration key, the balloon pipeline, the editor's every mode, the exports and the platform caveats. For a shorter start, read the <a href="/products/agnosis/help/inbrowser/">in-browser guide</a> or the <a href="/products/agnosis/help/desktop/">desktop guide</a>.</p>
+<article class="content-article agnosis-readme" data-admin="content:content.css" id="agnosis-help-readme-body">
+<h3>ABOUT</h3>
+<p><code>agnosis</code> hides your browser behind a fullscreen ASCII duck parade. It ships two ways: a <strong>Windows installer</strong> that sets everything up for you (install folder, Start-Menu shortcut, login autostart, daemon running), and a <strong>single portable exe</strong> you can run from anywhere with no install at all.</p>
+<p>The <strong>daemon</strong> is the resident half: it owns the global hotkey, and pressing that hotkey minimizes every open browser window and opens the parade. The <strong>parade itself</strong> — and everything you make for it — needs no daemon: the editor, the balloon folders and the exporters all work from a bare exe.</p>
+<p>When the hotkey fires, every open browser window is <strong>minimized</strong>, and a borderless fullscreen window takes over the display: a band of grass, 11 ducks marching right-to-left led by two large ones, and balloons trailing behind on simulated wobbling ropes.</p>
+<p>It is the old Windows XP &quot;hide your browser behind a fake hacker terminal&quot; joke, with one difference that matters: <strong>nothing is ever closed</strong>. The browsers are only minimized, so no tab, no form and no unsaved work is ever lost — and by default they <strong>stay</strong> minimized when the parade ends, because a browser that pops back up is exactly the &quot;parent walked in on you&quot; moment the joke is built on. (You can turn the automatic restore on if you would rather have your window state back — see HOW TO USE point 1.)</p>
+<p>The parade is yours to make: drop a picture in to turn it into a balloon, or draw your own duck in the built-in editor.</p>
+<h3>FEATURES SUMMARY</h3>
+<p>i. The app <strong>minimizes</strong> all open browsers when the parade starts, but they <strong>remain running</strong> — see HOW TO USE point 1 to change what happens when the parade ends. <strong>NO WORK IS LOST AS A RESULT: this is minimize only, nothing is ever closed.</strong> ii. A fullscreen ASCII duck parade: a band of grass, 11 ducks led by two big ones, balloons on ropes, and an on-screen exit hint. iii. <strong>Any picture becomes a balloon</strong> — drop it in the balloons folder, or type its name on the parade's input line. iv. <strong>Draw your own</strong> duck or balloon in the built-in editor — <strong><code>F2</code> opens it straight from the parade</strong> — and save it. v. <strong>Point any parade slot at your own art</strong> — the two big ducks, the nine small ducks and the five balloons. vi. A <strong>global hotkey</strong> on Windows, Linux and macOS, plus a <strong>menu-bar trigger</strong> on macOS that needs no privacy grant. vii. <strong>One config file</strong> (<code>config.toml</code>) for everything, with a repair pass that keeps it valid and writes the fixes back. viii. A <strong>headless PNG renderer</strong> (<code>agnosis selftest</code>) for scripting, for previews and for the release gate. ix. A <strong>live config reload</strong>: edit <code>config.toml</code> while the parade runs and the change lands within a second — no restart. x. <strong>Content you can change</strong>: a sky gradient, a custom message, a drawn grass band, per-duck personalities, and the weather (rain, snow, wind, lightning). xi. <strong>Take it with you</strong>: export and import a package (the drawn art, the assignments and the look), save scene presets, and copy a frame to the clipboard. xii. <strong>The editor never loses your work</strong>: undo and redo a whole stroke (<code>Ctrl+Z</code>), and a draft is written a second after you stop drawing, so a crash costs at most the last second. xiii. <strong>A settings panel instead of a TOML file</strong>: click a value and the parade changes while it runs — and your comments and unknown keys survive the write. xiv. <strong>Put a hat on the ducks</strong>: a decoration is drawn over their bodies, one per duck size. xv. <strong>The ducks notice you</strong>: click one and it hops, grimaces and clucks; shift-click and it stops in place and the ducks behind it stop too. xvi. <strong>A voice</strong>: every sound is synthesized (no audio files ship), a MIDI note track can be placed on a strip in the editor and played in step with the marching ducks, and a machine with no sound card simply runs in silence. xvii. <strong>A backdrop behind the ducks</strong>: point the config at a picture and it becomes a scrolling layer of ASCII art, at its own speed, behind the parade. xviii. <strong>Send it to somebody</strong>: <code>agnosis export parade.html</code> writes a single self-contained page (no network, no assets, no fonts) that replays the loop and can be paused and scrubbed, and <code>agnosis export parade.gif</code> writes an animated GIF of the same loop. xix. <strong>The same parade in a browser tab</strong>: the simulation is a library, so the web build is a <em>second front end</em> over it — the same ducks, the same physics, the same art, drawn with WebGPU, WebGL2 or a plain 2D canvas. Read-only: the art travels out as a package and back in through a file input.</p>
+<h3>HOW TO USE</h3>
+<ol><li><strong>The app minimizes all the opened browsers.</strong> They are minimized, never</li></ol>
+<p>closed — the processes keep running and no work is lost. <strong>By default they stay minimized after the parade ends</strong>, which is the joke: the browser is still hidden when the &quot;parent&quot; walks in, and you un-minimize it yourself when you want it back. If you would rather have the windows restored automatically, set this in <code>config.toml</code>:</p>
+<pre><code>[browsers]
+restore_on_close = true</code></pre>
+<p>The file lives next to the balloons folder (<code>%APPDATA%\AGnosis\AGnosis\config\config.toml</code> on Windows, <code>~/.config/AGnosis/config.toml</code> on Linux, <code>~/Library/Application Support/com.agnosis.agnosis/config.toml</code> on macOS). Run <code>agnosis config show</code> to see the values the app actually uses.</p>
+<ol><li>**Press the global hotkey to start the parade, and press it again to</li></ol>
+<p>stop it.** <code>ESC</code> closes the parade too, and the chord is per-platform (<code>A+G+Shift+Space</code> on Windows and Linux, <code>Ctrl+Alt+Shift+Space</code> on macOS) — see <em>Hotkey Chords per Platform</em> below. The parade follows the pointer (<code>monitor = &quot;cursor&quot;</code>) or the primary display.</p>
+<ol><li><strong>Make a balloon out of a picture.</strong> Drop the image into the balloons</li></ol>
+<p>folder, or type its name on the parade's input line and press <code>Enter</code>. <code>Ctrl+O</code> opens the balloons folder for you. See <em>Adding Balloon Pictures</em> below.</p>
+<ol><li><strong>Draw your own duck.</strong> <strong><code>F2</code> in the parade</strong> opens the editor window (the</li></ol>
+<p><code>Ctrl+Shift+D</code> chord, or <code>agnosis editor</code>, also work): a canvas, 19 drawing tools, 8 colours, and a save button. See <em>Draw Your Own</em> below.</p>
+<ol><li><strong>Put your art in the parade.</strong> The editor's <strong>ASSIGN</strong> button points</li></ol>
+<p>any of the sixteen parade slots at a drawn asset; <code>agnosis assign</code> and <code>agnosis list-drawn</code> do the same from the command line.</p>
+<ol><li><strong>Tune it.</strong> Everything lives in <code>config.toml</code> — the march speed, the</li></ol>
+<p>balloon radius, the ropes, the colours, the exit hint, the hotkey chords, the browser list. See <em>Configuration</em> below.</p>
+<ol><li><strong>Make it yours.</strong> The sky, a custom message, a drawn grass band, the</li></ol>
+<p>weather and per-duck personalities all live in <code>config.toml</code> — and they land <strong>live</strong>: edit the file while the parade runs and the change is on screen within a second. See <em>Make It Yours</em> below.</p>
+<ol><li><strong>Start it at login.</strong> <code>agnosis install</code> registers a login item (on macOS</li></ol>
+<p>it registers the menu bar). See <em>Install</em> below.</p>
+<hr>
+<h3>Command Reference</h3>
+<p><code>agnosis</code> is one exe with subcommand dispatch:</p>
+<pre><code>agnosis [OPTIONS] [COMMAND]</code></pre>
+<h4>Commands</h4>
+<table><thead><tr><th>Command</th><th>Description</th></tr></thead><tbody><tr><td><code>agnosis</code></td><td>Default invocation. Renders the fullscreen popup immediately on the configured monitor.</td></tr><tr><td><code>agnosis --daemon</code></td><td>Runs the resident background daemon listening for the global hotkey.</td></tr><tr><td><code>agnosis install</code></td><td>Registers a login item so <em>AGnosis</em> comes up on user login. <strong>Windows and Linux</strong> start the daemon (<code>agnosis --daemon</code>); <strong>macOS starts the menu bar</strong> (<code>agnosis menubar</code>) — the menu bar needs no privacy grant, so the parade and the editor stay reachable. On macOS the daemon (and with it the global hotkey) is therefore <strong>not</strong> started at login: run <code>agnosis start</code> for the chord.</td></tr><tr><td><code>agnosis uninstall</code></td><td>Removes the login autostart registration and stops any running daemon (retains balloon files).</td></tr><tr><td><code>agnosis start</code></td><td>Spawns a detached background daemon. Reports <code>daemon already running</code> when one is live.</td></tr><tr><td><code>agnosis stop</code></td><td>Requests a running daemon to shut down cleanly. Reports <code>no daemon running</code> or <code>no daemon running (stale pid file removed)</code>. Exits 0 when a daemon was signalled (or a stale record was cleaned up) and 1 when nothing was running.</td></tr><tr><td><code>agnosis add &lt;image&gt;</code></td><td>Converts an image (<code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.gif</code>, <code>.bmp</code>) from anywhere on disk into a balloon: copies it into <code>&lt;config&gt;/balloons/</code> and writes a radii-stamped <code>.sprite.json</code> cache beside it.</td></tr><tr><td><code>agnosis add-from-text &lt;file.ans&gt;</code></td><td>Converts a hand-crafted ANSI/ASCII text file into a balloon sprite.</td></tr><tr><td><code>agnosis selftest [--frames N] [--out DIR] [--config FILE]</code></td><td>Renders headless scene frames to PNG without opening a window or requiring a GPU (defaults: <code>--frames 30 --out ./selftest_out</code>). <code>--config</code> renders a specific configuration instead of the built-in one.</td></tr><tr><td><code>agnosis editor --origin X,Y --size W,H</code></td><td>Opens the &quot;Draw Your Own&quot; editor window, where you hand-draw a sprite or a balloon and save it. This is the spawn target the daemon uses for the <code>Ctrl+Shift+D</code> chord; <code>--size</code> is the <strong>monitor</strong> size in physical pixels (the editor sizes its own window).</td></tr><tr><td><code>agnosis assign &lt;slot&gt; &lt;name&gt;</code></td><td>Points a parade slot at a drawn asset. <code>slot</code> is <code>BIG1</code>–<code>BIG2</code>, <code>SMALL1</code>–<code>SMALL9</code> or <code>BALLOON1</code>–<code>BALLOON5</code>; <code>agnosis assign --clear &lt;slot&gt;</code> puts the built-in art back. It rewrites <strong>only the <code>[assignments]</code> table</strong>, in place, so your comments and every key <code>agnosis</code> does not know survive; the write is atomic and keeps the previous file as <code>config.toml.bak</code>.</td></tr><tr><td><code>agnosis list-drawn</code></td><td>Prints the names of the assets you have drawn, under <code>SPRITES</code>, <code>BALLOONS</code> and <code>DECORATIONS</code>.</td></tr><tr><td><code>agnosis config show</code></td><td>Prints the configuration the app actually uses — the file after the out-of-range values were repaired — <strong>and</strong> the repairs it applied. It writes nothing.</td></tr><tr><td><code>agnosis config validate</code></td><td>Parses <strong>your</strong> <code>config.toml</code> the way the parade's live reload does and prints every repair it would apply (or the parse error). Exit 1 when the file does not parse — the same edit the parade answered with <code>CONFIG ERROR - OLD VALUES KEPT</code> on its input line.</td></tr><tr><td><code>agnosis config reset</code></td><td>Writes the default configuration back, keeping the previous file as <code>config.toml.bak</code>. Destructive, so it is <strong>refused without <code>--yes</code></strong>: the refusal says what dies (colours, hotkeys, assignments, personalities) and names the <code>.bak</code> that survives. This is the way back from a config the app refuses to load.</td></tr><tr><td><code>agnosis config backup</code></td><td>Copies the current <code>config.toml</code> to a <strong>timestamped</strong> file (<code>config-2026-10-20-1912.toml</code>) beside it and prints the path. Deliberately not the <code>.bak</code>, which the writer overwrites.</td></tr><tr><td><code>agnosis config export &lt;file&gt;</code></td><td>Writes the configuration's <strong>manifest</strong> (the schema the package, the preset and the share file all use) to a file.</td></tr><tr><td><code>agnosis export &lt;file&gt;</code></td><td>Writes a shareable file. The <strong>extension</strong> picks the format: <code>.html</code> writes the <strong>self-contained page</strong> (the loop, in one file, with no network and no assets), <code>.gif</code> writes the <strong>animated GIF</strong>, and every other extension writes the <strong>package</strong> (the drawn art, the assignment table and the look). <code>--fps</code>, <code>--frames</code> and <code>--scale</code> tune the two new formats; <code>--name</code> names the creation in the manifest and the page title instead of the default <code>agnosis package</code>.</td></tr><tr><td><code>agnosis import &lt;file&gt;</code></td><td>Reads a package back on another machine: the drawn art, the assignment table and the look. An asset whose name already exists is <strong>refused</strong> rather than overwritten, and your own assignments always win.</td></tr><tr><td><code>agnosis preset save &lt;name&gt;</code> / <code>list</code> / <code>use &lt;name&gt;</code></td><td>Saves the current look under a name, lists the saved presets, and applies one. A preset replaces the <strong>look</strong> (sky, weather, message, grass, assignments, personalities) and never touches the hotkey or the browser list.</td></tr><tr><td><code>agnosis grass &lt;name&gt;</code></td><td>Uses a drawn grass tile for the ground band; <code>agnosis grass --clear</code> puts the built-in band back. With <strong>no</strong> name it is a pure query: it prints the tile in use and writes <strong>nothing</strong> to your config.</td></tr><tr><td><code>agnosis shot &lt;file.png&gt;</code></td><td>Writes a frame of the parade to a PNG file. The popup's own <strong>F12</strong> key copies the <em>live</em> frame to the clipboard.</td></tr><tr><td><code>agnosis help</code></td><td>Opens the <strong>in-app HELP window</strong>: the full text of this README, scrollable (the parade's own <strong>F1</strong> key opens the same window, and a second press while a reader is open is reported, not stacked). The window reads <code>README.md</code> <strong>at open time</strong> — beside the binary, or beside the repo checkout for development builds — so what it shows is always the documentation that ships; a missing, empty <strong>or deleted</strong> file falls back to the copy embedded at build time, and the embedded copy is written back beside the binary so the file never stays deleted. ESC closes it, the wheel and PgUp/PgDn scroll, Home/End jump.</td></tr><tr><td><code>agnosis track list</code> / <code>show &lt;name&gt;</code> / <code>use &lt;name&gt;</code> / <code>clear</code></td><td>The <strong>MIDI note tracks</strong>: <code>list</code> prints the tracks in <code>&lt;config&gt;/tracks/</code>, <code>show</code> prints the notes of one, <code>use</code> makes the parade play it (it writes the <code>[audio] track</code> key) and <code>clear</code> stops the track. The tracks are made in the editor's <strong>TRK</strong> mode.</td></tr><tr><td><code>agnosis menubar</code></td><td>Runs the macOS menu-bar trigger (<em>Show Parade</em> / <em>Draw Your Own</em> / <em>Stop Parade</em> / <em>Quit</em>). It needs no privacy grant, so it works even when the global hotkey cannot start. On every other platform it answers &quot;the menu bar is macOS only&quot;.</td></tr></tbody></table>
+<p>Pressing <code>ESC</code> while the popup is focused exits the popup. Pressing the global hotkey while a popup is already active toggles it shut. The editor chord (<code>Ctrl+Shift+D</code> by default) toggles the editor window instead and never minimizes your browsers.</p>
+<hr>
+<h3>Adding Balloon Pictures</h3>
+<p>There are three ways to turn a picture into a balloon. All of them convert the image (<code>.png</code>, <code>.jpg</code>, <code>.jpeg</code>, <code>.gif</code>, <code>.bmp</code>) into ASCII art and mount it on a duck's rope.</p>
+<h4>1. Type it live on the input line</h4>
+<p>While the popup is open, the line below the grass reads <code>ADD BALLOON: NAME + ENTER - CTRL O FOLDER - F12 SHOT - F2 EDITOR - F1 HELP</code>.</p>
+<ol><li>Put the picture in the <strong>balloons folder</strong> (see below) — or press <strong><code>Ctrl+O</code></strong> while the popup is open, and <code>agnosis</code> opens that folder for you. The shortcut carries a modifier on purpose: a bare letter would make every picture name that starts with that letter untypeable.</li><li>Type the picture's name (e.g. <code>redball</code>) — or a full path to any image on disk. A bare name is matched case-insensitively against every picture in the balloons folder and its subfolders, so <code>REDBALL</code> finds <code>redball.png</code>.</li><li>Press <strong><code>Enter</code></strong>. The line reports <code>ADDED &lt;NAME&gt;</code> and the balloon appears on the next carrier duck. <code>CANNOT LOAD ...</code> means the name did not resolve or the format is unsupported.</li></ol>
+<p>The typed name resolves exactly like a file dropped into the folder: a <code>&lt;name&gt;.sprite.json</code> cache next to the file is reused only when it was stamped with the radii of the current screen geometry, and an unstamped or mismatched cache is re-converted.</p>
+<p>While you type, the line shows your text (<code>ADD BALLOON: redball_</code>); <code>Backspace</code> deletes. The buffer holds 64 characters, and on a narrow grid the line scrolls so the newest characters stay visible. <code>ESC</code> still exits the popup first.</p>
+<h4>2. Drop pictures into the balloons folder</h4>
+<p>The balloons folder lives next to the config (the popup's <code>Ctrl+O</code> opens it):</p>
+<ul><li><strong>Windows:</strong> <code>%APPDATA%\AGnosis\AGnosis\config\balloons</code></li></ul>
+<p>(e.g. <code>C:\Users\&lt;User&gt;\AppData\Roaming\AGnosis\AGnosis\config\balloons</code>)</p>
+<ul><li><strong>Linux:</strong> <code>~/.config/AGnosis/balloons</code></li><li><strong>macOS:</strong> <code>~/Library/Application Support/com.agnosis.agnosis/balloons</code></li></ul>
+<p>A directory watcher picks up any image or <code>.ans</code> file dropped there at runtime — no restart needed.</p>
+<h4>3. The <code>agnosis add</code> command</h4>
+<p><code>agnosis add &lt;image&gt;</code> turns a picture from anywhere on disk into a balloon:</p>
+<ol><li>The real target monitor is resolved (the same probe the popup uses) and the sprite is converted at that monitor's radii. Art baked for another screen size would show up at the wrong size.</li><li>The picture is copied into the balloons folder (art that already lives there stays where it is), so the watcher picks it up. An existing balloon is never overwritten: when the name is taken by different art, the copy becomes <code>&lt;stem&gt;-N.ext</code> (<code>N</code> starts at 2).</li><li>The converted sprite is written as <code>&lt;stem&gt;.sprite.json</code> <strong>next to the picture</strong>, stamped with the radii it was built for. The watcher only reads a cache that sits next to the image, and re-converts when the stamp does not match the live geometry.</li></ol>
+<p><code>agnosis add-from-text &lt;file.ans&gt;</code> does the same for a hand-made <code>.ans</code> file.</p>
+<blockquote><p>Balloons fill a ring of 5 slots on ducks 1, 3, 5, 7 and 9; a 6th picture replaces the oldest one.</p></blockquote>
+<hr>
+<h3>Draw Your Own</h3>
+<p>The <strong>Draw Your Own</strong> editor is a separate window (its own process, its own window class) in which you hand-draw an ASCII sprite or a balloon, save it, and put it into the parade.</p>
+<h4>Opening it</h4>
+<ul><li><strong><code>Ctrl+Shift+D</code></strong> — the editor chord (<code>[hotkey].editor</code>). It <strong>toggles</strong> the</li></ul>
+<p>editor and never minimizes your browsers; that is the parade hotkey's job.</p>
+<ul><li><strong>The macOS menu bar</strong> — <em>Draw Your Own</em> in the <code>agnosis</code> menu-bar item</li></ul>
+<p>(<code>agnosis menubar</code>). It needs no privacy grant, so it works even when the global hotkey cannot start.</p>
+<ul><li><strong><code>agnosis editor --origin X,Y --size W,H</code></strong> — the spawn target the daemon</li></ul>
+<p>uses. <code>--size</code> is the <strong>monitor</strong> size in physical pixels; the editor sizes and centres its own window on it. The command is hidden from <code>agnosis --help</code> (it is an internal spawn target), but it still works.</p>
+<h4>The window is borderless</h4>
+<p>The editor window has <strong>no title bar, no close button and no system menu</strong> — it is borderless on purpose, so that the mouse coordinates the window reports line up with the canvas pixels. It is not fullscreen either: it is sized to 80 % of the monitor (at least 1344 × 600, at most 1920 × 1200) and centred on it. The floor is the width the top bar's controls need, so the name field can never be squeezed out of sight while it is being typed into; the OS enforces it, so the window cannot be dragged below it.</p>
+<p>That means <strong>there is no close button to hunt for</strong>: press <strong><code>Escape</code></strong> to close the editor, or press the editor chord (<code>Ctrl+Shift+D</code>) again to toggle it shut. The window is still resizable: it keeps a thin, invisible border you can drag to resize, and the canvas, the tool panel and the status line follow the new size.</p>
+<h4>Drawing</h4>
+<p>The top bar carries four dropdowns, the asset-name field and the <code>CFG</code> / <code>ASSIGN</code> / <code>DRAW</code> mode buttons (see <em>Settings mode</em> and <em>Assign mode</em> below):</p>
+<table><thead><tr><th>Control</th><th>Values</th><th>Notes</th></tr></thead><tbody><tr><td>1</td><td><code>BAL</code> / <code>SPR</code> / <code>GRS</code> / <code>DEC</code></td><td>a balloon, a walking sprite, a grass tile or a duck decoration</td></tr><tr><td>2</td><td><code>BIG</code> / <code>SML</code></td><td>the duck size — greyed out while a balloon is picked</td></tr><tr><td>3</td><td><code>1</code> … <code>4</code></td><td>one static frame, or 2–4 animation poses — greyed out while a balloon is picked</td></tr><tr><td>4</td><td><code>1</code> … <code>11</code></td><td><strong>which element of the parade you are drawing</strong> — the parade's own numbering</td></tr></tbody></table>
+<p>The fourth dropdown is the <strong>element picker</strong>: big ducks are <code>1</code>–<code>2</code>, small ducks <code>3</code>–<code>11</code> (the numbering of the train, not of the config keys), balloons <code>1</code>–<code>5</code>, decorations <code>1</code> (big) / <code>2</code> (small); a grass tile has no picker, because there is one tile. Picking a slot that carries an assignment <strong>loads that document for editing</strong> — the canvas, the frames and the name come from it, and a save writes the document back under its own name and points the slot at it. An unassigned slot starts a fresh document, like the picker was never there. Any other existing name is still refused on save: only the loaded document may be overwritten.</p>
+<p>The canvas is the element's own cell grid: <strong>150 × 150 cells</strong> for the big duck, 75 × 75 for the small one, and for a balloon the <strong>disc</strong> the parade draws — 109 × 73 cells at the default balloon radius. Only the frame rectangle at the top-left is drawable (150 × 70 for the big duck, 75 × 35 for the small one); for a balloon only the disc is. Everything else is plain background and cannot be painted. The drawable region is <strong>outlined</strong> (<code>+</code> corners, <code>|</code> and <code>-</code> edges) and carries a small <code>.</code> at every second cell intersection, so the grid is visible on the black background — and neither the outline nor the dots are ever part of the saved art.</p>
+<p>A balloon's canvas is not square, and that is the point: a character cell is taller than it is wide, so a disc that is 3:2 <strong>in cells</strong> is a <strong>circle on screen</strong> — exactly like the balloon the parade shows. The art you draw is mapped onto the runtime disc cell for cell, so a drawn balloon is never stretched or squashed. The editor window opens wide enough for the whole disc; on a small screen the canvas is clipped at the window edge (as it always was for the sprite canvas).</p>
+<p>The strip to the right of the canvas holds the 19 tool glyphs and the 8 colours, and marks the selected tool and colour. Clicking a cell paints it with the active glyph in the active colour (the default is <code>x</code> in white). The mouse wheel scrolls the canvas — and, when the pointer sits over the tool/colour panel, it scrolls that panel instead, so a long tool list stays reachable in a short window. <code>Enter</code> stores the current frame and moves on to the next one — the previous pose stays visible as a faint ghost — and the last frame is written to disk. <code>Escape</code> closes the editor.</p>
+<p>The <strong><code>F1</code>–<code>F4</code></strong> keys reach every panel without the mouse (the panels used to be mouse-only): <code>F1</code> the settings, <code>F2</code> the assignment picker, <code>F3</code> the note strip, <code>F4</code> back to the canvas. In the settings panel the rows answer the keyboard too: the arrow keys move the cursor, <code>Left</code>/<code>Right</code> step the value of the row the cursor is on, and <code>Enter</code>/<code>Space</code> activate it (a toggle flips, a dropdown opens). <code>Escape</code> walks a ladder — it closes an open dropdown first, commits a half-typed field, declines a pending draft offer (the draft file is kept), then leaves the panel — and only closes the editor from a plain canvas.</p>
+<p>Each asset is one JSON document, and the runtime frame is <strong>always</strong> the built-in size (150 × 70 cells for the big duck, 75 × 35 for the small one; the disc's own 109 × 73 cells for a balloon), so a drawn duck stands in exactly the same cells of the train as the built-in art and the parade spacing never changes.</p>
+<h4>Assign mode</h4>
+<p>The top bar's <strong><code>ASSIGN</code></strong> button switches the editor from drawing to assignment: the canvas area becomes the assignment panel — the sixteen parade slots on the left (<code>BIG 1</code>, <code>BIG 2</code>, <code>SMALL 3</code> … <code>SMALL 11</code>, <code>BALLOON 1</code> … <code>BALLOON 5</code> — the small ducks carry the parade's own numbering, so <code>SMALL 3</code> is config key <code>small_1</code>) and, on the right, the drawn assets of the selected slot's kind (sprites for the ducks, balloons for the balloon slots). Click a slot to select it and click an asset to point the slot at it: the editor writes the <code>[assignments]</code> table into your <code>config.toml</code> and the status line reports <code>ASSIGNED &lt;SLOT&gt; = &lt;NAME&gt;</code>. The <strong><code>CLEAR</code></strong> button below the slot list takes the assignment out again. The <strong><code>DRAW</code></strong> button goes back to the canvas, and the drawing you left is still there.</p>
+<p>Below the parade slots the same panel lists the three <strong>look targets</strong>: <code>GRASS</code> (the tile the parade tiles its ground with), <code>DECO BIG</code> and <code>DECO SMALL</code> (the decorations the big and the small ducks wear). They work the same way — pick the target, click an asset of its kind (grass tiles or decorations), and the editor writes the one key (<code>[grass] tile</code>, <code>[decorations] big</code>, <code>[decorations] small</code>) surgically into your config; <code>CLEAR</code> puts the built-in look back.</p>
+<h4>Settings mode</h4>
+<p>The top bar's <strong><code>CFG</code></strong> button switches the editor from drawing to the settings panel: the canvas area becomes a list of rows, one per documented setting — a label, a value and a unit. A numeric setting is a <strong>slider</strong> (click or drag the track), a boolean is a <strong>toggle</strong>, an enum is a <strong>dropdown</strong> and a string is a <strong>text field</strong> (click it, type, press <code>Enter</code> to commit). The arrow keys move the cursor from row to row, and the mouse wheel scrolls the list.</p>
+<p>Every change is written into <strong>your</strong> <code>config.toml</code> <strong>surgically</strong>: only the one key is replaced, so your comments, your unknown keys and every other setting survive byte-for-byte, and a <code>config.toml.bak</code> is kept beside the file. A value that cannot be written leaves the panel showing the old value and the toast explaining why — the editor never shows a value it failed to store. The parade picks the change up through the live reload, so the balloon radius moves while the parade is running.</p>
+<p>The legacy <code>cell_size</code> key is deliberately <strong>not</strong> offered: it is ignored by the app since the row-budget grid landed.</p>
+<p>The panel also carries the <strong>PERSONALITY</strong> actions: <code>RANDOMISE</code> gives each of the eleven ducks its own personality (a small delta around the built-in behaviour — bob, gait speed, phase, hop — written as <code>[[personality]]</code> tables into your config, seeded from the clock so every press differs), and <code>RESET</code> removes every <code>[[personality]]</code> table so all ducks return to the built-in behaviour. There is no per-duck picker; hand-tune the tables in the config file for that.</p>
+<h4>Undo, redo and the draft</h4>
+<p><code>Ctrl+Z</code> undoes the last <strong>stroke</strong> and <code>Ctrl+Shift+Z</code> redoes it (<code>Cmd+Z</code> works too on macOS). A stroke is one press-and-drag: a drag that paints 200 cells is <strong>one</strong> undo step, not two hundred. The stack holds 200 strokes and drops the oldest beyond that.</p>
+<p>The editor also keeps a <strong>draft</strong>: a second of quiet after a stroke writes the whole drawing to <code>&lt;config&gt;/drawn/drafts/&lt;kind&gt;-&lt;name&gt;.draft.json</code>, so a crash (or the release build's <code>panic = &quot;abort&quot;</code>) costs at most the last second of work. The draft lives in its own folder, so the parade and <code>agnosis list-drawn</code> can never pick a half-finished drawing up as if it were a real asset. When the editor opens and finds a draft it <strong>offers</strong> it — the status line says <code>DRAFT FOUND - PRESS ENTER TO LOAD</code> and <code>Enter</code> restores the drawing exactly. Saving the asset deletes the draft.</p>
+<h4>Decorations</h4>
+<p>A <strong>decoration</strong> is a second frame-sized asset that is drawn <strong>over</strong> the duck's body: a hat, a scarf, a bowtie. The kind dropdown's fourth option is <code>DEC</code>. A decoration is authored on the duck's <strong>own frame</strong> (150 × 70 for the big duck, 75 × 35 for the small one) with the built-in art shown faintly underneath, so you can see where the duck's head is. The blank cells stay transparent, so the body shows through everywhere the decoration does not cover.</p>
+<p>A decoration's frames step in step with the body's, so a walking duck keeps its hat in place. The <code>[decorations]</code> table in <code>config.toml</code> names one decoration per duck size:</p>
+<pre><code>[decorations]
+big = &quot;crown&quot;
+small = &quot;bowtie&quot;</code></pre>
+<p>A decoration that does not exist leaves the ducks bare — the built-in art is untouched.</p>
+<h4>Where the drawn assets live</h4>
+<ul><li><strong>Windows:</strong> <code>%APPDATA%\AGnosis\AGnosis\config\drawn\sprites\</code> and</li></ul>
+<p><code>%APPDATA%\AGnosis\AGnosis\config\drawn\balloons\</code> — the <code>directories</code> crate repeats the application name on Windows, hence the two <code>agnosis</code> folders. The grass tiles live in <code>drawn\grass\</code>, the decorations in <code>drawn\decorations\</code> and the editor's drafts in <code>drawn\drafts\</code>.</p>
+<ul><li><strong>Linux:</strong> <code>~/.config/AGnosis/drawn/sprites/</code> and</li></ul>
+<p><code>~/.config/AGnosis/drawn/balloons/</code></p>
+<ul><li><strong>macOS:</strong> <code>~/Library/Application Support/com.agnosis.agnosis/drawn/sprites/</code></li></ul>
+<p>and <code>~/Library/Application Support/com.agnosis.agnosis/drawn/balloons/</code></p>
+<h4>Putting a drawn asset into the parade</h4>
+<p><code>agnosis list-drawn</code> prints the assets you have drawn; <code>agnosis assign &lt;slot&gt; &lt;name&gt;</code> points a parade slot at one of them:</p>
+<table><thead><tr><th>Slot</th><th>What it replaces</th></tr></thead><tbody><tr><td><code>BIG1</code>, <code>BIG2</code></td><td>the first and the second big duck</td></tr><tr><td><code>SMALL1</code> … <code>SMALL9</code></td><td>the nine trailing small ducks</td></tr><tr><td><code>BALLOON1</code> … <code>BALLOON5</code></td><td>the five balloons, in ring order</td></tr></tbody></table>
+<p><code>agnosis assign --clear SMALL3</code> puts the built-in art back. The same mapping is the <code>[assignments]</code> table in <code>config.toml</code>. A drawn balloon can also be summoned by name from the parade's <code>ADD BALLOON</code> line.</p>
+<p><code>agnosis assign</code> loads <code>config.toml</code>, changes the one slot and writes <strong>only the <code>[assignments]</code> table</strong> back: every comment, every other table and any key <code>agnosis</code> does not know survive untouched. The write is atomic and keeps the previous file as <code>config.toml.bak</code>.</p>
+<hr>
+<h3>Make It Yours</h3>
+<p>Everything below lives in <code>config.toml</code> — and it lands <strong>live</strong>. The parade watches the file, so an edit is on screen within a second and no restart is needed. A broken file never takes the parade down: the last good values stay, the error is written to the trace log, and fixing the file applies it.</p>
+<h4>The sky</h4>
+<pre><code>[sky]
+enabled = true
+time_of_day = 0.35      # 0.0 = midnight, 0.5 = noon</code></pre>
+<p>The sky is a vertical colour ramp behind the parade: a zenith colour at the top of the frame, a horizon colour at the grass line, and dark earth below. <code>time<em>of</em>day</code> runs night → dawn → day → dusk → night. The ramp is a <strong>pure function</strong> of the value, so the same setting always renders the same frame.</p>
+<h4>A message of your own</h4>
+<pre><code>[message]
+text = &quot;BRING YOUR OWN DUCKS&quot;
+position = &quot;above_grass&quot;   # above_grass | bottom_left | bottom_right
+fade_seconds = 8.0</code></pre>
+<p>The message is upper-cased and drawn in the block font, which carries only <code>A-Z 0-9 . : <em> - / \</code> and space. An unsupported character is <strong>dropped and reported</strong>, and the rest of the message still shows. The message fades out after <code>fade</em>seconds</code> (a message that never leaves is a message you stop seeing); <code>fade_seconds = 0</code> means &quot;always&quot;.</p>
+<h4>A grass band of your own</h4>
+<p>Draw a <strong>grass tile</strong> in the editor (the kind dropdown offers <code>BAL</code>, <code>SPR</code> and <code>GRS</code>), save it, and point the config at it:</p>
+<pre><code>[grass]
+tile = &quot;meadow&quot;</code></pre>
+<p>A tile is a <em>tile</em>, not a frame: at most 4 rows and 200 columns, and it is repeated across the whole ground band. <code>agnosis grass meadow</code> sets the key for you and <code>agnosis grass --clear</code> puts the built-in band back.</p>
+<h4>A backdrop behind the ducks</h4>
+<p>Point the config at a picture and it becomes a <strong>scrolling layer of ASCII art</strong> behind the parade:</p>
+<pre><code>[[backdrop]]
+image = &quot;hills.png&quot;
+cols = 160
+rows = 18</code></pre>
+<p>The picture is converted to a tile of characters and repeated across the screen. Put the file in <code>&lt;config&gt;/backdrops/</code> (the app creates the folder) or give an absolute path.</p>
+<p>Up to three backdrops can be stacked, and <strong>each scrolls at its own speed</strong> — the far one drifts, the near one keeps up with the ducks. The speeds are code constants, not config keys: you choose the art, the app chooses the depth. The conversion happens on a <strong>worker thread</strong>, so a big picture never makes the parade stutter, and a picture that is missing or broken is simply skipped.</p>
+<h4>The weather</h4>
+<pre><code>[weather]
+mode = &quot;auto&quot;        # off | auto | rain | snow | wind | lightning
+intensity = 1.0      # 0.0 .. 2.0 — the particle density
+seed = 1             # the deterministic seed</code></pre>
+<ul><li><strong>Rain</strong> — blue waves fill the <em>gaps</em> of the ground band and move, and</li></ul>
+<p>blue splashes appear around every duck's feet.</p>
+<ul><li><strong>Snow</strong> — the whole band turns white, and one seeded duck falls on its</li></ul>
+<p>bum while <strong>every duck behind it stops</strong>. The order never changes and the stopped ducks keep walking in place: the rhythm is untouched.</p>
+<ul><li><strong>Wind</strong> — every <code>\</code> blade in the band leans the other way.</li><li><strong>Lightning</strong> — the tall blades turn yellow and the short ones navy</li></ul>
+<p>blue for half a second, and the <strong>whole parade stops for 1.5 seconds</strong>.</p>
+<p><code>mode = &quot;auto&quot;</code> runs a fixed 60-second cycle of all of them. The weather is a pure function of the clock and <code>seed</code>, so it is reproducible — the same seed always produces the same rain.</p>
+<h4>A personality per duck</h4>
+<pre><code>[[personality]]
+slot = &quot;small_3&quot;
+bob = 1.5
+gait_speed = 1.2
+phase_offset = 2
+hop = 0.5
+color = [255, 120, 60]</code></pre>
+<p>A personality is a <strong>delta</strong>, not a replacement: the config lists only the ducks that differ. <code>bob</code> is the bob amplitude in cells, <code>gait<em>speed</code> and <code>phase</em>offset</code> change the <strong>animation phase</strong> — never the train's spacing — and <code>color</code> repaints the duck. The size class is deliberately <em>not</em> a personality: the train's geometry depends on it. The editor's settings panel can write this block for you: its PERSONALITY <code>RANDOMISE</code> action draws a delta per duck and <code>RESET</code> removes the block again.</p>
+<h4>Coming back tomorrow</h4>
+<pre><code>[stats]
+show_days = true</code></pre>
+<p>The counters live in <code>&lt;config&gt;/stats.json</code>: the first parade's date, the number of parades, the streak of consecutive days and the achievements earned. The file is written atomically, and a broken one is treated as &quot;no stats&quot; rather than as a failure. The achievements are <strong>listed in a file, not in the code</strong> (<code>&lt;config&gt;/achievements.toml</code>), so you can add one without a rebuild.</p>
+<hr>
+<h3>Sound and Reactions</h3>
+<p>The parade can talk, and the ducks can notice you.</p>
+<h4>Click a duck</h4>
+<p>The parade window is borderless and fullscreen, so the pointer maps straight onto the grid. <strong>Click a duck</strong> and it reacts: it hops, its face changes (it holds its walk frame and squashes as it lands), it flashes white for a moment and it clucks.</p>
+<p><strong>Shift-click</strong> and the duck <em>stops in place</em> — and the ducks behind it stop too, while the ducks in front keep marching. The train never loses its order and never loses its rhythm: a stopped duck keeps walking on the spot, because the gait is a function of the simulation's clock, not of the train's position.</p>
+<p>Clicking empty ground does nothing at all.</p>
+<h4>The note track</h4>
+<p>The parade can also play a <strong>MIDI note track</strong> — a line of notes placed on a strip, one cell per sprite step, so the tune moves at exactly the speed the ducks march.</p>
+<p>Open the editor with the <strong>TRK</strong> button (or the <code>Ctrl+Shift+D</code> chord):</p>
+<ul><li>The <strong>strip</strong> is the canvas: the top row is the note lane, the bottom</li></ul>
+<p>row is a ruler that marks the loop's start and its end. One step is one sprite frame, so the strip is as long as the crossing window (263 steps at the default settings).</p>
+<ul><li>The <strong>palette</strong> on the right holds the twelve basic notes of an octave</li></ul>
+<p>(<code>C3</code>..<code>B3</code>). Click a note to pick it, then click a lane cell to place it; click the cell again to take it away.</p>
+<ul><li>The <strong>name field</strong> is the track's name, <strong>SAVE</strong> writes it to</li></ul>
+<p><code>&lt;config&gt;/tracks/&lt;name&gt;.json</code>, and <strong>Enter</strong> makes the parade play it (it writes the <code>[audio] track</code> key).</p>
+<ul><li><code>Ctrl+Z</code> / <code>Ctrl+Shift+Z</code> undo and redo a placed note.</li></ul>
+<p>The sequencer's clock is the <strong>scene's own clock</strong>, so a note cannot drift away from the animation: a note in slot <em>k</em> fires on the sprite step <em>k</em>.</p>
+<p>From the shell: <code>agnosis track list</code>, <code>agnosis track show &lt;name&gt;</code> and <code>agnosis track use &lt;name&gt;</code>.</p>
+<h4>The sound</h4>
+<p>Every sound is <strong>synthesized</strong> — no audio file is shipped and none is loaded from disk. The synth is a small pure-Rust sine/triangle/square oscillator with an ADSR envelope; the one-shots (the cluck, the balloon squeak, the jump chirp, the rain splosh and the thunder) are generated the same way. Each effect has its own gain and its own <strong>cooldown</strong>, so a train of events cannot machine-gun the sound card.</p>
+<pre><code>[audio]
+volume = 0.7
+muted = false
+track = &quot;marching&quot;
+waveform = &quot;triangle&quot;</code></pre>
+<p><strong>No sound card is not an error.</strong> The device is opened on a worker thread; if there is none, the app says so in one trace line and the parade carries on in silence. A machine with no audio (a CI runner) is a normal case, and the exit code is never affected.</p>
+<hr>
+<h3>Send It to Somebody</h3>
+<p>The parade is a pure function of a few numbers, so it can be <strong>written down</strong> and sent. Two artifacts come out of the same recording.</p>
+<h4>The self-contained page</h4>
+<pre><code>agnosis export parade.html</code></pre>
+<p>One file that opens in Chrome, Firefox and Edge straight from a <code>file://</code> URL, a chat app or a USB stick. <strong>No network, no assets, no fonts</strong>: the frames, the glyphs and the config travel inside the file.</p>
+<p>The page is a canvas, a blob decoder and a timer, and it can be <strong>paused and scrubbed</strong> — the slider at the bottom walks the loop. It is not a second implementation of the simulation: the frames are the app's own frames, so the page cannot drift from what you saw.</p>
+<p>At the default settings a 20 s loop at 12 fps is about <strong>650 kB</strong>.</p>
+<h4>The animated GIF</h4>
+<pre><code>agnosis export parade.gif</code></pre>
+<p>The same loop as a GIF: the ducks, the grass, the balloons and the HUD are all readable at the exported size (960x540), and the file is about <strong>1.4 MB</strong> for a 20 s loop.</p>
+<h4>Both of them</h4>
+<ul><li>The export is <strong>reproducible</strong>: the same parade exports byte-identical</li></ul>
+<p>files, every time.</p>
+<ul><li>The export runs <strong>off the UI thread</strong>: the parade keeps marching while</li></ul>
+<p>the file is written.</p>
+<ul><li><code>--fps</code> sets the frame rate (12 by default), <code>--frames</code> the number of</li></ul>
+<p>frames (one loop by default) and <code>--scale</code> the GIF's size (2 by default: the app's own size is 1).</p>
+<hr>
+<h3>The web build</h3>
+<p>The parade is not a program that draws ducks — it is a <strong>library that draws ducks</strong>, and the native app is one front end over it. The web build is the other: the same simulation, the same art, the same physics, running in a browser tab. It is a second front end, not a port: the simulation, the art and the exporters live in the <code>agnosis-core</code> package and are shared byte for byte, so the two cannot drift apart.</p>
+<h4>Build it</h4>
+<pre><code>./crates/agnosis-web/build-web.sh crates/agnosis-web/dist</code></pre>
+<p>The script builds the module with cargo and then runs the <strong>wasm-bindgen CLI</strong>, falling back to <strong>wasm-pack</strong> when the CLI is not installed. The CLI's version must match the crate's (<code>0.2.129</code>), because the CLI refuses a mismatched module. The output folder holds three files:</p>
+<pre><code>index.html         the page
+agnosis_web.js       the wasm-bindgen glue
+agnosis_web_bg.wasm  the module</code></pre>
+<h4>Serve it</h4>
+<p>Any static host serves them. There is <strong>no</strong> server-side component and the page fetches <strong>nothing</strong> from the network:</p>
+<pre><code>npx http-server crates/agnosis-web/dist -p 8765</code></pre>
+<blockquote><p><strong>The page needs a static host — <code>file://</code> does not work.</strong> An ES module cannot be imported from the file system (and the module is not served with the <code>application/wasm</code> content type), so the browser refuses the page. Open <code>http://localhost:8765/</code> instead of double clicking <code>index.html</code>.</p></blockquote>
+<h4>The three back ends</h4>
+<p>The page picks the fastest back end the browser has, and the top bar's <strong>backend</strong> selector forces one:</p>
+<table><thead><tr><th>Back end</th><th>What it is</th></tr></thead><tbody><tr><td><code>webgpu</code></td><td>the browser's WebGPU</td></tr><tr><td><code>webgl2</code></td><td>the browser's WebGL2 — the one every browser has</td></tr><tr><td><code>canvas2d</code></td><td>the plain 2D canvas: the RGBA frame is uploaded with <code>putImageData</code>, no GPU involved at all</td></tr><tr><td><code>auto</code></td><td>the default: WebGPU, then WebGL2, then the 2D canvas</td></tr></tbody></table>
+<p>A forced back end the browser does not have falls back to <code>auto</code>, and the status line says so. The status line shows the back end, the grid size, whether the parade is running or paused, and how many drawn assets the page carries.</p>
+<p>The forced back end is also reachable <strong>from the URL</strong>, so you can pin one without touching the page:</p>
+<pre><code>http://localhost:8765/?backend=webgl2</code></pre>
+<p>The parameter takes <code>auto</code>, <code>canvas2d</code>, <code>webgl2</code> or <code>webgpu</code> — the same four the selector offers. The page waits for the parade to boot before it applies the request, so the parameter is never lost, and the top bar's selector shows the back end that is really in use.</p>
+<h4>What the web build can and cannot do</h4>
+<table><thead><tr><th><strong>The parade, the art, the balloons, the ropes</strong></th><th><strong>Yes</strong> — it is the core</th></tr></thead><tbody><tr><td><strong>The sky, the weather, the grass, the messages</strong></td><td><strong>Yes</strong> — they are core content layers</td></tr><tr><td><strong>Mouse reactions</strong></td><td><strong>Yes</strong> — and this is where the web is <em>better</em> than the native one: a click makes a duck jump, a shift-click stops it and the ducks behind it</td></tr><tr><td><strong>The drawn art</strong></td><td><strong>Yes</strong>, read-only — a package or a manifest is imported through the file input</td></tr><tr><td><strong>The editor</strong></td><td><strong>No</strong> — it stays native; the <em>art</em> travels, not the editor</td></tr><tr><td><strong>The sound</strong></td><td><strong>No</strong> — the core still emits its audio events, but the web build has no audio device</td></tr><tr><td><strong>The global hotkey, the browser minimize, the folder watcher, the autostart</strong></td><td><strong>No</strong> — the web <em>is</em> the browser, so the joke is the native app's</td></tr></tbody></table>
+<h4>The art travels</h4>
+<p>The page's <strong>art</strong> file input takes two things:</p>
+<ul><li>a <strong><code>.agnosis</code> package</strong> — the file <code>agnosis export</code> writes (the drawn art,</li></ul>
+<p>the assignments and the look), applied to the running parade;</p>
+<ul><li>a bare <strong>manifest</strong> — the file <code>agnosis config export</code> writes.</li></ul>
+<p>The page reads the bytes, so the file's <em>name</em> does not matter: a ZIP header means a package, anything else is read as a manifest. Both are applied to the parade as it runs, so the ducks change without a reload.</p>
+<hr>
+<h3>Configuration</h3>
+<p>Configuration is stored in <code>config.toml</code> in the platform-standard configuration directory:</p>
+<ul><li><strong>Windows:</strong> <code>%APPDATA%\AGnosis\AGnosis\config\config.toml</code></li></ul>
+<p>(e.g. <code>C:\Users\&lt;User&gt;\AppData\Roaming\AGnosis\AGnosis\config\config.toml</code>)</p>
+<ul><li><strong>Linux:</strong> <code>~/.config/AGnosis/config.toml</code></li><li><strong>macOS:</strong> <code>~/Library/Application Support/com.agnosis.agnosis/config.toml</code></li></ul>
+<p>The balloon sprite directory is located alongside config at <code>&lt;config_dir&gt;/balloons/</code>. Dropping images or <code>.ans</code> files into this directory is automatically detected at runtime via a directory watcher.</p>
+<p><code>monitor</code> picks the display the popup covers: <code>cursor</code> (the display under the pointer) or <code>primary</code>. The displays are enumerated per platform — Windows through <code>EnumDisplayMonitors</code> with a per-monitor DPI query, Linux through X11 RandR, macOS through <code>NSScreen</code> — and the pointer position is read per platform too, so <code>cursor</code> works on all three. When the Linux or macOS probe fails, <code>agnosis</code> falls back to a single 1920×1080 display and logs a warning. The macOS probe reads AppKit and therefore has to run on the main thread.</p>
+<h4>Default Configuration (<code>config.toml</code>)</h4>
+<p>The block below is exactly what <code>agnosis</code> writes into <code>config.toml</code> on first start — the file is generated by <code>Config::default()</code>, so it is reproduced here byte for byte:</p>
+<pre><code>loop_seconds = 20.0
+cell_size = [
+    12,
+    24,
+]
+monitor = &quot;cursor&quot;
+max_cols = 4096
+fps_cap = 30
+exit_hint = &quot;press ESC to exit&quot;
+hint_corner = &quot;bottom-right&quot;
+
+[balloons]
+max = 5
+balloon_radius_rows = 36
+rope_min_small = 55
+rope_min_big = 85
+rope_max = 150
+pendulum_g = 9.8
+pendulum_damp = 0.35
+pendulum_drive = 0.9
+pendulum_period = 1.6
+
+[hotkey]
+windows = &quot;A+G+Shift+Space&quot;
+macos = &quot;Ctrl+Alt+Shift+Space&quot;
+linux = &quot;A+G+Shift+Space&quot;
+editor = &quot;Ctrl+Shift+D&quot;
+
+[browsers]
+names = []
+restore_on_close = false
+
+[assignments]
+
+[message]
+text = &quot;&quot;
+position = &quot;above_grass&quot;
+fade_seconds = 8.0
+
+[sky]
+enabled = false
+time_of_day = 0.35
+
+[grass]
+
+# The parallax backdrops: pictures that scroll behind the ducks.
+# The scroll speed is a code constant, not a key.
+# [[backdrop]]
+# image = &quot;hills.png&quot;    # a file in &lt;config&gt;/backdrops/, or an absolute path
+# cols = 160             # the tile width in cells (the tile repeats)
+# rows = 18              # the band height in cells
+
+[weather]
+mode = &quot;off&quot;
+intensity = 1.0
+seed = 1
+
+[stats]
+show_days = false
+
+[decorations]
+
+[audio]
+volume = 0.7
+muted = false
+track = &quot;&quot;
+waveform = &quot;triangle&quot;
+strip_steps = 263</code></pre>
+<p>What the keys mean:</p>
+<ul><li><code>loop_seconds</code> — how long the train takes to cross the screen (the march</li></ul>
+<p>speed is <code>cols / loop_seconds</code> cells per second).</p>
+<ul><li><code>cell_size</code> — <strong>legacy</strong>: the per-cell pixel size has been ignored since</li></ul>
+<p>the row-budget grid landed; it is kept so old configs keep loading.</p>
+<ul><li><code>monitor</code> — <code>cursor</code> (the display under the mouse pointer) or <code>primary</code>.</li><li><code>max_cols</code> — a grid-width safety cap (a perf valve, not a layout control).</li><li><code>fps_cap</code> — the target render framerate.</li><li><code>exit<em>hint</code>, <code>hint</em>corner</code> — the on-screen exit hint and the corner it</li></ul>
+<p>sits in (<code>bottom-left</code> or <code>bottom-right</code>).</p>
+<ul><li><code>[balloons]</code> — the balloon ring size (<code>max</code>, 5 slots), the balloon radius</li></ul>
+<p>in grid rows (<code>balloon<em>radius</em>rows</code>; the column radius follows the cell aspect), the randomized rope bounds in rows (<code>rope<em>min</em>small</code>, <code>rope<em>min</em>big</code>, <code>rope<em>max</code>) and the pendulum physics (<code>pendulum</em>g</code>, <code>pendulum<em>damp</code>, <code>pendulum</em>drive</code>, <code>pendulum_period</code>).</p>
+<ul><li><code>[hotkey]</code> — the parade chord per platform (<code>windows</code>, <code>linux</code>, <code>macos</code>)</li></ul>
+<p>and <code>editor</code>, the draw-your-own chord. <code>editor</code> is <strong>one string for every platform</strong>; an <strong>empty value disables the editor chord</strong>, and a value that does not parse is reported and dropped while the parade chord keeps working.</p>
+<ul><li><code>[browsers] names</code> — custom process names to minimize (case-insensitive,</li></ul>
+<p><code>.exe</code> stripped). When it is empty, the built-in browser list is used: chrome, chromium, msedge, firefox, waterfox, librewolf, seamonkey, brave, vivaldi, opera, yandex, thunderbird, tor, torbrowser, epiphany, konqueror, comodo, torch, thorium, iron, avast, avg.</p>
+<ul><li><code>[browsers] restore<em>on</em>close</code> — **put the minimized browsers back when</li></ul>
+<p>the parade ends.<strong> <code>false</code> (the default) keeps them minimized, which is the joke; <code>true</code> restores them automatically. The browsers are only ever </strong>minimized**, never closed, so no work is lost either way. See HOW TO USE point 1.</p>
+<ul><li><code>[assignments]</code> — which drawn asset replaces which built-in art; see</li></ul>
+<p>below.</p>
+<ul><li><code>[message]</code> — a <strong>custom message</strong> on the parade. <code>text</code> is upper-cased</li></ul>
+<p>and restricted to the block font's characters (<code>A-Z 0-9 . : <em> - / \</code> and space); an unsupported character is dropped and reported, and the rest of the message still shows. <code>position</code> is <code>above</em>grass</code> (centred, two rows above the grass — the default), <code>bottom<em>left</code> or <code>bottom</em>right</code>. The message is shown for <code>fade<em>seconds</code> and then fades out over one second; <code>fade</em>seconds = 0</code> means &quot;always&quot;.</p>
+<ul><li><code>[sky]</code> — the <strong>procedural sky gradient</strong>. <code>enabled</code> turns it on;</li></ul>
+<p><code>time<em>of</em>day</code> is <code>0.0</code> (midnight) to <code>1.0</code> (midnight again, through dawn, noon and dusk). The ramp is a pure function of the value, so the same value always renders the same frame.</p>
+<ul><li><code>[grass]</code> — <code>tile</code> names a drawn grass tile (see <em>Make It Yours</em>). The</li></ul>
+<p>tile is repeated across the whole ground band.</p>
+<ul><li><code>[weather]</code> — <code>mode</code> is <code>off</code> (never), <code>auto</code> (a fixed 60-second cycle</li></ul>
+<p>of lightning, rain, clear, snow, wind, clear), or one forced effect (<code>rain</code>, <code>snow</code>, <code>wind</code>, <code>lightning</code>). <code>intensity</code> is <code>0.0</code> to <code>2.0</code> and scales the particle density. <code>seed</code> seeds the <strong>deterministic</strong> generator: the weather is a pure function of the clock and the seed, so the same seed always produces the same rain.</p>
+<ul><li><code>[stats]</code> — <code>show_days</code> draws the &quot;days since the ducks&quot; counter in the</li></ul>
+<p>bottom-left corner. It is <strong>off</strong> by default; the counters live in <code>&lt;config&gt;/stats.json</code>.</p>
+<ul><li><code>[decorations]</code> — the drawn <strong>decorations</strong> the ducks wear: <code>big</code> names</li></ul>
+<p>the one the two big ducks wear and <code>small</code> the one the nine small ducks wear. A decoration is drawn <strong>over</strong> the duck's body, and a name that no drawn asset carries leaves the ducks bare (the built-in art is untouched).</p>
+<ul><li><code>[audio]</code> — the <strong>sound</strong>. <code>volume</code> is the master gain (<code>0.0</code> to <code>1.0</code>),</li></ul>
+<p><code>muted</code> silences everything without losing the volume, <code>track</code> names the note track in <code>&lt;config&gt;/tracks/</code> the parade plays (empty means &quot;no track&quot;), <code>waveform</code> is the voice the notes are played in (<code>sine</code>, <code>triangle</code> or <code>square</code>) and <code>strip_steps</code> is the length of the note strip in sprite steps (263 at the default settings — one step is one sprite frame). See <em>Sound and Reactions</em> below.</p>
+<ul><li><code>[[personality]]</code> — one table per duck that differs from the built-in</li></ul>
+<p>art. <code>slot</code> names the duck (<code>big<em>1</code>..<code>big</em>2</code>, <code>small<em>1</code>..<code>small</em>9</code>), <code>bob</code> is the bob amplitude in cells, <code>gait<em>speed</code> scales the <strong>animation phase</strong> (never the train's spacing), <code>phase</em>offset</code> shifts the phase by whole frames, <code>hop</code> is an extra hop in cells and <code>color</code> is an RGB triple. A slot that does not name a duck is dropped with a message.</p>
+<p>The built-in list holds executable names and is matched exactly, so <code>mychrome</code> is not <code>chrome</code>. On macOS the built-in browsers are also matched by bundle id, which is how the Tor Browser (executable <code>Tor Browser</code>) is recognized; a custom list on macOS additionally matches a localized app name or a bundle-id tail.</p>
+<h5>The <code>[assignments]</code> table</h5>
+<p>Sixteen explicit keys, one per parade slot. A missing or empty value means &quot;no override&quot;, so the built-in art stays. The default file leaves the table empty; it fills up as you assign things:</p>
+<pre><code>[assignments]
+big_1 = &quot;cat&quot;       # the first big duck (train slot 0) shows the drawn sprite &quot;cat&quot;
+small_1 = &quot;dog&quot;     # the first small duck (train slot 2) shows &quot;dog&quot;</code></pre>
+<p>Only the slots that carry an assignment are written: a slot with no override is simply absent, and the built-in art stays.</p>
+<p><code>agnosis assign &lt;slot&gt; &lt;name&gt;</code> writes into this table, and <code>agnosis assign --clear &lt;slot&gt;</code> takes the entry out again. A drawn balloon can also be summoned by name from the parade's <code>ADD BALLOON</code> line.</p>
+<p>The grid is <strong>row-budget driven</strong>: the cell size comes from the monitor height (<code>cell<em>h = monitor</em>h / 360</code>, <code>cell<em>w = 2/3 · cell</em>h</code>), so a duck covers the same share of the screen on every display and DPI. <code>cell_size</code> is legacy and ignored.</p>
+<h4>Repaired configuration values</h4>
+<p>Out-of-range values are clamped when the config is loaded, every repair is logged as a warning, and the repaired value is <strong>written back into the file</strong> — so the warning appears once, not on every run. The write replaces the repaired value in place, so your comments and any keys <code>agnosis</code> does not know survive.</p>
+<table><thead><tr><th>Key</th><th>Out-of-range value</th><th>Repaired to</th></tr></thead><tbody><tr><td><code>loop_seconds</code></td><td>not finite, or <code>&lt;= 0.1</code></td><td><code>20.0</code></td></tr><tr><td><code>max_cols</code></td><td><code>&lt; 960</code> / <code>&gt; 8192</code></td><td><code>4096</code> / <code>8192</code></td></tr><tr><td><code>fps_cap</code></td><td><code>0</code>, or <code>&gt; 240</code></td><td><code>30</code></td></tr><tr><td><code>balloons.max</code></td><td>outside <code>1..=5</code></td><td><code>5</code></td></tr><tr><td><code>balloons.balloon<em>radius</em>rows</code></td><td><code>0</code> / <code>&gt; 128</code></td><td><code>36</code> / <code>128</code></td></tr><tr><td><code>balloons.rope<em>min</em>small</code></td><td><code>0</code></td><td><code>55</code></td></tr><tr><td><code>balloons.rope<em>min</em>big</code></td><td><code>&lt; rope<em>min</em>small</code></td><td><code>rope<em>min</em>small</code></td></tr><tr><td><code>balloons.rope_max</code></td><td><code>&lt; rope<em>min</em>big</code></td><td><code>rope<em>min</em>big</code></td></tr><tr><td><code>balloons.pendulum_g</code></td><td>not finite, or <code>&lt;= 0</code></td><td><code>9.8</code></td></tr><tr><td><code>balloons.pendulum_damp</code></td><td>not finite, or <code>&lt; 0</code></td><td><code>0.35</code></td></tr><tr><td><code>balloons.pendulum_drive</code></td><td>not finite</td><td><code>0.9</code></td></tr><tr><td><code>balloons.pendulum_period</code></td><td>not finite, or <code>&lt;= 0</code></td><td><code>1.6</code></td></tr><tr><td><code>assignments.&lt;key&gt;</code></td><td>an empty or blank name</td><td>dropped — the slot keeps the built-in art</td></tr><tr><td><code>assignments.&lt;key&gt;</code></td><td>a name no drawn asset carries</td><td>dropped — the slot keeps the built-in art (the file may still show up later)</td></tr><tr><td><code>assignments.&lt;key&gt;</code></td><td>whitespace around the name</td><td>trimmed</td></tr><tr><td><code>audio.volume</code></td><td>not finite</td><td><code>0.7</code></td></tr><tr><td><code>audio.volume</code></td><td>outside <code>0.0..=1.0</code></td><td>clamped into it</td></tr><tr><td><code>audio.strip_steps</code></td><td><code>0</code> / <code>&gt; 4096</code></td><td><code>1</code> / <code>4096</code></td></tr><tr><td><code>audio.track</code></td><td>a blank name</td><td>dropped — the parade plays no track</td></tr><tr><td><code>audio.waveform</code></td><td>a name that is not <code>sine</code>, <code>triangle</code> or <code>square</code></td><td><code>triangle</code></td></tr></tbody></table>
+<p>The <code>[hotkey].editor</code> chord is <strong>not</strong> repaired here: an empty value simply disables the editor chord, and a value that does not parse is reported by the daemon and dropped, so the parade chord keeps working.</p>
+<hr>
+<h3>Hotkey Chords per Platform</h3>
+<p>The default chord configurations are:</p>
+<ul><li><strong>Windows:</strong> <code>A+G+Shift+Space</code>  </li></ul>
+<p>Monitored via a low-level keyboard hook (<code>WH<em>KEYBOARD</em>LL</code>). Key repeats are ignored, and re-arming requires releasing chord keys.</p>
+<ul><li><strong>Linux (X11):</strong> <code>A+G+Shift+Space</code>  </li></ul>
+<p>Captured via <code>XRecord</code> (with passive <code>XQueryKeymap</code> polling fallback). Does not grab keys globally or interfere with other applications.</p>
+<ul><li><strong>macOS:</strong> <code>Ctrl+Alt+Shift+Space</code>  </li></ul>
+<p>Captured with a <strong>listen-only</strong> <code>CGEventTap</code>: the tap observes the key events without swallowing them, so the permission macOS asks for is <strong>Input Monitoring</strong> and not Accessibility. Letters, digits, <code>Space</code>, <code>Esc</code> and <code>F1</code>–<code>F20</code> all work, and a chord may hold any number of them — but a chord that names a key no backend can produce (a punctuation mark, or <code>F21</code> and above) parses and then never fires. The macOS <strong>login item is the menu bar</strong>, not the daemon: <code>agnosis install</code> writes a LaunchAgent that runs <code>agnosis menubar</code>, so the daemon — and with it this chord — is <strong>not</strong> started at login on macOS. Run <code>agnosis start</code> for the chord (the menu-bar trigger works without it, and without any grant).</p>
+<p>There is a <strong>second</strong> chord, the same string on every platform:</p>
+<ul><li><strong>Editor chord:</strong> <code>Ctrl+Shift+D</code> (<code>[hotkey].editor</code>)  </li></ul>
+<p>Opens the <em>Draw Your Own</em> editor, and closes it again when it is already open. It never minimizes your browsers. Set <code>editor = &quot;&quot;</code> to disable it.</p>
+<p>On macOS the first run asks for the <strong>Input Monitoring</strong> grant: <strong>System Settings → Privacy &amp; Security → Input Monitoring</strong> → add <em>AGnosis</em> → switch it on. Without the grant the daemon exits with <code>hotkey unavailable: grant Input Monitoring to AGnosis in System Settings → Privacy &amp; Security → Input Monitoring</code>; <code>agnosis</code>, <code>agnosis editor</code> and the menu-bar item stay reachable. A detached daemon has no console, so its warnings (including that one) only reach the <code>AGNOSIS<em>TRACE</em>FILE</code> log file when that environment variable is set.</p>
+<hr>
+<h3>Install</h3>
+<h4>Windows — the installer (recommended)</h4>
+<p>Run <code>agnosis-setup.exe</code>: it asks <strong>where to install</strong> (any folder you like, <code>%LOCALAPPDATA%\Programs\AGnosis</code> by default), shows the README during the install, copies the exe + README + LICENSE, adds a Start-Menu shortcut, and offers to register the <strong>login autostart</strong> and <strong>start the daemon right away</strong> — the global hotkey (and with it the browser minimization) works as soon as the daemon is up. The uninstaller reverses all of it. The installer and how to build it live in `<code>packaging/windows/</code>`.</p>
+<h4>Other platforms and the portable path</h4>
+<p>Pre-built packages are published on every <code>v*</code> tag. Pick the one for your platform:</p>
+<table><thead><tr><th>Platform</th><th>Artifact</th><th>Install</th></tr></thead><tbody><tr><td>Windows (x86-64)</td><td><code>agnosis-&lt;version&gt;-windows-x64.zip</code></td><td>Unzip anywhere and run <code>agnosis.exe</code>.</td></tr><tr><td>macOS (Intel + Apple silicon)</td><td><code>agnosis-&lt;version&gt;-macos-universal.dmg</code></td><td>Mount the image and drag <code>agnosis.app</code> into <code>/Applications</code>.</td></tr><tr><td>Linux (Debian/Ubuntu, x86-64)</td><td><code>agnosis<em>&lt;version&gt;</em>amd64.deb</code></td><td><code>sudo dpkg -i agnosis<em>&lt;version&gt;</em>amd64.deb</code> — <code>agnosis</code> lands on <code>PATH</code> and shows up in the application menu.</td></tr></tbody></table>
+<h4>What the portable exe can do without the daemon</h4>
+<p>The daemon owns exactly two things: the <strong>global hotkey</strong> and the browser minimization that goes with it. Everything else runs from a bare exe — unzip, double-click, and the fullscreen parade starts:</p>
+<ul><li><strong><code>F2</code></strong> opens the <em>Draw Your Own</em> editor: draw walking sprites, balloons,</li></ul>
+<p>grass tiles and decorations, save them, and point parade slots at them with the editor's <strong>ASSIGN</strong> panel — the running parade picks the change up live.</p>
+<ul><li><strong><code>Ctrl+O</code></strong> opens the balloons folder; drop a picture in and the parade</li></ul>
+<p>carries it, or type its name on the input line and press <code>Enter</code>.</p>
+<ul><li><strong><code>F1</code></strong> shows the full README; <strong><code>F12</code></strong> copies the live frame to the</li></ul>
+<p>clipboard; a click pokes a duck, shift-click holds it.</p>
+<ul><li><strong>Export</strong> works from a terminal next to the exe, no daemon involved:</li></ul>
+<p><code>agnosis export loop.html</code> (self-contained page), <code>agnosis export loop.gif</code> (animated GIF), or <code>agnosis export loop.agnosis</code> (a package of your art and settings). <code>agnosis add picture.png</code> copies new balloon art into the folder the same way.</p>
+<p>The only thing a portable run cannot do is answer a hotkey — there is no keyboard hook without the daemon, so the parade is opened (and closed with <code>ESC</code>) by hand.</p>
+<p>Everything the packages contain, how they are built, and how to verify them locally is documented in `<code>packaging/README.md</code>`.</p>
+<h4>Per-platform caveats</h4>
+<ul><li><strong>Windows — the binary is a GUI-subsystem binary.</strong> It opens no console</li></ul>
+<p>window, so a double-clicked <code>agnosis.exe</code> never flashes a black console next to the duck parade. The CLI verbs <strong>do</strong> print when they are run from a terminal — a GUI process inherits the parent's standard handles — so <code>agnosis.exe list-drawn</code> prints its list and <code>agnosis.exe menubar</code> prints its error. Only the output is invisible when the binary is double-clicked or spawned detached by the daemon (whose stdio is nulled). The headless selftest writes files: <code>agnosis.exe selftest --frames 2 --out out</code> writes <code>out/frame<em>0000.png</code>, <code>out/frame</em>0001.png</code>, … — assert on those PNG files as well as on the output.</p>
+<ul><li><strong>macOS — the global hotkey needs the Input Monitoring grant.</strong> macOS only</li></ul>
+<p>lets an app read the keyboard after the user allows it explicitly: <strong>System Settings → Privacy &amp; Security → Input Monitoring</strong> → add <em>AGnosis</em> → switch it on. The grant is tied to the bundle id <code>com.agnosis.daemon</code>, so it survives an upgrade of the app. The <strong>menu-bar item</strong> is the permission-free path: it starts the parade — and the <em>Draw Your Own</em> editor — without asking for any grant, so it keeps working when the grant is missing or revoked. Without the grant the daemon exits with the exact remediation text (see <em>Hotkey Chords per Platform</em>).</p>
+<ul><li><strong>macOS — the app is unsigned and un-notarised.</strong> Notarisation needs an</li></ul>
+<p>Apple developer account, so Gatekeeper blocks the first launch: right-click <code>agnosis.app</code> → <strong>Open</strong>, or allow it once in <strong>System Settings → Privacy &amp; Security</strong> (<strong>Open Anyway</strong>).</p>
+<ul><li><strong>Linux — the X11 runtime libraries are required</strong>, and a Wayland-only</li></ul>
+<p>session needs <strong>XWayland</strong> installed (<code>sudo apt install xwayland</code>) with <code>DISPLAY</code> set: the binary is built against winit's X11 backend, so the popup opens through the XWayland X server. The <code>.deb</code> names the libraries in its <code>Depends:</code> line, and the release CI checks that line twice: against the <strong>link-time</strong> closure <code>ldd</code> reports, and against the hand-written list of the X11 libraries winit <code>dlopen</code>s at runtime (<code>ldd</code> never reports those, so the second check is what catches a package that installs but will not start).</p>
+<hr>
+<h3>Repository layout</h3>
+<p>The project is a Cargo <strong>workspace</strong> with three packages:</p>
+<table><thead><tr><th>Package</th><th>Path</th><th>What it is</th></tr></thead><tbody><tr><td><code>agnosis</code></td><td>the repository root (<code>src/</code>)</td><td>the <strong>shell</strong>: the CLI, the daemon, the popup window, the editor window, the platform tree, the folder watcher, the GPU renderer, the audio device</td></tr><tr><td><code>agnosis-core</code></td><td><code>crates/agnosis-core/</code></td><td>the <strong>pure core</strong>: the simulation, the art, the scene, the data model, the exporters, the editor's pure state, the audio's pure side. Platform-free by construction — it names no OS and no platform tree, and it compiles for <code>wasm32-unknown-unknown</code></td></tr><tr><td><code>agnosis-web</code></td><td><code>crates/agnosis-web/</code></td><td>the <strong>web front end</strong>: the same parade in a browser tab (WASM)</td></tr></tbody></table>
+<p>The rule the split enforces: the core never resolves a path or a platform default. The shell resolves them (<code>src/host.rs</code>) and hands the core plain data, so the core can be compiled for a platform the app was never built for.</p>
+<hr>
+<h3>Building and Installation</h3>
+<h4>Prerequisites</h4>
+<ul><li><strong>Rust:</strong> Rust 1.90 or newer (Rust 2021 edition)</li><li><strong>Cargo</strong></li><li><strong>Linux dependencies (Ubuntu/Debian):</strong></li></ul>
+<p>``<code>bash sudo apt-get install -y libx11-dev libxext-dev libxfixes-dev libasound2-dev </code>`<code> </code>libasound2-dev<code> is the ALSA header: the parade can play a note track, so the binary links against ALSA. The <strong>runtime</strong> library (</code>libasound2<code>) is what the </code>.deb` depends on; the headers are only needed to build.</p>
+<h4>Build and Run</h4>
+<p>To build the project in release mode:</p>
+<pre><code>cargo build --release</code></pre>
+<p>That builds the native binary (<code>agnosis</code>). The other two packages have their own commands:</p>
+<pre><code>cargo build -p agnosis-core   # the core library</code></pre>
+<p>and the web crate is built for the browser by the script below.</p>
+<p>To run the test suite:</p>
+<pre><code>cargo test --workspace</code></pre>
+<blockquote><p><code>cargo test</code> on its own runs <strong>only the root package</strong> (the shell) — the core's and the web crate's tests are not in it. Use <code>cargo test --workspace</code> for the whole suite.</p></blockquote>
+<p>To run a headless selftest (no display or GPU needed):</p>
+<pre><code>cargo run -p agnosis -- selftest --frames 2 --out ./selftest_out</code></pre>
+<p>To build the web front end (see <em>The web build</em> above):</p>
+<pre><code>./crates/agnosis-web/build-web.sh crates/agnosis-web/dist</code></pre>
+<p>To type-check the <strong>browser</strong> build — the same command the CI runs:</p>
+<pre><code>rustup target add wasm32-unknown-unknown
+cargo check -p agnosis-core -p agnosis-web --target wasm32-unknown-unknown</code></pre>
+<p>To install and launch the resident daemon:</p>
+<pre><code>agnosis install
+agnosis start</code></pre>
+<hr>
+<h3>License &amp; Assets</h3>
+<ul><li>Built with Rust and licensed under the **Open Source License with Ethical</li></ul>
+<p>Restrictions** in `<code>LICENSE.txt</code>` — an open-source license with ethical restrictions and a reserved name (&quot;AGnosis&quot;): use, modification and distribution are free for any purpose that honours the human-rights terms, and modified forks must rename. Contact the licensor for alternative licensing.</p>
+<ul><li>Bundled font: <strong>DejaVu Sans Mono</strong> (licensed under the Bitstream Vera License, notice included in <code>crates/agnosis-core/assets/fonts/LICENSE-BitstreamVera.txt</code>).</li></ul>
+</article>
+</section>
+<div class="chip-row">
+<a class="chip" href="/products/agnosis/help/">AGnosis help</a>
+<a class="chip" href="/products/agnosis/help/inbrowser/">In-browser help</a>
+<a class="chip" href="/products/agnosis/help/desktop/">Desktop help</a>
+<a class="chip" href="/products/agnosis/">Product page</a>
+</div>

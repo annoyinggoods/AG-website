@@ -56,12 +56,35 @@ p {
 .feature-media img {
   border-radius: var(--radius-box);
 }
+/* The product rows on the home page: the logo stands in the media column,
+   ten body lines tall, and its top edge starts on the line below the
+   product name. One name line is the heading margin (1rem) plus the
+   heading itself (1.45rem at the desktop cap, times the 1.6 line height)
+   plus its bottom margin (0.4rem), so the media column pads by 3.7rem. */
+.feature-product {
+  align-items: start;
+}
+.feature-logo {
+  display: block;
+  height: 16.8rem;
+  width: auto;
+}
+.feature-product .feature-media {
+  padding-block-start: 3.7rem;
+}
 @media (max-width: 56rem) {
   .feature-row {
     grid-template-columns: 1fr;
   }
   .feature-row:nth-child(even) .feature-text {
     order: 0;
+  }
+  .feature-product .feature-media {
+    padding-block-start: 0;
+  }
+  .feature-logo {
+    height: 12rem;
+    margin-inline: auto;
   }
 }
 .media-row figure {
@@ -204,6 +227,29 @@ a.button-chip {
   background: var(--menu-group);
   padding: 1rem 1.25rem;
   margin-block: 0.9rem;
+}
+/* The product cards on the products index: the icon fills the spare right
+   half of the box, six body lines tall, its top edge on the line below the
+   product name — the same one-name-line offset as the home page rows. */
+.product-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 1.25rem;
+  align-items: start;
+}
+.product-card-icon {
+  height: 10.1rem;
+  width: auto;
+  margin-block-start: 3.7rem;
+}
+@media (max-width: 40rem) {
+  .product-card {
+    gap: 0.9rem;
+  }
+  .product-card-icon {
+    height: 6.3rem;
+    margin-block-start: 3.7rem;
+  }
 }
 .entry-open {
   text-decoration: underline;

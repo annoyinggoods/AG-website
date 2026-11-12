@@ -1,15 +1,15 @@
 <section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
 <h2 class="section-heading" id="download-heading">Download</h2>
 <article class="content-article" data-admin="content:content.css" id="download-get">
-<h3 class="article-heading">Get AGony 0.9.0</h3>
+<h3 class="article-heading">Get AGony {{agony_version}}</h3>
 <p>AGony ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and run <code>agony.exe</code> in a terminal. Everything AGony stores lives under one folder in your user profile and deleting that folder uninstalls the desktop completely.</p>
-<p><a href="/downloads/agony-0.9.0/agony-0.9.0-x86_64-pc-windows-msvc.tar.gz" download>Download the Windows archive (3.1 MB)</a> — AGony 0.9.0 for Windows 10/11, 64-bit.</p>
+<p><a href="/downloads/agony-{{agony_version}}/{{agony_file}}" download>Download the Windows archive ({{agony_size}})</a> — AGony {{agony_version}} for Windows 10/11, 64-bit.</p>
 <div class="table-scroll"><table class="download-table">
 <thead>
 <tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row"><a href="/downloads/agony-0.9.0/agony-0.9.0-x86_64-pc-windows-msvc.tar.gz" download>AGony portable archive</a></th><td>Windows 64-bit</td><td>3.1 MB</td><td><code>SHA256:8c780ce9cc32494f02c8a4b0d45de150435a6ebcd97cde76c4909e4cf96042c4</code></td></tr>
+<tr><th scope="row"><a href="/downloads/agony-{{agony_version}}/{{agony_file}}" download>AGony portable archive</a></th><td>Windows 64-bit</td><td>{{agony_size}}</td><td><code>SHA256:{{agony_sha256}}</code></td></tr>
 <tr><th scope="row">AGony portable archive</th><td>Linux 64-bit</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
 <tr><th scope="row">AGony portable archive</th><td>macOS Apple Silicon</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
 </tbody>
@@ -32,7 +32,7 @@
 <h2 class="section-heading" id="download-install-heading">Install in four steps</h2>
 <article class="content-article" data-admin="content:content.css" id="download-install-steps">
 <h3 class="article-heading">From the archive to the desktop</h3>
-<p>1. Unpack the archive — in PowerShell: <code>tar -xzf agony-0.9.0-x86_64-pc-windows-msvc.tar.gz</code>.</p>
+<p>1. Unpack the archive — in PowerShell: <code>tar -xzf {{agony_file}}</code>.</p>
 <p>2. Put <code>agony.exe</code> somewhere on PATH, or run it from where you unpacked it.</p>
 <p>3. Run <code>agony doctor</code> once — it reports the environment (the engine, the daemon, the completion binary, your font's icon support) and never repairs anything.</p>
 <p>4. Run <code>agony</code> in Windows Terminal. The desktop opens with a welcome window naming the three things worth trying.</p>

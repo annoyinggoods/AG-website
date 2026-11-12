@@ -96,3 +96,12 @@ declare module "node:child_process" {
   export function spawnSync(command: string, args: string[], options: { cwd?: string; encoding: string; env?: Record<string, string | undefined>; timeout?: number }): { status: number | null; stdout: string; stderr: string };
   export function spawnSync(command: string, args: string[], options?: { cwd?: string }): { status: number | null; stdout: Buffer; stderr: Buffer };
 }
+declare module "node:buffer" {
+  // The one Buffer constructor a test calls: an uploaded file fixture
+  // has to arrive at setInputFiles as a Buffer, and the interface above
+  // is the type it returns.
+  const Buffer: {
+    from(data: readonly number[] | string | Uint8Array): Buffer;
+  };
+  export { Buffer };
+}

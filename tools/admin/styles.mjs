@@ -21,7 +21,8 @@ export const CATEGORY_FILES = {
   effects: ["styles/effects-glow.css", "styles/effects-lens.css"],
   events: ["styles/events.css"],
   cookies: ["styles/cookies.css"],
-  nag: ["styles/nag.css"]
+  nag: ["styles/nag.css"],
+  agnosis: ["styles/agnosis.css"]
 };
 
 function fail(message) {

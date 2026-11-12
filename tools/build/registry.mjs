@@ -49,10 +49,19 @@ export function readProducts(root, tree, nodeByPath, contentDir, slugFor) {
     if (!readFile(fragment).trim()) {
       fail("The product " + slug + " has no content fragment at " + path.relative(root, fragment) + ".");
     }
+    const icon = String(item.icon || "");
+    const iconWidth = Number(item.iconWidth || 0);
+    const iconHeight = Number(item.iconHeight || 0);
+    if (icon && (!iconWidth || !iconHeight)) {
+      fail("The product " + slug + " declares an icon without its width and height.");
+    }
     products.push({
       slug: slug,
       title: title,
       path: productPath,
+      icon: icon,
+      iconWidth: iconWidth,
+      iconHeight: iconHeight,
       tagline: tagline,
       summary: summary,
       keywords: Array.isArray(item.keywords) ? item.keywords.map(String) : []
@@ -73,6 +82,7 @@ export function productsSectionHtml(products) {
   for (let i = 0; i < products.length; i += 1) {
     const product = products[i];
     parts.push('<article class="content-article entry-card product-card" data-admin="content:content.css" id="' + product.slug + '">');
+    parts.push('<div class="product-card-body">');
     parts.push('<h3 class="article-heading"><a href="' + product.path + '">' + product.title + "</a></h3>");
     if (product.tagline) {
       parts.push('<p class="entry-standfirst">' + product.tagline + "</p>");
@@ -81,6 +91,10 @@ export function productsSectionHtml(products) {
       parts.push("<p>" + product.summary + "</p>");
     }
     parts.push('<p><a href="' + product.path + '">Open the ' + product.title + " page</a></p>");
+    parts.push("</div>");
+    if (product.icon) {
+      parts.push('<img class="product-card-icon" src="' + product.icon + '" alt="" width="' + product.iconWidth + '" height="' + product.iconHeight + '" loading="lazy" decoding="async">');
+    }
     parts.push("</article>");
   }
   parts.push("</section>");

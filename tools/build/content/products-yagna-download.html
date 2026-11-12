@@ -1,15 +1,15 @@
 <section class="content-section" data-admin="content:content.css" id="download" aria-labelledby="download-heading">
 <h2 class="section-heading" id="download-heading">Download</h2>
 <article class="content-article" data-admin="content:content.css" id="download-get">
-<h3 class="article-heading">Get yAGna 0.9.0</h3>
+<h3 class="article-heading">Get yAGna {{yagna_version}}</h3>
 <p>yAGna ships as a small portable archive: the binary, a short install note and the license text. No installer wizard, no registry entries, no background service — unpack it and run <code>yagna.exe</code>. Everything yAGna stores lives under one folder in your user profile (<code>%APPDATA%\yagna\</code>) and deleting that folder uninstalls the library completely.</p>
-<p><a href="/downloads/yagna-0.9.0/yagna-0.9.0-x86_64-pc-windows-msvc.tar.gz" download>Download the Windows archive (11.5 MB)</a> — yAGna 0.9.0 for Windows 10/11, 64-bit.</p>
+<p><a href="/downloads/yagna-{{yagna_version}}/{{yagna_file}}" download>Download the Windows archive ({{yagna_size}})</a> — yAGna {{yagna_version}} for Windows 10/11, 64-bit.</p>
 <div class="table-scroll"><table class="download-table">
 <thead>
 <tr><th scope="col">Build</th><th scope="col">Platform</th><th scope="col">Size</th><th scope="col">Checksum</th></tr>
 </thead>
 <tbody>
-<tr><th scope="row"><a href="/downloads/yagna-0.9.0/yagna-0.9.0-x86_64-pc-windows-msvc.tar.gz" download>yAGna portable archive</a></th><td>Windows 64-bit</td><td>11.5 MB</td><td><code>SHA256:fc2da4e1215a03791581679f57eed47e6d47790cb48c81e0994b2e1f581f32fb</code></td></tr>
+<tr><th scope="row"><a href="/downloads/yagna-{{yagna_version}}/{{yagna_file}}" download>yAGna portable archive</a></th><td>Windows 64-bit</td><td>{{yagna_size}}</td><td><code>SHA256:{{yagna_sha256}}</code></td></tr>
 <tr><th scope="row">yAGna portable archive</th><td>Linux 64-bit</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
 <tr><th scope="row">yAGna portable archive</th><td>macOS Apple Silicon</td><td>TBA</td><td><code>SHA256:TBA</code></td></tr>
 </tbody>
@@ -18,7 +18,7 @@
 </article>
 <article class="content-article" data-admin="content:content.css" id="download-install">
 <h3 class="article-heading">From the archive to the library</h3>
-<p>1. Unpack the archive — in PowerShell: <code>tar -xzf yagna-0.9.0-x86_64-pc-windows-msvc.tar.gz</code>.</p>
+<p>1. Unpack the archive — in PowerShell: <code>tar -xzf {{yagna_file}}</code>.</p>
 <p>2. Put <code>yagna.exe</code> somewhere on PATH, or run it from where you unpacked it.</p>
 <p>3. Run <code>yagna doctor</code> once — it reports the token it found (env <code>GITHUB_TOKEN</code> or <code>gh auth token</code>), the API's reachability and rate limit, the data directory and the schema version. It reports, never repairs.</p>
 <p>4. Run <code>yagna sync</code> — the first sweep of your stars. The honest pace: about five minutes per thousand repositories, once. After that, everything reads from your disk.</p>
@@ -32,6 +32,7 @@
 <p>yAGna's Model Context Protocol server ships in the same binary, and the npm launcher <code>yagna-mcp</code> installs it for your host: run <code>npx -y yagna-mcp</code> once to fetch the release, then point your host at it — a server named <code>yagna</code> with the command <code>npx</code> and the argument list <code>-y yagna-mcp</code>:</p>
 <p><code>{ "mcpServers": { "yagna": { "command": "npx", "args": ["-y", "yagna-mcp"] } } }</code></p>
 <p>Already have the binary on PATH? The launcher finds it there, or take <code>YAGNA_BIN</code> to name it directly. The server speaks MCP over stdio and shares the catalog with the app.</p>
+<p>The server speaks protocol revision <code>2025-11-25</code> — the newest revision every common host accepts — so Kilo Code, Goose, OpenCode and the rest connect on the first handshake instead of arguing about the protocol.</p>
 </article>
 <article class="content-article" data-admin="content:content.css" id="download-agent-tools">
 <h3 class="article-heading">What the agent gets</h3>

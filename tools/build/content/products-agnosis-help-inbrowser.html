@@ -1,0 +1,106 @@
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-inbrowser-start" aria-labelledby="agnosis-help-inbrowser-start-heading">
+<h2 class="section-heading" id="agnosis-help-inbrowser-start-heading">AGnosis in the browser — the short guide</h2>
+<p>This page is for the <strong>browser version</strong> of AGnosis — the parade and the duck editor that run on the <a href="/playground/agnosis/">playground page</a> with nothing to install. If you want the desktop app (the hotkey that hides your browsers), read the <a href="/products/agnosis/help/desktop/">desktop guide</a> instead. Everything here is "press this, this happens" — no jargon, no steps you can skip.</p>
+<div class="chip-row">
+<a class="chip" href="/playground/agnosis/">Open the playground</a>
+<a class="chip" href="/products/agnosis/help/desktop/">Desktop help</a>
+<a class="chip" href="/products/agnosis/help/readme/">The full read-me</a>
+</div>
+</section>
+
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-inbrowser-play" aria-labelledby="agnosis-help-inbrowser-play-heading">
+<h2 class="section-heading" id="agnosis-help-inbrowser-play-heading">Watch and poke the parade</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-play-start">
+<h3 class="article-heading">Start it</h3>
+<p><strong>Click "Click to start the parade".</strong> The ducks walk in from the left, two big ones first, nine small ones behind, balloons on ropes over their backs. The whole parade is running in your browser — nothing is downloaded to your computer and nothing is sent anywhere.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-play-poke">
+<h3 class="article-heading">Poke a duck</h3>
+<dl>
+<dt>Click a duck</dt>
+<dd>It jumps and clucks, and keeps marching.</dd>
+<dt>Shift-click a duck</dt>
+<dd>It stops in place. The ducks behind it stop too; the ones in front keep walking. Shift-click again (or click it) and it rejoins the line.</dd>
+<dt><code>pause</code></dt>
+<dd>Freezes the parade. The button turns into <code>resume</code>.</dd>
+</dl>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-play-art">
+<h3 class="article-heading">Bring your own art</h3>
+<p>Click <strong>art (.agnosis / manifest)</strong> and pick a file. A <code>.agnosis</code> package (what the desktop app's <code>agnosis export</code> writes) or a manifest <code>.json</code> both work: your drawn ducks replace the built-in ones while the parade keeps running. <strong>Type this, this happens:</strong> pick the file → the ducks change immediately. Nothing is uploaded; the file never leaves the page.</p>
+</article>
+</section>
+
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-inbrowser-editor" aria-labelledby="agnosis-help-inbrowser-editor-heading">
+<h2 class="section-heading" id="agnosis-help-inbrowser-editor-heading">Draw your own duck in the editor</h2>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-editor-open">
+<h3 class="article-heading">Open it</h3>
+<p><strong>Click "open the editor".</strong> The parade pauses and the editor takes its place: a black canvas, the tool strip on the right, and a top bar. Press <strong>ESC</strong> (or click "back to the parade") to go back — your drawing stays until you close the tab.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-editor-draw">
+<h3 class="article-heading">Draw</h3>
+<p>Click a cell to paint it; press and drag to paint many cells in one go. Pick one of the <strong>19 tools</strong> (the glyphs in the right strip) and one of the <strong>8 colours</strong> (the coloured squares at the bottom of the strip). The drawing goes into the frame of a big duck first; the top bar decides what you are drawing.</p>
+<p>The top bar, left to right: <strong>what kind</strong> (<code>BAL</code> balloon, <code>SPR</code> walking duck, <code>GRS</code> grass tile, <code>DEC</code> hat), <strong>which size</strong> (<code>BIG</code>/<code>SML</code>), <strong>how many frames</strong> (1 still, up to 4 poses), and the <strong>name</strong> field. Click a bar, click an option in the list that opens. The name already carries a free suggestion — <code>sprite-1</code> — and your first typed letter replaces it.</p>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-editor-keys">
+<h3 class="article-heading">Press this, this happens</h3>
+<dl>
+<dt>Click on the canvas</dt>
+<dd>Paints one cell (drag = many cells, one undo step).</dd>
+<dt><code>Enter</code></dt>
+<dd>Saves — with more than one frame chosen, it first stores the pose and shows the previous one faintly for the next.</dd>
+<dt><code>Ctrl+Z</code></dt>
+<dd>Undoes the last stroke. <code>Ctrl+Shift+Z</code> (or <code>Ctrl+Y</code>) redoes.</dd>
+<dt><code>F1</code></dt>
+<dd>The settings panel: sliders, toggles and dropdowns for the parade's look. A change applies to the parade on the spot.</dd>
+<dt><code>F2</code></dt>
+<dd>The assign panel: pick a parade slot on the left, pick one of your drawn assets on the right — your art replaces that duck.</dd>
+<dt><code>F4</code></dt>
+<dd>Back to the drawing canvas from any panel.</dd>
+<dt>Arrow keys</dt>
+<dd>Scroll the canvas (and step values in the settings panel).</dd>
+<dt><code>Escape</code></dt>
+<dd>Closes an open list first, then leaves a panel, then returns to the parade.</dd>
+</dl>
+</article>
+<article class="content-article" data-admin="content:content.css" id="agnosis-help-inbrowser-editor-save">
+<h3 class="article-heading">Save (and where it lands)</h3>
+<p>Click <strong>SAVE</strong> (or press <code>Enter</code>). The document is saved <strong>inside the page</strong> — the parade can use it right away — and a copy lands in your browser's downloads as <code>sprite-1.json</code> (or the name you typed). That download is your only copy: the browser tab does not keep files, so <strong>keep the downloads</strong>. Put a downloaded document into the desktop app's <code>drawn</code> folder, or send a whole set around with <strong>export art (.agnosis)</strong>.</p>
+<p><strong>Note the two things the browser editor does not have yet:</strong> the note strip (<code>TRK</code> answers politely — it is a desktop feature for now) and sound. Undo, drafts and everything else about drawing work as they do on the desktop, minus the autosave: on the web, saving means downloading.</p>
+</article>
+</section>
+
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-inbrowser-export" aria-labelledby="agnosis-help-inbrowser-export-heading">
+<h2 class="section-heading" id="agnosis-help-inbrowser-export-heading">Take the parade with you</h2>
+<p>Three buttons in the bar, each writes a file into your downloads. The recording runs on the page — no server, no upload.</p>
+<dl>
+<dt><code>export page (.html)</code></dt>
+<dd>One self-contained page that replays your parade anywhere — open it straight from the downloads folder, send it to a friend.</dd>
+<dt><code>export GIF (.gif)</code></dt>
+<dd>The same loop as an animated GIF.</dd>
+<dt><code>export art (.agnosis)</code></dt>
+<dd>A package of everything you drew or imported — the desktop app imports it back with <code>agnosis import</code>.</dd>
+</dl>
+</section>
+
+<section class="content-section" data-admin="content:content.css" id="agnosis-help-inbrowser-faq" aria-labelledby="agnosis-help-inbrowser-faq-heading">
+<h2 class="section-heading" id="agnosis-help-inbrowser-faq-heading">Three small questions</h2>
+<details class="faq-item" data-admin="content:content.css" id="agnosis-help-inbrowser-faq-upload" name="agnosis-help-inbrowser-faq">
+<summary class="faq-question">Is anything uploaded or installed?</summary>
+<p>No. The parade runs inside the page; your art files are read in the browser and your exports are written by the browser. No account, no server, no install.</p>
+</details>
+<details class="faq-item" data-admin="content:content.css" id="agnosis-help-inbrowser-faq-close" name="agnosis-help-inbrowser-faq">
+<summary class="faq-question">Where does my art go when I close the tab?</summary>
+<p>Into your downloads, if you saved it. The page itself keeps nothing — there is no disk in a browser tab — so a saved document is a downloaded document. Draw it, SAVE it, keep the download.</p>
+</details>
+<details class="faq-item" data-admin="content:content.css" id="agnosis-help-inbrowser-faq-quiet" name="agnosis-help-inbrowser-faq">
+<summary class="faq-question">Why is it silent?</summary>
+<p>The browser version has no sound yet — the ducks march silently on purpose for now. The desktop app synthesizes every sound itself.</p>
+</details>
+</section>
+<div class="chip-row">
+<a class="chip" href="/playground/agnosis/">Open the playground</a>
+<a class="chip" href="/products/agnosis/help/desktop/">Desktop help</a>
+<a class="chip" href="/products/agnosis/help/readme/">The full read-me</a>
+<a class="chip" href="/products/agnosis/">Product page</a>
+</div>

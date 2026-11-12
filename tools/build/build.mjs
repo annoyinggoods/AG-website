@@ -14,6 +14,10 @@ import { buildDraghtsBundle } from "./bundle-draghts.mjs";
 import { buildDraghtsStandalone } from "./bundle-draghts-standalone.mjs";
 import { buildDraghtsPackage } from "./package-draghts.mjs";
 import { buildAgnosisPackage } from "./package-agnosis.mjs";
+import { stageAgnosisWasm } from "./bundle-agnosis.mjs";
+import { buildYagnaPackage } from "./package-yagna.mjs";
+import { buildAgonyPackage } from "./package-agony.mjs";
+import { buildAgrrrPackage } from "./package-agrrr.mjs";
 
 const SCRIPT_DIR = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(SCRIPT_DIR, "..", "..");
@@ -476,6 +480,26 @@ const draghtsPackage = buildDraghtsPackage();
 // the release binary of that project and leaves the download alone when the
 // project is not on this machine.
 const agnosisPackage = buildAgnosisPackage();
+// The playground's wasm is a static asset of that same project: the web
+// bundle the project's own build wrote is staged where the playground page
+// loads it from. Like the archive, the stage is left alone when the project
+// is not on this machine or its bundle has not been built yet.
+const agnosisWasmSize = stageAgnosisWasm();
+// yAGna is built and packaged in its own repository too, so the site stages
+// the release archive that repository built and quotes what the staged bytes
+// actually are. An archive missing for the version the repository names stops
+// the build, because the alternative is a page that sells a download that
+// does not exist.
+const yagnaPackage = buildYagnaPackage();
+// AGony is built and packaged in its own repository as well, under the same
+// rule: the site stages the release archive that repository built and quotes
+// what the staged bytes actually are, and a missing archive stops the build.
+const agonyPackage = buildAgonyPackage();
+// AGrrr! is the same story with an installer instead of an archive: the site
+// stages the NSIS setup the AGrrr! repository built, quotes what the staged
+// bytes actually are, and rewrites the staged folder's sha256.txt, and a
+// setup missing for the version the repository names stops the build.
+const agrrrPackage = buildAgrrrPackage();
 
 // Root-absolute asset/style URLs so nested folder pages resolve subresources
 function rootAbsoluteAssets(html) {
@@ -506,7 +530,10 @@ function metaFor(node) {
   if (!entry || typeof entry !== "object") {
     fail("tools/build/page-meta.json has no entry for " + node.path + ". Every page needs a description.");
   }
-  const description = String(entry.description || "");
+  // The description is a template like every other page text, so a page-meta
+  // entry may carry a placeholder and the gate below measures the characters
+  // a visitor and a search engine actually read.
+  const description = fillPlaceholders(String(entry.description || ""));
   if (description.length < DESCRIPTION_MIN || description.length > DESCRIPTION_MAX) {
     fail("The description for " + node.path + " is " + description.length + " characters. It must be " + DESCRIPTION_MIN + " to " + DESCRIPTION_MAX + ".");
   }
@@ -558,6 +585,32 @@ const PLACEHOLDERS = {
   "{{agnosis_file}}": () => "agnosis-" + agnosisPackage.version + "-windows-x64.zip",
   "{{agnosis_setup_size}}": () => agnosisPackage.setupHumanSize,
   "{{agnosis_setup_sha256}}": () => agnosisPackage.setupSha256,
+  // The yAGna download page quotes the version, the size and the checksum of
+  // the archive the yAGna repository built and this build staged, so the page
+  // can never quote a checksum that does not match the file beside it.
+  "{{yagna_version}}": () => yagnaPackage.version,
+  "{{yagna_size}}": () => yagnaPackage.humanSize,
+  "{{yagna_bytes}}": () => String(yagnaPackage.bytes),
+  "{{yagna_sha256}}": () => yagnaPackage.sha256,
+  "{{yagna_file}}": () => yagnaPackage.file,
+  // The AGony download page quotes the version, the size and the checksum of
+  // the archive the AGony repository built and this build staged, under the
+  // same never-drift rule as the yAGna page above.
+  "{{agony_version}}": () => agonyPackage.version,
+  "{{agony_size}}": () => agonyPackage.humanSize,
+  "{{agony_bytes}}": () => String(agonyPackage.bytes),
+  "{{agony_sha256}}": () => agonyPackage.sha256,
+  "{{agony_file}}": () => agonyPackage.file,
+  // The AGrrr! download page quotes the version, the size and the checksum of
+  // the NSIS setup the AGrrr! repository built and this build staged, under
+  // the same never-drift rule as the yAGna and AGony pages above. The byte
+  // count arrives with thousand separators, the shape that page has carried
+  // since 0.1.0.
+  "{{agrrr_version}}": () => agrrrPackage.version,
+  "{{agrrr_size}}": () => agrrrPackage.humanSize,
+  "{{agrrr_bytes}}": () => agrrrPackage.groupedBytes,
+  "{{agrrr_sha256}}": () => agrrrPackage.sha256,
+  "{{agrrr_file}}": () => agrrrPackage.file,
 };
 
 function fillPlaceholders(html) {
@@ -665,16 +718,19 @@ function buildNavItem(node, currentPath) {
   return '<li class="menu-item' + leafClass + '" data-menu-path="' + escapeHtml(node.path) + '">' + inner + "</li>";
 }
 
-function buildNav(currentPath) {
-  const roots = nodes.filter(function (node) { return node.parent === null; });
-  const items = roots.map(function (node) { return buildNavItem(node, currentPath); }).join("");
-  const pill = `<div class="menu-theme-pill" role="group" aria-label="Theme" data-theme-effective="dark">
+function themePillHtml() {
+  return `<div class="menu-theme-pill" role="group" aria-label="Theme" data-theme-effective="dark">
 <button class="theme-pill-segment" type="button" data-theme-choice="dark" aria-pressed="false" aria-label="dark theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-moon"></use></svg><span class="theme-pill-label">dark</span></button>
 <button class="theme-pill-segment" type="button" data-theme-choice="system" aria-pressed="true" aria-label="follow the system theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-auto"></use></svg><span class="theme-pill-label">auto</span></button>
 <button class="theme-pill-segment" type="button" data-theme-choice="light" aria-pressed="false" aria-label="light theme"><svg class="theme-pill-icon" aria-hidden="true" focusable="false"><use href="#icon-knife"></use></svg><span class="theme-pill-label">light</span></button>
 <svg class="theme-pill-hint" aria-hidden="true" focusable="false"><use href="#icon-pentagram"></use></svg>
 </div>
 <span class="theme-status" data-theme-status role="status" aria-live="polite" hidden></span>`;
+}
+
+function buildNav(currentPath) {
+  const roots = nodes.filter(function (node) { return node.parent === null; });
+  const items = roots.map(function (node) { return buildNavItem(node, currentPath); }).join("");
   return `<nav class="menu-box" id="site-menu" aria-label="Site menu" data-menu data-menu-panel data-admin="menu:menu.css">
 <div class="menu-search">
 <label class="menu-search-label" for="menu-search-input">Search pages</label>
@@ -682,7 +738,53 @@ function buildNav(currentPath) {
 </div>
 <div class="menu-search-results" data-menu-results role="listbox" aria-label="Page search results" hidden></div>
 <p class="menu-search-status" data-menu-search-status role="status" aria-live="polite" hidden></p>
-<ul class="menu-list" data-menu-tree>` + items + `</ul>` + pill + `
+<ul class="menu-list" data-menu-tree>` + items + `</ul>` + themePillHtml() + `
+</nav>`;
+}
+
+// The playground menu is a horizontal bar across the top of the page. It
+// carries no search box, never opens a drawer on its own and highlights only
+// the top-level branch that holds the current page. It keeps the data-menu
+// hook so the bubble can drive it as the mobile drawer, and it uses its own
+// menu-top-* classes on purpose: the sidebar state code (menu-tree, page-state,
+// menu-search) must not touch this tree.
+function playgroundBranchContains(node, currentPath) {
+  if (node.path === currentPath) {
+    return true;
+  }
+  for (let i = 0; i < node.children.length; i += 1) {
+    if (playgroundBranchContains(node.children[i], currentPath)) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function playgroundNavItem(node, currentPath, topLevel) {
+  const href = linkFor(node);
+  const hasChildren = node.children.length > 0;
+  const isCurrent = node.path === currentPath;
+  const current = isCurrent ? ' aria-current="page"' : "";
+  const link = '<a class="menu-top-link" href="' + href + '" data-menu-top-item="' + escapeHtml(node.path) + '"' + current + ">" + escapeHtml(node.title) + "</a>";
+  if (!hasChildren) {
+    return '<li class="menu-top-item"><span class="menu-top-heading">' + link + "</span></li>";
+  }
+  const active = topLevel && playgroundBranchContains(node, currentPath) ? " data-menu-top-active" : "";
+  const listClass = topLevel ? "menu-top-drop" : "menu-top-sub";
+  const self = '<li class="menu-top-item"><span class="menu-top-heading">' + link + "</span></li>";
+  const children = node.children.map(function (child) {
+    return playgroundNavItem(child, currentPath, false);
+  }).join("");
+  return '<li class="menu-top-item"' + active + ' data-menu-top-path="' + escapeHtml(node.path) + '">' +
+    '<details class="menu-top-details"><summary class="menu-top-branch">' + escapeHtml(node.title) + "</summary>" +
+    '<ul class="' + listClass + '">' + self + children + "</ul></details></li>";
+}
+
+function buildPlaygroundNav(currentPath) {
+  const roots = nodes.filter(function (node) { return node.parent === null; });
+  const items = roots.map(function (node) { return playgroundNavItem(node, currentPath, true); }).join("");
+  return `<nav class="menu-top" id="site-menu" aria-label="Site menu" data-menu data-menu-top data-menu-panel data-admin="menu:playground-menu.css">
+<ul class="menu-top-list" data-menu-top-tree>` + items + `</ul>` + themePillHtml() + `
 </nav>`;
 }
 
@@ -984,7 +1086,7 @@ ${sprite}
 <h1 class="site-title">${escapeHtml(node.title)}</h1>
 </div>
 </header>
-${buildNav(node.path)}
+${isPlayground ? buildPlaygroundNav(node.path) : buildNav(node.path)}
 <main class="main-box" id="main-content" data-main-box data-admin="boxes:boxes.css">${downloadCtaHtml(node)}${rootAbsoluteAssets(rewriteFlatLinks(content))}</main>
 ${footerHtml()}
 </div>
@@ -1244,3 +1346,4 @@ console.log("styles/bundle.min.css: " + String(styleBundleSize) + " bytes.");
 console.log("scripts/bundle.js: " + String(scriptBundleSize) + " bytes.");
 console.log("scripts/nag/nag.bundle.js: " + String(nagBundleSize) + " bytes.");
 console.log("scripts/draghts/draghts.bundle.js: " + String(draghtsBundleSize) + " bytes.");
+console.log("wasm/agnosis: " + String(agnosisWasmSize) + " bytes staged.");

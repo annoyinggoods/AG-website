@@ -19,3 +19,231 @@
   white-space: pre;
   tab-size: 2;
 }
+
+/* The playground: the parade itself, lazily loaded. The gate copies the
+   site intro's click-to-start veil — a poster, a prompt chip, nothing
+   else on the stage — and the loading state swaps the prompt for the
+   AGnosis mark, which spins where a loading circle would sit. */
+
+.agnosis-app {
+  margin: 0;
+}
+
+/* The stage holds the canvas and the gate; the canvas is laid out from
+   the start so the wasm boots into a real box, and the veil hides it
+   until the visitor starts the parade. */
+.agnosis-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-box);
+  background: #0c0c10;
+}
+
+.agnosis-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #000;
+  image-rendering: pixelated;
+}
+
+.agnosis-gate {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-gate);
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 1.5rem;
+  background: var(--gate-veil);
+}
+
+.agnosis-gate.is-dismissed {
+  display: none;
+}
+
+.agnosis-gate-poster {
+  display: block;
+  max-width: 18vw;
+  height: auto;
+}
+
+/* The loading mark: no spinner, the studio's own mark. */
+.agnosis-gate-loading {
+  display: none;
+  max-width: 12rem;
+  height: auto;
+}
+
+.agnosis-gate.is-loading .agnosis-gate-poster,
+.agnosis-gate.is-loading .agnosis-gate-prompt {
+  display: none;
+}
+
+.agnosis-gate.is-loading .agnosis-gate-loading {
+  display: block;
+}
+
+/* The prompt chip: the intro gate's own button, word for word in shape
+   — white ink on the studio dark, a hairline edge, the tiny face. */
+.agnosis-gate-prompt {
+  margin: 0;
+  color: #ffffff;
+  background: #14102a;
+  border: var(--hairline-w) solid #ffffff;
+  border-radius: var(--radius-chip);
+  min-height: 2.75rem;
+  padding: 0.6rem 1.4rem;
+  font-family: var(--font-tiny);
+  font-size: 1rem;
+  letter-spacing: 0.15em;
+  text-align: center;
+  cursor: pointer;
+}
+
+.agnosis-gate-prompt:hover {
+  border-color: var(--accent-dark);
+  color: var(--accent-dark);
+}
+
+.agnosis-gate-prompt:focus-visible,
+.agnosis-bar button:focus-visible,
+.agnosis-bar input:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+
+.agnosis-gate-status {
+  margin: 0;
+  min-height: 1.5em;
+  max-width: 90%;
+  text-align: center;
+  color: var(--ink-muted);
+  font-family: var(--font-tiny);
+}
+
+/* The controls stay out of the page until the parade runs. */
+.agnosis-bar {
+  display: none;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.agnosis-app.is-running .agnosis-bar {
+  display: flex;
+}
+
+.agnosis-bar button,
+.agnosis-bar input {
+  font: inherit;
+  color: var(--ink-soft);
+  background: #141019;
+  border: var(--hairline-w) solid #333;
+  border-radius: var(--radius-chip);
+  padding: 0.2rem 0.75rem;
+  cursor: pointer;
+}
+
+.agnosis-bar button:hover,
+.agnosis-bar input:hover {
+  border-color: var(--ink-muted);
+}
+
+.agnosis-bar label {
+  display: inline-flex;
+  gap: 0.4rem;
+  align-items: center;
+  font-family: var(--font-tiny);
+}
+
+.agnosis-status {
+  margin-left: auto;
+  opacity: 0.85;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-family: var(--font-tiny);
+}
+
+/* The wasm reports its own failures into this box (its report() looks
+   for the id), and the box stays out of the page until it has one. */
+.agnosis-diag {
+  max-height: 30vh;
+  overflow: auto;
+  margin: 0.75rem 0 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-box);
+  background: rgba(40, 0, 0, 0.88);
+  color: #ffb4b4;
+  white-space: pre-wrap;
+  font-size: 0.85rem;
+}
+
+.agnosis-diag:empty {
+  display: none;
+}
+
+/* A narrow stage: the poster steps aside for the prompt. */
+@media (max-width: 40rem) {
+  .agnosis-gate-poster {
+    max-width: 6rem;
+  }
+}
+
+/* --- the draw-your-own editor (milestone M3) ------------------------------ */
+
+/* The editor panel: hidden until the visitor opens it, then it takes
+   the stage's place — the parade keeps running underneath, paused by
+   the wasm for the session. */
+.agnosis-editor {
+  margin-top: 0.75rem;
+}
+
+/* The editor canvas: the layout floor's own ratio (1362 x 600 is the
+   native window's minimum — below it the name field would vanish while
+   the user types into it). The wasm's buffer is that floor or bigger at
+   the device pixel ratio, and the CSS box scales it to fit; a narrow
+   page area shows the same editor, scaled down, never clipped. */
+.agnosis-editor-canvas {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1362 / 600;
+  background: #000;
+  image-rendering: pixelated;
+  touch-action: none;
+}
+
+.agnosis-editor-canvas:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: var(--focus-ring);
+}
+
+/* The hint and the mirror: the canvas chrome is pixels, these two are
+   text — the hint one line under the canvas, the status region an
+   aria-live copy of the wasm's own status line. */
+.agnosis-editor-hint,
+.agnosis-editor-status {
+  margin: 0.5rem 0 0;
+  color: var(--ink-muted);
+  font-family: var(--font-tiny);
+}
+
+.agnosis-editor-status {
+  min-height: 1.5em;
+}
+
+/* While the editor is open the parade's own controls go quiet: the
+   pause button would un-pause a parade nobody watches, an import would
+   race the panel's store, an export would record a hidden parade. The
+   editor toggle stays reachable — it is the way back. */
+.agnosis-app.is-editing .agnosis-bar button:not([data-agnosis-editor]),
+.agnosis-app.is-editing .agnosis-bar label {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.agnosis-app.is-editing .agnosis-stage:not(.agnosis-editor-stage) {
+  display: none;
+}

@@ -1,0 +1,237 @@
+/* Single responsibility: the playground top menu — a horizontal bar of branch
+   chips whose drawers unroll downward with a pop bounce. The bar reuses the
+   bubble machinery on small screens, so it doubles as the slide-in drawer
+   there. All of its class names are its own (menu-top-*): the sidebar state
+   code must never touch this tree. */
+
+.menu-top {
+  grid-area: menu;
+  position: relative;
+  z-index: var(--z-menu);
+  display: flex;
+  align-items: center;
+  margin: 0.75rem 0;
+  padding: 0.4rem;
+  border-radius: var(--radius-menu);
+  background: var(--panel);
+  box-shadow: var(--shadow-float);
+}
+.menu-top-list {
+  flex: 1 1 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.menu-top-item {
+  position: relative;
+}
+.menu-top-item > .menu-top-heading {
+  display: flex;
+}
+
+/* Branch chips: the toggle button after the upgrade and the summary before it
+   share one look, so the menu keeps its shape without scripting. */
+.menu-top-branch,
+.menu-top-list > .menu-top-item > .menu-top-heading > .menu-top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.95rem;
+  border: 0;
+  border-radius: var(--radius-chip);
+  background: transparent;
+  color: var(--nav-ink);
+  font-family: var(--font-tiny);
+  font-size: 1rem;
+  text-decoration: none;
+  cursor: pointer;
+}
+summary.menu-top-branch {
+  list-style: none;
+}
+summary.menu-top-branch::-webkit-details-marker {
+  display: none;
+}
+.menu-top-branch::before {
+  content: "▸";
+  font-size: 0.75em;
+  opacity: 0.7;
+}
+.menu-top-branch[aria-expanded="true"]::before {
+  content: "▾";
+}
+.menu-top-branch:hover,
+.menu-top-branch:focus-visible,
+.menu-top-list > .menu-top-item > .menu-top-heading > .menu-top-link:hover,
+.menu-top-list > .menu-top-item > .menu-top-heading > .menu-top-link:focus-visible {
+  background: var(--accent-tint);
+  color: var(--ink);
+}
+/* Only the highest level is highlighted: the branch that holds the current
+   page lights up, but no drawer opens by itself. */
+.menu-top-item[data-menu-top-active] > .menu-top-branch,
+.menu-top-item[data-menu-top-active] > details > summary.menu-top-branch,
+.menu-top-item[data-menu-top-active] > .menu-top-heading > .menu-top-link {
+  background: var(--chip-active);
+  color: var(--chip-ink);
+}
+.menu-top-branch:focus-visible,
+.menu-top-link:focus-visible {
+  outline: var(--focus-ring) solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Drawers. The top-level panel floats over the game; deeper levels unroll
+   in place inside their panel. */
+.menu-top-drop,
+.menu-top-sub {
+  margin: 0;
+  padding: 0.3rem;
+  list-style: none;
+}
+.menu-top-sub {
+  margin-inline: 0.4rem 0;
+  padding-inline-start: 0.9rem;
+  border-inline-start: 2px solid var(--branch-edge);
+}
+.menu-top-drop {
+  position: absolute;
+  top: calc(100% + 0.35rem);
+  left: 0;
+  min-width: 11rem;
+  max-width: min(20rem, 90vw);
+  border-radius: var(--radius-menu);
+  background: var(--panel);
+  box-shadow: var(--shadow-float);
+  z-index: 1;
+}
+.menu-top-drop.is-right {
+  left: auto;
+  right: 0;
+}
+.menu-top-drop[data-open] {
+  transform-origin: top center;
+  animation: menu-top-pop 340ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes menu-top-pop {
+  0% {
+    transform: scaleY(0.7);
+    opacity: 0;
+  }
+  60% {
+    transform: scaleY(1.05);
+    opacity: 1;
+  }
+  80% {
+    transform: scaleY(0.98);
+  }
+  100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+}
+.menu-top-drop .menu-top-link,
+.menu-top-sub .menu-top-link {
+  display: flex;
+  align-items: center;
+  padding: 0.45rem 0.7rem;
+  border-radius: var(--radius-chip);
+  color: var(--nav-ink);
+  font-family: var(--font-tiny);
+  text-decoration: none;
+}
+.menu-top-drop .menu-top-link:hover,
+.menu-top-drop .menu-top-link:focus-visible,
+.menu-top-sub .menu-top-link:hover,
+.menu-top-sub .menu-top-link:focus-visible {
+  background: var(--accent-tint);
+  color: var(--ink);
+}
+.menu-top-link[aria-current="page"] {
+  background: var(--chip);
+  color: var(--chip-ink);
+}
+
+/* The theme pill rides at the right end of the bar. The sidebar styling
+   stretches its segments, which would collapse them in a fit-content pill. */
+.menu-top .menu-theme-pill {
+  position: static;
+  flex: 0 0 auto;
+  align-self: center;
+  margin: 0 0.25rem 0 auto;
+}
+.menu-top .menu-theme-pill .theme-pill-segment {
+  flex: 0 0 auto;
+}
+
+/* On small screens the bar is the drawer the bubble opens: fixed, opaque,
+   sliding in from the docked edge. */
+@media (max-width: 56rem) {
+  .menu-top {
+    position: fixed;
+    inset-block: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: auto;
+    display: block;
+    width: min(22rem, 86vw);
+    max-height: none;
+    margin: 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    transform: translateX(105%);
+    transition: transform var(--dur-fade) ease;
+    padding-top: env(safe-area-inset-top, 0rem);
+    padding-bottom: env(safe-area-inset-bottom, 0rem);
+  }
+  .menu-top.is-open {
+    transform: translateX(0);
+  }
+  .menu-top.is-left {
+    right: auto;
+    left: 0;
+    transform: translateX(-105%);
+  }
+  .menu-top.is-left.is-open {
+    transform: translateX(0);
+  }
+  /* The drawer lies over the page, so its surface has to be opaque; the
+     translucent box tint would let the page bleed through the menu text. */
+  .menu-top.is-detached,
+  .menu-top.is-detached.is-dimmed,
+  .menu-top.is-detached.is-dimmed:hover,
+  .menu-top.is-detached.is-dimmed:focus-within {
+    background: var(--panel);
+  }
+  .menu-top.is-detached {
+    background: var(--panel);
+  }
+  .menu-top-list {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .menu-top-drop {
+    position: static;
+    max-width: none;
+    box-shadow: none;
+  }
+  .menu-top .menu-theme-pill {
+    margin: 0.6rem 0.25rem 0.25rem;
+  }
+  /* Without scripting the bubble cannot open anything, so the menu stays in
+     the page flow where every link is reachable and the branches still open
+     through the native details element. */
+  html:not(.js) .menu-top {
+    position: static;
+    inset: auto;
+    width: auto;
+    height: auto;
+    transform: none;
+    overflow: visible;
+  }
+}

@@ -1,11 +1,12 @@
 {
   "version": "1.0.1",
-  "file": "/downloads/1.0.1-r3/AGIT-Setup-1.0.1.exe",
-  "sizeMB": 535,
-  "sha256": "ee8d13837333a0fc7e13aa7a6a9a3ab58f12970c0aa2c4ae6a87d352e9de4d51",
+  "file": "/downloads/1.0.1-r4/AGIT-Setup-1.0.1.exe",
+  "sizeMB": 534,
+  "sha256": "bc3b4437f79344cd3dbd54c8d192080eded5dd2c83d57920cfef4fb814b7eeff",
   "installerPath": "C:\\Projects\\AGIT\\dist\\AGIT-Setup-1.0.1.exe",
   "keepAlive": [
     "/downloads/1.0.1/AGIT-Setup-1.0.1.exe",
-    "/downloads/1.0.1-r2/AGIT-Setup-1.0.1.exe"
+    "/downloads/1.0.1-r2/AGIT-Setup-1.0.1.exe",
+    "/downloads/1.0.1-r3/AGIT-Setup-1.0.1.exe"
   ]
 }

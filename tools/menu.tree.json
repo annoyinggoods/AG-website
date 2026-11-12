@@ -435,6 +435,63 @@
               "parent": "/products/agnosis/",
               "path": "/products/agnosis/license/",
               "title": "License"
+            },
+            {
+              "path": "/products/agnosis/help/",
+              "title": "Help",
+              "depth": 2,
+              "parent": "/products/agnosis/",
+              "keywords": [
+                "help",
+                "guide",
+                "how to",
+                "faq",
+                "readme"
+              ],
+              "children": [
+                {
+                  "path": "/products/agnosis/help/inbrowser/",
+                  "title": "In the browser",
+                  "depth": 3,
+                  "parent": "/products/agnosis/help/",
+                  "keywords": [
+                    "browser",
+                    "playground",
+                    "wasm",
+                    "editor",
+                    "how to"
+                  ],
+                  "children": []
+                },
+                {
+                  "path": "/products/agnosis/help/desktop/",
+                  "title": "On the desktop",
+                  "depth": 3,
+                  "parent": "/products/agnosis/help/",
+                  "keywords": [
+                    "windows",
+                    "macos",
+                    "linux",
+                    "hotkey",
+                    "install",
+                    "faq"
+                  ],
+                  "children": []
+                },
+                {
+                  "path": "/products/agnosis/help/readme/",
+                  "title": "The read-me",
+                  "depth": 3,
+                  "parent": "/products/agnosis/help/",
+                  "keywords": [
+                    "readme",
+                    "commands",
+                    "config",
+                    "reference"
+                  ],
+                  "children": []
+                }
+              ]
             }
           ],
           "depth": 1,
@@ -758,6 +815,20 @@
           "parent": "/playground/",
           "path": "/playground/nAG/",
           "title": "nAG"
+        },
+        {
+          "children": [],
+          "depth": 1,
+          "keywords": [
+            "playground",
+            "ducks",
+            "parade",
+            "agnosis",
+            "wasm"
+          ],
+          "parent": "/playground/",
+          "path": "/playground/agnosis/",
+          "title": "AGnosis"
         }
       ],
       "depth": 0,
@@ -1023,6 +1094,9 @@
       "slug": "agit",
       "title": "AGIT",
       "path": "/products/agit/",
+      "icon": "/assets/agit/agit-logo.webp",
+      "iconWidth": 256,
+      "iconHeight": 256,
       "tagline": "The writing desk that remembers your story",
       "summary": "AGIT helps with fiction, non-fiction, research and role-play in one local-first workspace, and it runs on your own machine.",
       "keywords": [
@@ -1035,6 +1109,9 @@
       "slug": "agrrr",
       "title": "AGrrr!",
       "path": "/products/agrrr/",
+      "icon": "/assets/agrrr/agrrr-logo.webp",
+      "iconWidth": 512,
+      "iconHeight": 512,
       "tagline": "Raw drafts with teeth",
       "summary": "AGrrr! composes web pages on a live canvas and compiles them into real HTML and CSS, and it keeps every growl on your own machine.",
       "keywords": [
@@ -1048,6 +1125,9 @@
       "slug": "agnosis",
       "title": "AGnosis",
       "path": "/products/agnosis/",
+      "icon": "/assets/agnosis/agnosis-logo.webp",
+      "iconWidth": 512,
+      "iconHeight": 512,
       "tagline": "A hotkey, a parade, and nobody's business",
       "summary": "AGnosis is the studio joke that ships: press one hotkey and every open browser minimizes behind a fullscreen ASCII duck parade.",
       "keywords": [
@@ -1076,6 +1156,9 @@
       "slug": "yagna",
       "title": "yAGna",
       "path": "/products/yagna/",
+      "icon": "/assets/yagna/yagna-logo.webp",
+      "iconWidth": 256,
+      "iconHeight": 256,
       "tagline": "Your stars, offline — and your agent's memory",
       "summary": "yAGna keeps every GitHub star as a local library: READMEs, licenses, tags, health and fit scores, search, and an MCP server that hands the whole shelf to your coding agent.",
       "keywords": [
@@ -1091,6 +1174,9 @@
       "slug": "agony",
       "title": "AGony",
       "path": "/products/agony/",
+      "icon": "/assets/agony/agony-logo.webp",
+      "iconWidth": 512,
+      "iconHeight": 512,
       "tagline": "A desktop that lives in a terminal",
       "summary": "AGony turns a terminal into a desktop: windows, a taskbar, a start menu and a command bar that suggests everything, built in Rust on the rmux engine.",
       "keywords": [
@@ -1119,6 +1205,9 @@
       "slug": "nAG",
       "title": "nAG",
       "path": "/products/nAG/",
+      "icon": "/assets/nag/nag-logo.webp",
+      "iconWidth": 512,
+      "iconHeight": 512,
       "tagline": "The memory game that nags you",
       "summary": "nAG is a reverse-order memory game: scout the board, then replay the whole order in one perfect run. It plays in the browser and downloads as a small offline archive.",
       "keywords": [
@@ -1132,6 +1221,9 @@
       "slug": "drAGhts",
       "title": "drAGhts",
       "path": "/products/drAGhts/",
+      "icon": "/assets/draghts/draghts-logo.webp",
+      "iconWidth": 1024,
+      "iconHeight": 1024,
       "tagline": "Chaotic checkers with house rules",
       "summary": "drAGhts is chaotic checkers with eight toggleable house rules: play a friend hot-seat or face the computer, in the browser or from a small offline archive.",
       "keywords": [
